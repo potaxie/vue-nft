@@ -5,7 +5,7 @@ module.exports = {
     disableHostCheck: true,
     proxy: {
       "/app": {
-        target: "http://localhost:50009",
+        target: "http://192.168.31.100:50009",
       },
     },
   },
