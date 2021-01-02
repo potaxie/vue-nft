@@ -1,54 +1,58 @@
 <template>
-  <a-layout id="admin-layout">
-    <a-layout-sider
-      breakpoint="lg"
-      collapsed-width="0"
-      :style="{ 'text-align': 'left' }"
-    >
+  <a-layout id="admin-layout" class="layout">
+    <a-layout-header style="text-align: left;">
       <div class="logo">
-        <a>
-          <img src="/bithot.jpeg" alt="logo" />
-          <h1>BitHot</h1>
-        </a>
+        <img src="/favicon.ico" alt="logo" />
       </div>
-      <a-menu theme="dark" mode="inline" @click="handleSelect">
-        <a-menu-item v-for="menu in menus" :key="menu.name">
-          <component :is="menu.icon"></component>
-          <span class="nav-text">{{ menu.title }}</span>
+      <a-menu
+        theme="dark"
+        mode="horizontal"
+        @click="handleSelect"
+        :style="{ lineHeight: '64px' }"
+      >
+        <a-menu-item key="artwork">
+          Home
+        </a-menu-item>
+        <a-menu-item key="market-place">
+          MarketPlace
+        </a-menu-item>
+        <a-menu-item key="workbench">
+          DataAnalysis
+        </a-menu-item>
+        <a-menu-item key="artrcle">
+          Artrcle
         </a-menu-item>
       </a-menu>
-    </a-layout-sider>
-    <a-layout>
-      <!-- <a-layout-header :style="{ background: '#fff', padding: 0 }" /> -->
-      <a-layout-content>
-        <workbench v-if="current === 'workbench'"></workbench>
-      </a-layout-content>
-      <a-layout-footer :style="{ 'text-align': 'center', padding: '10px 50px' }"
-        >BitHot ©2020 Created by potaxie</a-layout-footer
-      >
-    </a-layout>
+    </a-layout-header>
+    <a-layout-content style="padding: 0 50px">
+      <div :style="{ background: '#fff', padding: '24px', minHeight: '280px' }">
+        <artwork v-if="current === 'artwork'" />
+        <workbench v-if="current === 'workbench'" />
+        <market-place v-if="current === 'market-place'" />
+        <artrcle v-if="current === 'artrcle'" />
+      </div>
+    </a-layout-content>
+    <a-layout-footer style="text-align: center">
+      Simple Web ©2020 Created by novicezk
+    </a-layout-footer>
   </a-layout>
 </template>
 <script>
-import { UserOutlined, MenuOutlined } from "@ant-design/icons-vue";
+import Artwork from "@/components/Artwork";
 import Workbench from "@/components/Workbench";
+import MarketPlace from "@/components/MarketPlace";
+import Artrcle from "@/components/Artrcle";
 
 export default {
   components: {
-    UserOutlined,
-    MenuOutlined,
+    Artwork,
     Workbench,
+    MarketPlace,
+    Artrcle,
   },
   data() {
     return {
-      current: "workbench",
-      menus: [
-        {
-          name: "workbench",
-          title: "工作台",
-          icon: "UserOutlined",
-        },
-      ],
+      current: "artrcle",
     };
   },
   methods: {
@@ -63,33 +67,12 @@ export default {
 #admin-layout {
   min-height: 100%;
   .logo {
-    position: relative;
-    display: flex;
-    align-items: center;
-    padding: 16px;
-    line-height: 32px;
-    cursor: pointer;
+    float: left;
+    height: 64px;
     img {
-      display: inline-block;
-      height: 32px;
-      vertical-align: middle;
+      vertical-align: unset;
+      width: 64px;
     }
-    h1 {
-      display: inline-block;
-      height: 32px;
-      margin: 0 0 0 12px;
-      color: #fff;
-      font-weight: 600;
-      font-size: 18px;
-      line-height: 32px;
-      vertical-align: middle;
-    }
-  }
-  .logo > a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 32px;
   }
 }
 </style>

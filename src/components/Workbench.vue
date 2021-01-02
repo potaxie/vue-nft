@@ -1,13 +1,17 @@
 <template>
   <a-card
-    title="波动超过8%统计"
+    title="统计"
     :tab-list="tabs"
     @tabChange="(key) => changeTab(key)"
     style="text-align: left;"
   >
     <div ref="container" id="container"></div>
   </a-card>
-  <a-card title="波动超过8%明细" style="text-align: left;" class="detail-table">
+  <a-card
+    title="明细"
+    style="text-align: left;margin-bottom: 20px"
+    class="detail-table"
+  >
     <a-date-picker
       v-model:value="date"
       @change="onChange"
@@ -95,7 +99,7 @@ export default {
     this.chart = new this.G2.Chart({
       container: "container",
       autoFit: true,
-      width: scrollWidth - 200,
+      width: scrollWidth,
       height: 350,
       padding: [30, 40, 20, 30],
     });
