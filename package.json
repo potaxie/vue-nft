@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@antv/g2": "^3.5.17",
-    "ant-design-vue": "^2.0.0-rc.3",
+    "ant-design-vue": "^2.0.0-rc.6",
     "axios": "^0.21.0",
     "core-js": "^3.6.5",
     "less": "^3.13.0",
