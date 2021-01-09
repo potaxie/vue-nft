@@ -1,31 +1,29 @@
 <template>
   <a-card
-    title="统计"
+    :title="(current ? current.symbol : '') + '统计'"
     :tab-list="tabs"
     @tabChange="(key) => changeTab(key)"
-    style="text-align: left;"
+    style="text-align: left"
   >
     <div ref="container" id="container"></div>
   </a-card>
-  <a-card
-    title="明细"
-    style="text-align: left;margin-bottom: 20px"
-    class="detail-table"
-  >
-    <a-date-picker
-      v-model:value="date"
-      @change="onChange"
-      size="large"
-      style="margin-bottom: 10px;"
-    />
+  <a-card title="明细" style="text-align: left;">
     <a-table
       :columns="columns"
       :data-source="data"
+      :scroll="{ y: 300 }"
       :pagination="false"
       size="middle"
     >
-      <template #symbol="{ text }">
-        <a>{{ text }}</a>
+      <template #symbol="{ record }">
+        <a
+          href="javascript:;"
+          @click="
+            current = record;
+            refresh();
+          "
+          >{{ record.symbol }}</a
+        >
       </template>
     </a-table>
   </a-card>
@@ -51,12 +49,12 @@ const columns = [
     dataIndex: "ratio",
   },
 ];
-const now = new Date();
 export default {
   data() {
     return {
       data: [],
-      date: "" + now.getFullYear() + now.getMonth() + now.getDate(),
+      current: null,
+      choice: "7",
       columns: columns,
       chart: undefined,
       tabs: [
@@ -73,24 +71,24 @@ export default {
   },
   methods: {
     changeTab(name) {
-      this.refresh(name);
+      this.choice = name;
+      this.refresh();
     },
-    refresh(choice) {
+    refresh() {
       let that = this;
-      api.list(choice).then((res) => {
+      api.list(this.choice, this.current ? this.current.symbol : null).then((res) => {
         that.chart.source(res.data);
         that.chart.render();
       });
     },
-    detail(date) {
-      api.detail(date).then((res) => {
+    detail() {
+      api.detail().then((res) => {
         this.data = res.data;
+        if (this.data) {
+          this.current = this.data[0];
+        }
+        this.refresh();
       });
-    },
-    onChange(value, dateString) {
-      if (dateString) {
-        this.detail(dateString);
-      }
     },
   },
   mounted() {
@@ -100,25 +98,14 @@ export default {
       container: "container",
       autoFit: true,
       width: scrollWidth,
-      height: 350,
+      height: 250,
       padding: [30, 40, 20, 30],
     });
-    this.chart
-      .interval()
-      .position("date*sum")
-      .tooltip({
-        showMarkers: false,
-      });
-    this.refresh(7);
-    this.detail("2020-12-17");
+    this.chart.line().position("date*sum").tooltip({
+      showMarkers: false,
+    });
+    this.detail();
   },
 };
 </script>
-<style>
-.ant-card-head-title {
-  font-size: 25px !important;
-}
-.detail-table .ant-card-body {
-  padding-left: 37px;
-}
-</style>
+
