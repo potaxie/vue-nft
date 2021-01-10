@@ -1,11 +1,11 @@
 import api from "@/api/index";
 
 export default {
-  list: (choice) => {
-    return api.get({ url: "/binance_data_dash/" + choice });
+  list: (choice, id) => {
+    return api.get({ url: "/binance_data_dash/" + choice + "/" + id });
   },
-  detail: (date) => {
-    return api.get({ url: "/binance_data_detail/" + date });
+  detail: () => {
+    return api.get({ url: "/binance_data_detail" });
   },
   marketPlaceList: () => {
     return api.get({ url: "/request_picture/test" });
@@ -19,4 +19,10 @@ export default {
   imageGroups: () => {
     return api.get({ url: "/request_picture_groups/test" });
   },
+  collect: (id) => {
+    return api.get({ url: "/collection/" + id });
+  },
+  cancelCollect: (id) => {
+    return api.get({ url: "/cancel_collection/" + id });
+  }
 };

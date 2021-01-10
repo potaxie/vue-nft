@@ -63,7 +63,7 @@
         </a-col>
         <a-col :span="3">
           <a href="javascript:;" @click="like(article)">
-            <LikeOutlined
+            <LikeFilled
               v-if="article.liked"
               :style="{ fontSize: '20px', color: '#52c41a' }"
             />
@@ -117,6 +117,7 @@ import {
   LikeOutlined,
   MessageOutlined,
   SendOutlined,
+  LikeFilled,
 } from "@ant-design/icons-vue";
 import { message } from "ant-design-vue";
 import api from "@/api/article";
@@ -130,6 +131,7 @@ export default {
     LikeOutlined,
     MessageOutlined,
     SendOutlined,
+    LikeFilled,
   },
   data() {
     return {
@@ -249,7 +251,7 @@ export default {
   .ant-card-body {
     padding: 12px 24px;
   }
-  .ant-card-head{
+  .ant-card-head {
     min-height: 30px;
     font-size: 13px;
   }

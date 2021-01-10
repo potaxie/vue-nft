@@ -1,17 +1,9 @@
 <template>
-  <a-card title="MAKERT PLACE" style="text-align: left;margin-bottom: 20px">
-    A full-service platform for artists and creators to mint non-fungible tokens
-    representing their artwork. Made possible by blockchain technology, every
-    digital creation available through MakersPlace is an authentic and truly
-    unique digital creation, signed and issued by the creator. Even if the
-    digital creation is copied, it won’t be the authentic or the original signed
-    version.
-  </a-card>
   <a-card
     title="HISTORY CHART"
     :tab-list="tabs"
     @tabChange="(key) => changeTab(key)"
-    style="text-align: left;margin-bottom: 20px"
+    style="text-align: left; margin-bottom: 20px"
   >
     <div ref="container" id="container"></div>
   </a-card>
@@ -20,8 +12,12 @@
       :columns="columns"
       :data-source="data"
       :pagination="false"
+      :scroll="{ y: 300 }"
       size="middle"
     >
+      <template #Token="{ text }">
+        <a>{{ text }}</a>
+      </template>
       <template #Image="{ record }">
         <a-avatar
           size="large"
@@ -34,7 +30,7 @@
   </a-card>
   <a-modal v-model:visible="showImageDetail" :footer="null">
     <p>
-      <span style="font-weight: bold;">名称</span><br />
+      <span style="font-weight: bold">名称</span><br />
       {{ detail.name }}
     </p>
     <p>
@@ -55,6 +51,7 @@ export default {
         {
           title: "Token",
           dataIndex: "Token",
+          slots: { customRender: "Token" },
         },
         {
           title: "AssetId",
@@ -115,7 +112,7 @@ export default {
       autoFit: true,
       width: scrollWidth,
       height: 250,
-      padding: [30, 50, 20, 50],
+      padding: [30, 40, 20, 30],
     });
     this.chart.scale({
       month: {
@@ -129,25 +126,10 @@ export default {
       showCrosshairs: true,
       shared: true,
     });
-    this.chart.axis("temperature", {
-      label: {
-        formatter: (val) => {
-          return val + " °C";
-        },
-      },
-    });
-    this.chart
-      .line()
-      .position("month*temperature")
-      .color("city")
-      .shape("smooth");
-    this.chart
-      .point()
-      .position("month*temperature")
-      .color("city")
-      .shape("circle");
+    this.chart.line().position("month*temperature").color("city").shape("smooth");
+    this.chart.point().position("month*temperature").color("city").shape("circle");
     this.refresh(7);
   },
 };
 </script>
-<style></style>
+

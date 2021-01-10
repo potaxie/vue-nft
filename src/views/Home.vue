@@ -2,7 +2,7 @@
   <a-layout id="admin-layout" class="layout">
     <a-layout-header style="text-align: left; line-height: 50px; height: 50px">
       <a-row>
-        <a-col :span="2">
+        <a-col :span="1">
           <a-avatar src="/favicon.ico" :size="40" />
         </a-col>
         <a-col :span="16">
@@ -10,11 +10,11 @@
             theme="dark"
             mode="horizontal"
             @click="handleSelect"
-            :style="{ lineHeight: '50px' }"
+            :style="{ lineHeight: '50px', fontWeight: 'bold' }"
           >
             <a-menu-item key="artwork"> Home </a-menu-item>
-            <a-menu-item key="market-place"> MarketPlace </a-menu-item>
             <a-menu-item key="workbench"> DataAnalysis </a-menu-item>
+            <a-menu-item key="market-place"> MarketPlace </a-menu-item>
             <a-menu-item key="article"> Article </a-menu-item>
           </a-menu></a-col
         >
@@ -124,11 +124,11 @@ export default {
     DownOutlined,
     UserOutlined,
     PlusOutlined,
-    LoadingOutlined
+    LoadingOutlined,
   },
   data() {
     return {
-      current: "article",
+      current: "artwork",
       form: {},
       showUserModal: false,
       fileList: [],
