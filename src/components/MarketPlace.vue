@@ -126,10 +126,17 @@ export default {
       showCrosshairs: true,
       shared: true,
     });
-    this.chart.line().position("month*temperature").color("city").shape("smooth");
-    this.chart.point().position("month*temperature").color("city").shape("circle");
+    this.chart
+      .line()
+      .position("month*temperature")
+      .color("city")
+      .shape("smooth");
+    this.chart
+      .point()
+      .position("month*temperature")
+      .color("city")
+      .shape("circle");
     this.refresh(7);
   },
 };
 </script>
-

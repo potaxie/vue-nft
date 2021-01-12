@@ -14,7 +14,11 @@
         :wrapper-col="{ span: 24 }"
       >
         <a-form-item name="content">
-          <a-textarea v-model:value="form.content" placeholder="..." :rows="4" />
+          <a-textarea
+            v-model:value="form.content"
+            placeholder="..."
+            :rows="4"
+          />
         </a-form-item>
         <a-form-item>
           <a-upload
@@ -51,7 +55,11 @@
       <p style="font-size: 15px; color: black">{{ article.content }}</p>
       <a-row type="flex" justify="space-between">
         <a-col :span="24" v-for="image in article.picture" :key="image">
-          <a-image :width="'100%'" :height="350" :src="'/app/file/get/' + image" />
+          <a-image
+            :width="'100%'"
+            :height="350"
+            :src="'/app/file/get/' + image"
+          />
         </a-col>
       </a-row>
       <a-row :gutter="16" style="margin-top: 5px; margin-left: 5px">
@@ -80,7 +88,9 @@
             v-model:value="article.myComment"
           >
             <template #addonAfter>
-              <a href="javascript:;" @click="submitComment(article)"><SendOutlined /></a>
+              <a href="javascript:;" @click="submitComment(article)"
+                ><SendOutlined
+              /></a>
             </template>
           </a-input>
         </a-row>
@@ -91,7 +101,10 @@
         >
           <template #renderItem="{ item }">
             <a-list-item>
-              <a-comment :author="item.author" :avatar="'/app/file/get/' + item.avatar">
+              <a-comment
+                :author="item.author"
+                :avatar="'/app/file/get/' + item.avatar"
+              >
                 <template #content>
                   <p>
                     {{ item.content }}
@@ -99,7 +112,9 @@
                 </template>
                 <template #datetime>
                   <a-tooltip :title="item.time">
-                    <span>{{ moment(item.time, "yyyy-MM-dd HH:mm:ss").fromNow() }}</span>
+                    <span>{{
+                      moment(item.time, "yyyy-MM-dd HH:mm:ss").fromNow()
+                    }}</span>
                   </a-tooltip>
                 </template>
               </a-comment>
@@ -141,7 +156,9 @@ export default {
       form: {},
       fileList: [],
       rules: {
-        content: [{ required: true, message: "Content is Empty.", trigger: "blur" }],
+        content: [
+          { required: true, message: "Content is Empty.", trigger: "blur" },
+        ],
       },
     };
   },

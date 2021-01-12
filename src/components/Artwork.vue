@@ -40,11 +40,32 @@
       </a-col>
     </a-row>
   </div>
-  <a-modal v-model:visible="showDetail" :footer="null">
-    <p><span style="font-weight: bold">名称: </span> {{ detail.name }}</p>
+  <a-modal v-model:visible="showDetail" :footer="null" style="font-size: 10px">
     <p>
-      <span style="font-weight: bold">链接: </span
-      ><a target="_blank" :href="detail.href">{{ detail.href }}</a>
+      <span style="font-weight: bold;font-size: 16px">name: </span>
+      {{ detail.name }}
+    </p>
+    <p>
+      <span style="font-weight: bold;font-size: 16px">token_id: </span>
+      {{ detail.token_id }}
+    </p>
+    <p>
+      <span style="font-weight: bold;font-size: 16px"
+        >from_account_address:
+      </span>
+      {{ detail.from_account_address }}
+    </p>
+
+    <p>
+      <span style="font-weight: bold;font-size: 16px"
+        >to_account_address:
+      </span>
+      {{ detail.to_account_address }}
+    </p>
+
+    <p>
+      <span style="font-weight: bold;font-size: 16px">external_link: </span
+      ><a target="_blank" :href="detail.href">{{ detail.external_link }}</a>
     </p>
   </a-modal>
 </template>
