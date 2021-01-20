@@ -17,6 +17,9 @@ export default {
     return api.get({ url: "/article/comments/" + id });
   },
   submitComment: (id, myComment) => {
-    return api.post({ url: "/article/submit_comment", data: { id: id, comment: myComment } });
-  }
+    return api.post({
+      url: "/article/submit_comment",
+      data: { id: id, comment: myComment },
+    });
+  },
 };

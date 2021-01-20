@@ -10,7 +10,7 @@
       {{ group.name }}</a-row
     >
     <a-row type="flex" justify="space-around">
-      <a-col :span="4" v-for="image in group.images" :key="image.id">
+      <a-col :span="5" v-for="image in group.images" :key="image.id">
         <a-card>
           <template #cover>
             <img
