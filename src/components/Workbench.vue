@@ -1,13 +1,13 @@
 <template>
   <a-card
-    :title="(current ? current.symbol : '') + ' price volatility'"
+    :title="(current ? current.symbol : '') + ' price change'"
     :tab-list="tabs"
     @tabChange="(key) => changeTab(key)"
     style="text-align: left"
   >
     <div ref="container" id="container"></div>
   </a-card>
-  <a-card title="my collections" style="text-align: left;">
+  <a-card title="my collections" style="text-align: left;font-weight: bold; ">
     <a-table
       :columns="columns"
       :data-source="data"

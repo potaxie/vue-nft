@@ -24,5 +24,5 @@ export default {
   },
   cancelCollect: (id) => {
     return api.get({ url: "/cancel_collection/" + id });
-  }
+  },
 };

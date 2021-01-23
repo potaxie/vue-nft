@@ -1,21 +1,21 @@
 <template>
   <h1 style="font-weight: bold; font-size: 50px; margin-bottom: 50px">
-    🌟 Welcome Art Social! 🌟
+    🌟 Welcome NFT Social! 🌟
   </h1>
 
   <div v-for="group in groups" :key="group.name" style="margin-bottom: 30px">
     <a-row
-      style="text-align: left; font-size: 32px; font-weight: bold; margin-bottom: 10px"
+      style="text-align: left; font-size: 32px; font-family: Roboto,-apple-system,BlinkMacSystemFont,Arial,sans-serif;sans-serif;font-weight: bold; margin-bottom: 10px;color: #3291E6"
     >
       {{ group.name }}</a-row
     >
     <a-row type="flex" justify="space-around">
-      <a-col :span="5" v-for="image in group.images" :key="image.id">
+      <a-col :span="4" v-for="image in group.images" :key="image.id">
         <a-card>
           <template #cover>
             <img
               :src="'data:image/png;base64,' + image.src"
-              height="260"
+              height="240"
               @click="handleImage(image)"
             />
           </template>
@@ -24,7 +24,7 @@
               <span style="font-size: 16px">{{ image.description }}</span
               ><br />
               <span style="color: green; font-size: 16px; font-weight: bold">
-                ${{ image.price }}</span
+                {{ image.price }} ETH</span
               >
               <br />
               <a href="javascript:;" @click="star(image)">
@@ -61,6 +61,15 @@
         >to_account_address:
       </span>
       {{ detail.to_account_address }}
+    </p>
+    <p>
+      <span style="font-weight: bold;font-size: 16px">transaction_hash: </span>
+      {{ detail.transaction_hash }}
+    </p>
+
+    <p>
+      <span style="font-weight: bold;font-size: 16px">transaction_time: </span>
+      {{ detail.transaction_time }}
     </p>
 
     <p>
