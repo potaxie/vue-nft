@@ -15,5 +15,5 @@ export default {
   },
   update: (data) => {
     return api.post({ url: "/setting", data: data });
-  }
+  },
 };

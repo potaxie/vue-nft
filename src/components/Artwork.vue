@@ -1,11 +1,11 @@
 <template>
   <h1 style="font-weight: bold; font-size: 50px; margin-bottom: 50px">
-    🌟 Welcome Art Social! 🌟
+    🌟 Welcome NFT Social! 🌟
   </h1>
 
   <div v-for="group in groups" :key="group.name" style="margin-bottom: 30px">
     <a-row
-      style="text-align: left; font-size: 32px; font-weight: bold; margin-bottom: 10px"
+      style="text-align: left; font-size: 32px; font-family: Roboto,-apple-system,BlinkMacSystemFont,Arial,sans-serif;sans-serif;font-weight: bold; margin-bottom: 10px;color: #3291E6"
     >
       {{ group.name }}</a-row
     >
@@ -15,7 +15,7 @@
           <template #cover>
             <img
               :src="'data:image/png;base64,' + image.src"
-              height="260"
+              height="240"
               @click="handleImage(image)"
             />
           </template>
@@ -24,7 +24,7 @@
               <span style="font-size: 16px">{{ image.description }}</span
               ><br />
               <span style="color: green; font-size: 16px; font-weight: bold">
-                ${{ image.price }}</span
+                {{ image.price }} ETH</span
               >
               <br />
               <a href="javascript:;" @click="star(image)">
@@ -40,11 +40,41 @@
       </a-col>
     </a-row>
   </div>
-  <a-modal v-model:visible="showDetail" :footer="null">
-    <p><span style="font-weight: bold">名称: </span> {{ detail.name }}</p>
+  <a-modal v-model:visible="showDetail" :footer="null" style="font-size: 10px">
     <p>
-      <span style="font-weight: bold">链接: </span
-      ><a target="_blank" :href="detail.href">{{ detail.href }}</a>
+      <span style="font-weight: bold;font-size: 16px">name: </span>
+      {{ detail.name }}
+    </p>
+    <p>
+      <span style="font-weight: bold;font-size: 16px">token_id: </span>
+      {{ detail.token_id }}
+    </p>
+    <p>
+      <span style="font-weight: bold;font-size: 16px"
+        >from_account_address:
+      </span>
+      {{ detail.from_account_address }}
+    </p>
+
+    <p>
+      <span style="font-weight: bold;font-size: 16px"
+        >to_account_address:
+      </span>
+      {{ detail.to_account_address }}
+    </p>
+    <p>
+      <span style="font-weight: bold;font-size: 16px">transaction_hash: </span>
+      {{ detail.transaction_hash }}
+    </p>
+
+    <p>
+      <span style="font-weight: bold;font-size: 16px">transaction_time: </span>
+      {{ detail.transaction_time }}
+    </p>
+
+    <p>
+      <span style="font-weight: bold;font-size: 16px">external_link: </span
+      ><a target="_blank" :href="detail.href">{{ detail.external_link }}</a>
     </p>
   </a-modal>
 </template>

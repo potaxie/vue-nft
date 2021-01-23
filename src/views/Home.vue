@@ -12,8 +12,8 @@
             @click="handleSelect"
             :style="{ lineHeight: '50px', fontWeight: 'bold' }"
           >
-            <a-menu-item key="artwork"> Home </a-menu-item>
-            <a-menu-item key="workbench"> DataAnalysis </a-menu-item>
+            <a-menu-item key="artwork"> View </a-menu-item>
+            <a-menu-item key="workbench"> Option </a-menu-item>
             <a-menu-item key="market-place"> MarketPlace </a-menu-item>
             <a-menu-item key="article"> Article </a-menu-item>
           </a-menu></a-col
@@ -67,7 +67,12 @@
     @ok="handleOk"
     @cancel="showUserModal = false"
   >
-    <a-form ref="form" :model="form" :label-col="{ span: 4 }" :wrapper-col="{ span: 18 }">
+    <a-form
+      ref="form"
+      :model="form"
+      :label-col="{ span: 4 }"
+      :wrapper-col="{ span: 18 }"
+    >
       <a-form-item label="Username" name="username">
         <a-input v-model:value="form.username" disabled />
       </a-form-item>

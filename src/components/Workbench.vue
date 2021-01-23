@@ -1,13 +1,13 @@
 <template>
   <a-card
-    :title="(current ? current.symbol : '') + '统计'"
+    :title="(current ? current.symbol : '') + ' price change'"
     :tab-list="tabs"
     @tabChange="(key) => changeTab(key)"
     style="text-align: left"
   >
     <div ref="container" id="container"></div>
   </a-card>
-  <a-card title="明细" style="text-align: left;">
+  <a-card title="my collections" style="text-align: left;font-weight: bold; ">
     <a-table
       :columns="columns"
       :data-source="data"
@@ -37,16 +37,16 @@ const columns = [
     slots: { customRender: "symbol" },
   },
   {
-    title: "WeekAvg",
-    dataIndex: "WeekAvg",
+    title: "token_id",
+    dataIndex: "token_id",
   },
   {
-    title: "lastPrice",
-    dataIndex: "lastPrice",
+    title: "price",
+    dataIndex: "price",
   },
   {
-    title: "ratio",
-    dataIndex: "ratio",
+    title: "name",
+    dataIndex: "name",
   },
 ];
 export default {
@@ -76,10 +76,12 @@ export default {
     },
     refresh() {
       let that = this;
-      api.list(this.choice, this.current ? this.current.symbol : null).then((res) => {
-        that.chart.source(res.data);
-        that.chart.render();
-      });
+      api
+        .list(this.choice, this.current ? this.current.symbol : null)
+        .then((res) => {
+          that.chart.source(res.data);
+          that.chart.render();
+        });
     },
     detail() {
       api.detail().then((res) => {
@@ -98,14 +100,16 @@ export default {
       container: "container",
       autoFit: true,
       width: scrollWidth,
-      height: 250,
-      padding: [30, 40, 20, 30],
+      height: 200,
+      padding: [40, 40, 20, 40],
     });
-    this.chart.line().position("date*sum").tooltip({
-      showMarkers: false,
-    });
+    this.chart
+      .line()
+      .position("date*price")
+      .tooltip({
+        showMarkers: false,
+      });
     this.detail();
   },
 };
 </script>
-
