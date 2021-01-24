@@ -13,8 +13,8 @@
             :style="{ lineHeight: '50px', fontWeight: 'bold' }"
           >
             <a-menu-item key="artwork"> View </a-menu-item>
-            <a-menu-item key="workbench"> Option </a-menu-item>
             <a-menu-item key="market-place"> MarketPlace </a-menu-item>
+             <a-menu-item key="workbench"> Option </a-menu-item>
             <a-menu-item key="article"> Article </a-menu-item>
           </a-menu></a-col
         >

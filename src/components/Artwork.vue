@@ -14,7 +14,7 @@
         <a-card>
           <template #cover>
             <img
-              :src="'data:image/png;base64,' + image.src"
+              :src="'/app/file/get/' + image.id"
               height="280"
               @click="handleImage(image)"
             />
@@ -57,69 +57,41 @@
       </a-col>
     </a-row>
   </div>
-  <a-modal
-    title="Information"
-    :width="410"
-    v-model:visible="showDetail"
-    :footer="null"
-    style="font-size: 10px"
-    wrapClassName="information"
-  >
-    <p>
-      <span style="font-weight: bold; font-size: 16px">name: </span>
-      {{ detail.name }}
-    </p>
-    <p>
-      <span style="font-weight: bold; font-size: 16px">token_id: </span>
-      {{ detail.token_id }}
-    </p>
-    <p>
-      <span style="font-weight: bold; font-size: 16px">transaction_time: </span>
-      {{ detail.transaction_time }}
-    </p>
-    <p>
-      <span style="font-weight: bold; font-size: 16px">transaction_hash: </span>
-      {{ detail.transaction_hash }}
-    </p>
-    <p>
-      <span style="font-weight: bold; font-size: 16px">from_account_address: </span>
-      <span>{{ detail.from_account_address }}</span>
-    </p>
-
-    <p>
-      <span style="font-weight: bold; font-size: 16px">to_account_address: </span>
-      {{ detail.to_account_address }}
-    </p>
-    <p>
-      <span style="font-weight: bold; font-size: 16px">external_link: </span
-      ><a target="_blank" :href="detail.href">{{ detail.external_link }}</a>
-    </p>
-  </a-modal>
+  <image-detail ref="image-detail" />
 </template>
 <script>
 import { StarOutlined, StarFilled } from "@ant-design/icons-vue";
 import { message } from "ant-design-vue";
+import { mapGetters } from "vuex";
+import ImageDetail from "@/components/ImageDetail";
 import api from "@/api/module";
 export default {
   components: {
     StarOutlined,
     StarFilled,
+    ImageDetail,
+  },
+  computed: {
+    ...mapGetters(["getCurrentUser"]),
   },
   data() {
     return {
-      showDetail: false,
-      detail: {},
       groups: [],
     };
   },
   methods: {
     handleImage(image) {
       api.marketPlaceDetail(image.id).then((res) => {
-        this.detail = res.data;
-        this.showDetail = true;
+        let imageDetail = this.$refs["image-detail"];
+        imageDetail.detail = res.data;
+        imageDetail.showDetail = true;
       });
     },
     star(image) {
+      if (!this.getCurrentUser()) {
+        message.warn("Please sign in...");
+        return;
+      }
       if (image.stared) {
         api.cancelCollect(image.id).then((res) => {
           if (res.data.code === 1) {

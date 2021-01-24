@@ -1,43 +1,63 @@
 <template>
   <a-card
-    :title="(current ? current.symbol : '') + ' price change'"
+    :title="(current ? current.name : '') + ' price change'"
     :tab-list="tabs"
     @tabChange="(key) => changeTab(key)"
     style="text-align: left"
   >
     <div ref="container" id="container"></div>
   </a-card>
-  <a-card title="my collections" style="text-align: left;font-weight: bold; ">
+  <a-card title="my collections" style="text-align: left; font-weight: bold">
     <a-table
       :columns="columns"
       :data-source="data"
       :scroll="{ y: 300 }"
       :pagination="false"
+      rowKey="token_id"
       size="middle"
     >
-      <template #symbol="{ record }">
+      <template #name="{ record }">
         <a
           href="javascript:;"
           @click="
             current = record;
             refresh();
           "
-          >{{ record.symbol }}</a
+          >{{ record.name }}</a
         >
+      </template>
+      <template #image="{ record }">
+        <a-avatar
+          size="large"
+          shape="square"
+          :src="'/app/file/get/' + record.image"
+          @click="onImageDetail(record)"
+        />
       </template>
     </a-table>
   </a-card>
+  <image-detail ref="image-detail" />
 </template>
 <script>
+import ImageDetail from "@/components/ImageDetail";
 import api from "@/api/module";
 const columns = [
   {
-    title: "symbol",
-    dataIndex: "symbol",
-    slots: { customRender: "symbol" },
+    title: "Name",
+    dataIndex: "name",
+    slots: { customRender: "name" },
   },
   {
-    title: "token_id",
+    title: "Image",
+    dataIndex: "image",
+    slots: { customRender: "image" },
+  },
+  {
+    title: "Symbol",
+    dataIndex: "symbol",
+  },
+  {
+    title: "Token_id",
     dataIndex: "token_id",
   },
   {
@@ -45,11 +65,14 @@ const columns = [
     dataIndex: "price",
   },
   {
-    title: "name",
-    dataIndex: "name",
+    title: "Time",
+    dataIndex: "time",
   },
 ];
 export default {
+  components: {
+    ImageDetail,
+  },
   data() {
     return {
       data: [],
@@ -76,12 +99,17 @@ export default {
     },
     refresh() {
       let that = this;
-      api
-        .list(this.choice, this.current ? this.current.symbol : null)
-        .then((res) => {
-          that.chart.source(res.data);
-          that.chart.render();
-        });
+      api.list(this.choice, this.current ? this.current.token_id : null).then((res) => {
+        that.chart.source(res.data);
+        that.chart.render();
+      });
+    },
+    onImageDetail(record) {
+      api.marketPlaceDetail(record.image).then((res) => {
+        let imageDetail = this.$refs["image-detail"];
+        imageDetail.detail = res.data;
+        imageDetail.showDetail = true;
+      });
     },
     detail() {
       api.detail().then((res) => {
@@ -103,12 +131,9 @@ export default {
       height: 200,
       padding: [40, 40, 20, 40],
     });
-    this.chart
-      .line()
-      .position("date*price")
-      .tooltip({
-        showMarkers: false,
-      });
+    this.chart.line().position("date*price").tooltip({
+      showMarkers: false,
+    });
     this.detail();
   },
 };

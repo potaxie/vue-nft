@@ -13,64 +13,61 @@
       :data-source="data"
       :pagination="false"
       :scroll="{ y: 300 }"
+      rowKey="token_id"
       size="middle"
     >
-      <template #Token="{ text }">
-        <a>{{ text }}</a>
-      </template>
-      <template #Image="{ record }">
+      <template #image="{ record }">
         <a-avatar
           size="large"
           shape="square"
-          :src="'data:image/png;base64,' + record.Image"
-          @click="imageDetail(record)"
+          :src="'/app/file/get/' + record.image"
+          @click="onImageDetail(record)"
         />
       </template>
     </a-table>
   </a-card>
-  <a-modal v-model:visible="showImageDetail" :footer="null">
-    <p>
-      <span style="font-weight: bold">名称</span><br />
-      {{ detail.name }}
-    </p>
-    <p>
-      <a target="_blank" :href="detail.href">{{ detail.href }}</a>
-    </p>
-  </a-modal>
+  <image-detail ref="image-detail" />
 </template>
 <script>
+import ImageDetail from "@/components/ImageDetail";
 import api from "@/api/module";
+const columns = [
+  {
+    title: "Name",
+    dataIndex: "name",
+  },
+  {
+    title: "Image",
+    dataIndex: "image",
+    slots: { customRender: "image" },
+  },
+  {
+    title: "Symbol",
+    dataIndex: "symbol",
+  },
+  {
+    title: "Token_id",
+    dataIndex: "token_id",
+  },
+  {
+    title: "price",
+    dataIndex: "price",
+  },
+  {
+    title: "Time",
+    dataIndex: "time",
+  },
+];
 export default {
+  components: {
+    ImageDetail,
+  },
   data() {
     return {
-      showImageDetail: false,
       chart: undefined,
-      detail: {},
       data: [],
-      columns: [
-        {
-          title: "Token",
-          dataIndex: "Token",
-          slots: { customRender: "Token" },
-        },
-        {
-          title: "AssetId",
-          dataIndex: "AssetId",
-        },
-        {
-          title: "Image",
-          dataIndex: "Image",
-          slots: { customRender: "Image" },
-        },
-        {
-          title: "Price",
-          dataIndex: "Price",
-        },
-        {
-          title: "SaleDate",
-          dataIndex: "SaleDate",
-        },
-      ],
+      columns: columns,
+      choice: "7",
       tabs: [
         {
           key: "7",
@@ -84,27 +81,29 @@ export default {
     };
   },
   methods: {
-    imageDetail(record) {
-      api.marketPlaceDetail(record.Token).then((res) => {
-        this.detail = res.data;
-        this.showImageDetail = true;
+    onImageDetail(record) {
+      api.marketPlaceDetail(record.image).then((res) => {
+        let imageDetail = this.$refs["image-detail"];
+        imageDetail.detail = res.data;
+        imageDetail.showDetail = true;
       });
     },
     changeTab(name) {
-      this.refresh(name);
+      this.choice = name;
+      this.refresh();
     },
-    refresh(choice) {
+    refresh() {
       let that = this;
-      api.marketPlaceAnalysis(choice).then((res) => {
+      api.marketPlaceAnalysis(this.choice).then((res) => {
         that.chart.source(res.data);
         that.chart.render();
+      });
+      api.marketPlaceList(this.choice).then((res) => {
+        this.data = res.data;
       });
     },
   },
   mounted() {
-    api.marketPlaceList().then((res) => {
-      this.data = res.data;
-    });
     let containerRef = this.$refs["container"];
     let scrollWidth = containerRef.scrollWidth;
     this.chart = new this.G2.Chart({
@@ -126,17 +125,9 @@ export default {
       showCrosshairs: true,
       shared: true,
     });
-    this.chart
-      .line()
-      .position("month*temperature")
-      .color("city")
-      .shape("smooth");
-    this.chart
-      .point()
-      .position("month*temperature")
-      .color("city")
-      .shape("circle");
-    this.refresh(7);
+    this.chart.line().position("month*temperature").color("city").shape("smooth");
+    this.chart.point().position("month*temperature").color("city").shape("circle");
+    this.refresh();
   },
 };
 </script>
