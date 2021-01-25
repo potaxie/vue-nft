@@ -7,8 +7,8 @@ export default {
   detail: () => {
     return api.get({ url: "/binance_data_detail" });
   },
-  marketPlaceList: () => {
-    return api.get({ url: "/request_picture/test" });
+  marketPlaceList: (choice) => {
+    return api.get({ url: "/request_picture/" + choice });
   },
   marketPlaceDetail: (id) => {
     return api.get({ url: "/request_picture_detail/" + id });

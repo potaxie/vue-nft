@@ -9,20 +9,37 @@
     >
       {{ group.name }}</a-row
     >
-    <a-row type="flex" justify="space-around">
+    <a-row :gutter="20" type="flex" justify="start">
       <a-col :span="4" v-for="image in group.images" :key="image.id">
         <a-card>
           <template #cover>
             <img
-              :src="'data:image/png;base64,' + image.src"
-              height="240"
+              :src="'/app/file/get/' + image.id"
+              height="280"
               @click="handleImage(image)"
             />
           </template>
           <a-card-meta :title="image.name">
             <template #description>
-              <span style="font-size: 16px">{{ image.description }}</span
-              ><br />
+              <a-tooltip>
+                <template #title>
+                  {{ image.description }}
+                </template>
+                <div
+                  style="
+                    font-size: 16px;
+                    -webkit-line-clamp: 2;
+                    display: -webkit-box;
+                    -webkit-box-orient: vertical;
+                    text-overflow: ellipsis;
+                    word-break: break-all;
+                    overflow: hidden;
+                  "
+                >
+                  {{ image.description }}
+                </div>
+              </a-tooltip>
+
               <span style="color: green; font-size: 16px; font-weight: bold">
                 {{ image.price }} ETH</span
               >
@@ -40,68 +57,41 @@
       </a-col>
     </a-row>
   </div>
-  <a-modal v-model:visible="showDetail" :footer="null" style="font-size: 10px">
-    <p>
-      <span style="font-weight: bold;font-size: 16px">name: </span>
-      {{ detail.name }}
-    </p>
-    <p>
-      <span style="font-weight: bold;font-size: 16px">token_id: </span>
-      {{ detail.token_id }}
-    </p>
-    <p>
-      <span style="font-weight: bold;font-size: 16px"
-        >from_account_address:
-      </span>
-      {{ detail.from_account_address }}
-    </p>
-
-    <p>
-      <span style="font-weight: bold;font-size: 16px"
-        >to_account_address:
-      </span>
-      {{ detail.to_account_address }}
-    </p>
-    <p>
-      <span style="font-weight: bold;font-size: 16px">transaction_hash: </span>
-      {{ detail.transaction_hash }}
-    </p>
-
-    <p>
-      <span style="font-weight: bold;font-size: 16px">transaction_time: </span>
-      {{ detail.transaction_time }}
-    </p>
-
-    <p>
-      <span style="font-weight: bold;font-size: 16px">external_link: </span
-      ><a target="_blank" :href="detail.href">{{ detail.external_link }}</a>
-    </p>
-  </a-modal>
+  <image-detail ref="image-detail" />
 </template>
 <script>
 import { StarOutlined, StarFilled } from "@ant-design/icons-vue";
 import { message } from "ant-design-vue";
+import { mapGetters } from "vuex";
+import ImageDetail from "@/components/ImageDetail";
 import api from "@/api/module";
 export default {
   components: {
     StarOutlined,
     StarFilled,
+    ImageDetail,
+  },
+  computed: {
+    ...mapGetters(["getCurrentUser"]),
   },
   data() {
     return {
-      showDetail: false,
-      detail: {},
       groups: [],
     };
   },
   methods: {
     handleImage(image) {
       api.marketPlaceDetail(image.id).then((res) => {
-        this.detail = res.data;
-        this.showDetail = true;
+        let imageDetail = this.$refs["image-detail"];
+        imageDetail.detail = res.data;
+        imageDetail.showDetail = true;
       });
     },
     star(image) {
+      if (!this.getCurrentUser()) {
+        message.warn("Please sign in...");
+        return;
+      }
       if (image.stared) {
         api.cancelCollect(image.id).then((res) => {
           if (res.data.code === 1) {
@@ -128,9 +118,14 @@ export default {
   },
 };
 </script>
-<style>
+<style lang="less">
 .ant-card-meta-detail > div:not(:last-child) {
   font-size: 24px;
   font-weight: bolder;
+}
+.information {
+  .ant-modal-title {
+    font-size: 21px;
+  }
 }
 </style>
