@@ -99,10 +99,12 @@ export default {
     },
     refresh() {
       let that = this;
-      api.list(this.choice, this.current ? this.current.token_id : null).then((res) => {
-        that.chart.source(res.data);
-        that.chart.render();
-      });
+      api
+        .list(this.choice, this.current ? this.current.token_id : null)
+        .then((res) => {
+          that.chart.source(res.data);
+          that.chart.render();
+        });
     },
     onImageDetail(record) {
       api.marketPlaceDetail(record.image).then((res) => {
@@ -131,9 +133,12 @@ export default {
       height: 200,
       padding: [40, 40, 20, 40],
     });
-    this.chart.line().position("date*price").tooltip({
-      showMarkers: false,
-    });
+    this.chart
+      .line()
+      .position("date*price")
+      .tooltip({
+        showMarkers: false,
+      });
     this.detail();
   },
 };

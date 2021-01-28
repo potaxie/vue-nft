@@ -12,12 +12,20 @@
     >
       <a-form-item>
         <a-input v-model:value="form.username" placeholder="Username">
-          <template #prefix><UserOutlined style="color: rgba(0, 0, 0, 0.25)" /></template>
+          <template #prefix
+            ><UserOutlined style="color: rgba(0, 0, 0, 0.25)"
+          /></template>
         </a-input>
       </a-form-item>
       <a-form-item>
-        <a-input v-model:value="form.password" type="password" placeholder="Password">
-          <template #prefix><LockOutlined style="color: rgba(0, 0, 0, 0.25)" /></template>
+        <a-input
+          v-model:value="form.password"
+          type="password"
+          placeholder="Password"
+        >
+          <template #prefix
+            ><LockOutlined style="color: rgba(0, 0, 0, 0.25)"
+          /></template>
         </a-input>
       </a-form-item>
       <a-form-item v-if="action === 'signup'">
@@ -26,7 +34,9 @@
           type="password"
           placeholder="Confirm Password"
         >
-          <template #prefix><LockOutlined style="color: rgba(0, 0, 0, 0.25)" /></template>
+          <template #prefix
+            ><LockOutlined style="color: rgba(0, 0, 0, 0.25)"
+          /></template>
         </a-input>
       </a-form-item>
       <a-form-item>
@@ -45,7 +55,9 @@
             type="primary"
             html-type="submit"
             :disabled="
-              form.user === '' || form.password === '' || form.confirmPassword === ''
+              form.user === '' ||
+                form.password === '' ||
+                form.confirmPassword === ''
             "
           >
             Create account

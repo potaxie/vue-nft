@@ -17,20 +17,28 @@
         {{ detail.token_id }}
       </p>
       <p>
-        <span style="font-weight: bold; font-size: 16px">transaction_time: </span>
+        <span style="font-weight: bold; font-size: 16px"
+          >transaction_time:
+        </span>
         {{ detail.transaction_time }}
       </p>
       <p>
-        <span style="font-weight: bold; font-size: 16px">transaction_hash: </span>
+        <span style="font-weight: bold; font-size: 16px"
+          >transaction_hash:
+        </span>
         {{ detail.transaction_hash }}
       </p>
       <p>
-        <span style="font-weight: bold; font-size: 16px">from_account_address: </span>
+        <span style="font-weight: bold; font-size: 16px"
+          >from_account_address:
+        </span>
         <span>{{ detail.from_account_address }}</span>
       </p>
 
       <p>
-        <span style="font-weight: bold; font-size: 16px">to_account_address: </span>
+        <span style="font-weight: bold; font-size: 16px"
+          >to_account_address:
+        </span>
         {{ detail.to_account_address }}
       </p>
       <p>
