@@ -7,8 +7,8 @@
     <a-row
       style="text-align: left; font-size: 32px; font-family: Roboto,-apple-system,BlinkMacSystemFont,Arial,sans-serif;sans-serif;font-weight: bold; margin-bottom: 10px;color: #3291E6"
     >
-      {{ group.name }}</a-row
-    >
+      {{ group.name }}
+    </a-row>
     <a-row :gutter="20" type="flex" justify="start">
       <a-col :span="4" v-for="image in group.images" :key="image.id">
         <a-card>
@@ -59,6 +59,7 @@
   </div>
   <image-detail ref="image-detail" />
 </template>
+
 <script>
 import { StarOutlined, StarFilled } from "@ant-design/icons-vue";
 import { message } from "ant-design-vue";
@@ -81,7 +82,7 @@ export default {
   },
   methods: {
     handleImage(image) {
-      api.marketPlaceDetail(image.id).then((res) => {
+      api.imageDetail(image.id).then((res) => {
         let imageDetail = this.$refs["image-detail"];
         imageDetail.detail = res.data;
         imageDetail.showDetail = true;
@@ -93,7 +94,7 @@ export default {
         return;
       }
       if (image.stared) {
-        api.cancelCollect(image.id).then((res) => {
+        api.nftWorkCancelCollect(image.id).then((res) => {
           if (res.data.code === 1) {
             image.stared = false;
           } else {
@@ -101,7 +102,7 @@ export default {
           }
         });
       } else {
-        api.collect(image.id).then((res) => {
+        api.nftWorkCollect(image.id).then((res) => {
           if (res.data.code === 1) {
             image.stared = true;
           } else {
