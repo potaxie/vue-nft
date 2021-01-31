@@ -1,5 +1,5 @@
 <template>
-  <div style="padding-left: 25%; padding-right: 25%">
+  <div class="blog" style="padding-left: 25%; padding-right: 25%">
     <a-card
       class="edit-article-card"
       title="Startpagina"
@@ -14,18 +14,15 @@
         :wrapper-col="{ span: 24 }"
       >
         <a-form-item name="content">
-          <a-textarea
-            v-model:value="form.content"
-            placeholder="..."
-            :rows="4"
-          />
+          <a-textarea v-model:value="form.content" placeholder="..." :rows="4" />
         </a-form-item>
         <a-form-item>
           <a-upload
+            name="file"
             list-type="picture"
             v-model:fileList="fileList"
-            :customRequest="customUpload"
             class="upload-list-inline"
+            action="/app/file/upload"
           >
             <a-button shape="circle"> <FileImageOutlined /> </a-button>
           </a-upload>
@@ -44,9 +41,9 @@
         <a-avatar
           v-if="article.head_avatar"
           :src="'/app/file/get/' + article.head_avatar"
-          :size="45"
+          :size="30"
         />
-        <a-avatar v-else :size="45">
+        <a-avatar v-else :size="30">
           <template #icon><UserOutlined /></template>
         </a-avatar>
         {{ article.username }}
@@ -54,12 +51,13 @@
       <p>{{ article.time }}</p>
       <p style="font-size: 15px; color: black">{{ article.content }}</p>
       <a-row type="flex" justify="space-between">
-        <a-col :span="24" v-for="image in article.picture" :key="image">
-          <a-image
-            :width="'100%'"
-            :height="350"
-            :src="'/app/file/get/' + image"
-          />
+        <a-col
+          :span="24"
+          style="margin-top: 3px"
+          v-for="image in article.picture"
+          :key="image"
+        >
+          <a-image :width="'70%'" :height="280" :src="'/app/file/get/' + image" />
         </a-col>
       </a-row>
       <a-row :gutter="16" style="margin-top: 5px; margin-left: 5px">
@@ -88,9 +86,7 @@
             v-model:value="article.myComment"
           >
             <template #addonAfter>
-              <a href="javascript:;" @click="submitComment(article)"
-                ><SendOutlined
-              /></a>
+              <a href="javascript:;" @click="submitComment(article)"><SendOutlined /></a>
             </template>
           </a-input>
         </a-row>
@@ -101,10 +97,7 @@
         >
           <template #renderItem="{ item }">
             <a-list-item>
-              <a-comment
-                :author="item.author"
-                :avatar="'/app/file/get/' + item.avatar"
-              >
+              <a-comment :author="item.author" :avatar="'/app/file/get/' + item.avatar">
                 <template #content>
                   <p>
                     {{ item.content }}
@@ -112,9 +105,7 @@
                 </template>
                 <template #datetime>
                   <a-tooltip :title="item.time">
-                    <span>{{
-                      moment(item.time, "yyyy-MM-dd HH:mm:ss").fromNow()
-                    }}</span>
+                    <span>{{ moment(item.time, "yyyy-MM-dd HH:mm:ss").fromNow() }}</span>
                   </a-tooltip>
                 </template>
               </a-comment>
@@ -135,7 +126,7 @@ import {
   LikeFilled,
 } from "@ant-design/icons-vue";
 import { message } from "ant-design-vue";
-import api from "@/api/article";
+import api from "@/api/module";
 import { mapGetters } from "vuex";
 import moment from "moment";
 
@@ -156,9 +147,7 @@ export default {
       form: {},
       fileList: [],
       rules: {
-        content: [
-          { required: true, message: "Content is Empty.", trigger: "blur" },
-        ],
+        content: [{ required: true, message: "Content is Empty.", trigger: "blur" }],
       },
     };
   },
@@ -166,14 +155,6 @@ export default {
     ...mapGetters(["getCurrentUser"]),
   },
   methods: {
-    customUpload(e) {
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(e.file);
-      fileReader.onload = () => {
-        e.onProgress({ percent: 100 });
-        e.onSuccess(fileReader.result, e.file);
-      };
-    },
     onSubmit() {
       this.$refs.form.validate().then(() => {
         const files = this.fileList.map((f) => f.response);
@@ -182,7 +163,7 @@ export default {
           if (res.data.code === 1) {
             this.form = {};
             this.fileList = [];
-            message.success("发布成功");
+            message.success("success");
             this.list();
           } else {
             message.error(res.data.description);
@@ -191,7 +172,7 @@ export default {
       });
     },
     list() {
-      api.collectionList().then((res) => {
+      api.list().then((res) => {
         this.data = res.data;
       });
     },
@@ -251,40 +232,42 @@ export default {
 };
 </script>
 <style lang="less">
-.upload-list-inline ::v-deep(.ant-upload-list-item) {
-  float: left;
-  width: 200px;
-  margin-right: 8px;
-}
-.upload-list-inline ::v-deep(.ant-upload-animate-enter) {
-  animation-name: uploadAnimateInlineIn;
-}
-.upload-list-inline ::v-deep(.ant-upload-animate-leave) {
-  animation-name: uploadAnimateInlineOut;
-}
-.edit-article-card {
-  text-align: left;
-  margin-bottom: 20px;
-  .ant-card-body {
-    padding: 12px 24px;
+.blog {
+  .upload-list-inline ::v-deep(.ant-upload-list-item) {
+    float: left;
+    width: 200px;
+    margin-right: 8px;
   }
-  .ant-card-head {
-    min-height: 30px;
-    font-size: 13px;
+  .upload-list-inline ::v-deep(.ant-upload-animate-enter) {
+    animation-name: uploadAnimateInlineIn;
   }
-}
-.ant-image-img {
-  height: 100% !important;
-}
-.ant-form-item {
-  margin-bottom: 0 !important;
-}
-.ant-list-item {
-  padding: 0 !important;
-}
-.ant-comment-content-detail {
-  p {
+  .upload-list-inline ::v-deep(.ant-upload-animate-leave) {
+    animation-name: uploadAnimateInlineOut;
+  }
+  .edit-article-card {
+    text-align: left;
+    margin-bottom: 20px;
+    .ant-card-body {
+      padding: 12px 24px;
+    }
+    .ant-card-head {
+      min-height: 30px;
+      font-size: 13px;
+    }
+  }
+  .ant-image-img {
+    height: 100% !important;
+  }
+  .ant-form-item {
     margin-bottom: 0 !important;
+  }
+  .ant-list-item {
+    padding: 0 !important;
+  }
+  .ant-comment-content-detail {
+    p {
+      margin-bottom: 0 !important;
+    }
   }
 }
 </style>
