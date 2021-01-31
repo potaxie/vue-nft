@@ -3,7 +3,7 @@
     title="HISTORY VOLUME"
     :tab-list="tabs"
     @tabChange="(key) => changeTab(key)"
-    style="text-align: left; margin-bottom: 20px"
+    class="history-volume"
   >
     <div ref="container" id="container"></div>
   </a-card>
@@ -111,7 +111,7 @@ export default {
       autoFit: true,
       width: scrollWidth,
       height: 250,
-      padding: [30, 40, 20, 30],
+      padding: [30, 40, 60, 30],
     });
     this.chart.scale({
       month: {
@@ -125,17 +125,18 @@ export default {
       showCrosshairs: true,
       shared: true,
     });
-    this.chart
-      .line()
-      .position("month*temperature")
-      .color("city")
-      .shape("smooth");
-    this.chart
-      .point()
-      .position("month*temperature")
-      .color("city")
-      .shape("circle");
+    this.chart.point().position("month*temperature").color("city").shape("smooth");
+    this.chart.line().position("month*temperature").color("city").shape("smooth");
     this.refresh();
   },
 };
 </script>
+<style lang="less">
+.history-volume {
+  text-align: left;
+  margin-bottom: 20px;
+  .ant-card-body {
+    padding: 24px 24px 10px 25px;
+  }
+}
+</style>

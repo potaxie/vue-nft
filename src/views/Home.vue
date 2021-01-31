@@ -1,6 +1,7 @@
 <template>
   <a-layout id="admin-layout" class="layout"
-    ><a-layout-header style="text-align: left; line-height: 50px; height: 50px"
+    ><a-layout-header
+      style="text-align: left; line-height: 50px; height: 50px; padding: 0 0 0 50px"
       ><a-row
         ><a-col :span="1"><a-avatar src="/favicon.ico" :size="40" /></a-col
         ><a-col :span="16"
@@ -14,41 +15,35 @@
             ><a-menu-item key="Collection">Collection </a-menu-item
             ><a-menu-item key="Blog">Blog </a-menu-item></a-menu
           ></a-col
-        ><a-col :span="6" style="text-align: right"
-          ><span v-if="getCurrentUser()"
-            ><a-avatar
-              v-if="getCurrentUser().head_avatar"
-              :src="'/app/file/get/' + getCurrentUser().head_avatar"
-              :size="40"
-            /><a-avatar v-else :size="40"
-              ><template #icon><UserOutlined /></template></a-avatar
-            ><a-dropdown
-              ><a class="ant-dropdown-link" @click="(e) => e.preventDefault()">
+        ><a-col :span="6" style="text-align: right">
+          <a-dropdown v-if="getCurrentUser()">
+            <a-space>
+              <a-avatar
+                v-if="getCurrentUser().head_avatar"
+                :src="'/app/file/get/' + getCurrentUser().head_avatar"
+                :size="28"
+              /><a-avatar v-else :size="28"
+                ><template #icon><UserOutlined /></template
+              ></a-avatar>
+              <a class="ant-dropdown-link" @click="(e) => e.preventDefault()">
                 {{ getCurrentUser().nickname || getCurrentUser().username }}
-                <DownOutlined /></a
-              ><template #overlay
-                ><a-menu
-                  ><a-menu-item
-                    ><a href="javascript:;" @click="userSetting"
-                      >Setting</a
-                    ></a-menu-item
-                  ><a-menu-item
-                    ><a href="javascript:;" @click="logout"
-                      >Sign out</a
-                    ></a-menu-item
-                  ></a-menu
-                ></template
-              ></a-dropdown
-            ></span
-          ><a-button v-else type="link" @click="goLogin"
-            >Sign in</a-button
-          ></a-col
+              </a>
+            </a-space>
+            <template #overlay
+              ><a-menu
+                ><a-menu-item
+                  ><a href="javascript:;" @click="userSetting">Setting</a></a-menu-item
+                ><a-menu-item
+                  ><a href="javascript:;" @click="logout">Sign out</a></a-menu-item
+                ></a-menu
+              ></template
+            >
+          </a-dropdown>
+          <a-button v-else type="link" @click="goLogin">Sign in</a-button></a-col
         ></a-row
       ></a-layout-header
     ><a-layout-content
-      ><div
-        :style="{ background: '#fff', padding: '24px', minHeight: '280px' }"
-      >
+      ><div :style="{ background: '#fff', padding: '24px', minHeight: '280px' }">
         <NftWork v-if="current === 'NftWork'" /><Collection
           v-if="current === 'Collection'"
         /><MarketPlace v-if="current === 'MarketPlace'" /><Blog
@@ -62,11 +57,7 @@
     title="User Setting"
     @ok="handleOk"
     @cancel="showUserModal = false"
-    ><a-form
-      ref="form"
-      :model="form"
-      :label-col="{ span: 4 }"
-      :wrapper-col="{ span: 18 }"
+    ><a-form ref="form" :model="form" :label-col="{ span: 4 }" :wrapper-col="{ span: 18 }"
       ><a-form-item label="Username" name="username"
         ><a-input v-model:value="form.username" disabled /></a-form-item
       ><a-form-item label="Nickname"
@@ -101,12 +92,7 @@ import Collection from "@/components/Collection";
 import MarketPlace from "@/components/MarketPlace";
 import Blog from "@/components/Blog";
 
-import {
-  DownOutlined,
-  UserOutlined,
-  PlusOutlined,
-  LoadingOutlined,
-} from "@ant-design/icons-vue";
+import { UserOutlined, PlusOutlined, LoadingOutlined } from "@ant-design/icons-vue";
 
 import { mapGetters, mapActions } from "vuex";
 
@@ -119,7 +105,6 @@ export default {
     Collection,
     MarketPlace,
     Blog,
-    DownOutlined,
     UserOutlined,
     PlusOutlined,
     LoadingOutlined,
@@ -199,11 +184,9 @@ export default {
 <style lang="less">
 #admin-layout {
   min-height: 100%;
-
   .logo {
     float: left;
     line-height: 50px;
-
     img {
       vertical-align: middle;
       width: 45px;
