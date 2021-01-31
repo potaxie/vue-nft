@@ -24,8 +24,7 @@
               ><template #icon><UserOutlined /></template></a-avatar
             ><a-dropdown
               ><a class="ant-dropdown-link" @click="(e) => e.preventDefault()">
-                { { getCurrentUser().nickname || getCurrentUser().username } }
-
+                {{ getCurrentUser().nickname || getCurrentUser().username }}
                 <DownOutlined /></a
               ><template #overlay
                 ><a-menu

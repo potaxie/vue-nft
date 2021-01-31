@@ -1,13 +1,16 @@
 <template>
   <a-card
-    :title="(current ? current.name : '') + ' price change'"
+    :title="(current ? current.name : '') + ':PRICE VERB '"
     :tab-list="tabs"
     @tabChange="(key) => changeTab(key)"
     style="text-align: left"
   >
     <div ref="container" id="container"></div>
   </a-card>
-  <a-card title="my collections" style="text-align: left; font-weight: bold">
+  <a-card
+    title="PERSON COLLECTIONS"
+    style="text-align: left; font-weight: bold"
+  >
     <a-table
       :columns="columns"
       :data-source="data"
@@ -100,21 +103,24 @@ export default {
     refresh() {
       let that = this;
       api
-        .list(this.choice, this.current ? this.current.token_id : null)
+        .collectionList(
+          this.choice,
+          this.current ? this.current.token_id : null
+        )
         .then((res) => {
           that.chart.source(res.data);
           that.chart.render();
         });
     },
     onImageDetail(record) {
-      api.marketPlaceDetail(record.image).then((res) => {
+      api.imageDetail(record.image).then((res) => {
         let imageDetail = this.$refs["image-detail"];
         imageDetail.detail = res.data;
         imageDetail.showDetail = true;
       });
     },
     detail() {
-      api.detail().then((res) => {
+      api.collectionDetail().then((res) => {
         this.data = res.data;
         if (this.data) {
           this.current = this.data[0];

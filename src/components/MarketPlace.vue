@@ -1,13 +1,13 @@
 <template>
   <a-card
-    title="HISTORY CHART"
+    title="HISTORY VOLUME"
     :tab-list="tabs"
     @tabChange="(key) => changeTab(key)"
     style="text-align: left; margin-bottom: 20px"
   >
     <div ref="container" id="container"></div>
   </a-card>
-  <a-card title="SALES HISTORY" style="text-align: left">
+  <a-card title="HISTORY SALES" style="text-align: left">
     <a-table
       :columns="columns"
       :data-source="data"
@@ -82,7 +82,7 @@ export default {
   },
   methods: {
     onImageDetail(record) {
-      api.marketPlaceDetail(record.image).then((res) => {
+      api.imageDetail(record.image).then((res) => {
         let imageDetail = this.$refs["image-detail"];
         imageDetail.detail = res.data;
         imageDetail.showDetail = true;

@@ -191,7 +191,7 @@ export default {
       });
     },
     list() {
-      api.list().then((res) => {
+      api.collectionList().then((res) => {
         this.data = res.data;
       });
     },
