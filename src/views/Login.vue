@@ -1,10 +1,12 @@
 <template>
   <div class="login-container">
     <div class="top">
-      <a-avatar src="/favicon.ico" :size="60" />
-      <span class="title">Potaxie NFT</span>
+      <a-avatar src="/favicon.ico" :size="50" />
+      <span class="title">Ginkgo</span>
     </div>
-    <div class="desc">Welcome to Potaxie NFT</div>
+    <div class="desc">
+      <span> </span>
+    </div>
     <div class="main">
       <a-form
         :model="form"
@@ -14,7 +16,11 @@
         @submit.prevent
       >
         <a-form-item>
-          <a-input v-model:value="form.username" size="large" placeholder="Username">
+          <a-input
+            v-model:value="form.username"
+            size="large"
+            placeholder="Username"
+          >
             <template #prefix>
               <UserOutlined style="color: rgba(0, 0, 0, 0.25)" />
             </template>
@@ -43,7 +49,9 @@
           </a-input-password>
         </a-form-item>
         <a-form-item style="text-align: left" v-if="action === 'login'">
-          <a-checkbox v-model:checked="form['remember-me']">Remember me</a-checkbox>
+          <a-checkbox v-model:checked="form['remember-me']"
+            >Remember me</a-checkbox
+          >
           <a
             style="float: right; line-height: 40px"
             href="javascript:;;"
@@ -66,12 +74,12 @@
             type="primary"
             html-type="submit"
             size="large"
-            >{{ action === 'login' ? "Sign In" : "Create Account" }}</a-button
+            >{{ action === "login" ? "Sign In" : "Create Account" }}</a-button
           >
         </a-form-item>
       </a-form>
     </div>
-    <div class="copyright">Copyright © 2020 novicezk</div>
+    <div class="copyright">Copyright © 2020 Ginkgo</div>
   </div>
 </template>
 <script>

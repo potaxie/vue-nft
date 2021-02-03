@@ -2,7 +2,7 @@
   <div class="blog" style="padding-left: 25%; padding-right: 25%">
     <a-card
       class="edit-article-card"
-      title="Startpagina"
+      title="Your Blog"
       style="text-align: left; margin-bottom: 20px"
       v-if="getCurrentUser()"
     >
@@ -14,7 +14,11 @@
         :wrapper-col="{ span: 24 }"
       >
         <a-form-item name="content">
-          <a-textarea v-model:value="form.content" placeholder="..." :rows="4" />
+          <a-textarea
+            v-model:value="form.content"
+            placeholder="..."
+            :rows="4"
+          />
         </a-form-item>
         <a-form-item>
           <a-upload
@@ -24,7 +28,7 @@
             class="upload-list-inline"
             action="/app/file/upload"
           >
-            <a-button shape="circle"> <FileImageOutlined /> </a-button>
+            <a-button shape="circle"> <FileImageOutlined /> </a-button> image
           </a-upload>
           <div style="text-align: right">
             <a-button type="primary" @click="onSubmit"> Submit </a-button>
@@ -37,7 +41,7 @@
       :key="article.id"
       style="text-align: left; margin-bottom: 10px"
     >
-      <p style="font-weight: 900; font-size: 22px">
+      <p style="font-weight: bold; font-size: 25px">
         <a-avatar
           v-if="article.head_avatar"
           :src="'/app/file/get/' + article.head_avatar"
@@ -57,7 +61,11 @@
           v-for="image in article.picture"
           :key="image"
         >
-          <a-image :width="'70%'" :height="280" :src="'/app/file/get/' + image" />
+          <a-image
+            :width="'70%'"
+            :height="280"
+            :src="'/app/file/get/' + image"
+          />
         </a-col>
       </a-row>
       <a-row :gutter="16" style="margin-top: 5px; margin-left: 5px">
@@ -86,7 +94,9 @@
             v-model:value="article.myComment"
           >
             <template #addonAfter>
-              <a href="javascript:;" @click="submitComment(article)"><SendOutlined /></a>
+              <a href="javascript:;" @click="submitComment(article)"
+                ><SendOutlined
+              /></a>
             </template>
           </a-input>
         </a-row>
@@ -97,7 +107,10 @@
         >
           <template #renderItem="{ item }">
             <a-list-item>
-              <a-comment :author="item.author" :avatar="'/app/file/get/' + item.avatar">
+              <a-comment
+                :author="item.author"
+                :avatar="'/app/file/get/' + item.avatar"
+              >
                 <template #content>
                   <p>
                     {{ item.content }}
@@ -105,7 +118,9 @@
                 </template>
                 <template #datetime>
                   <a-tooltip :title="item.time">
-                    <span>{{ moment(item.time, "yyyy-MM-dd HH:mm:ss").fromNow() }}</span>
+                    <span>{{
+                      moment(item.time, "yyyy-MM-dd HH:mm:ss").fromNow()
+                    }}</span>
                   </a-tooltip>
                 </template>
               </a-comment>
@@ -147,7 +162,9 @@ export default {
       form: {},
       fileList: [],
       rules: {
-        content: [{ required: true, message: "Content is Empty.", trigger: "blur" }],
+        content: [
+          { required: true, message: "Content is Empty.", trigger: "blur" },
+        ],
       },
     };
   },
