@@ -114,10 +114,10 @@ export default {
       padding: [30, 40, 60, 30],
     });
     this.chart.scale({
-      month: {
+      day: {
         range: [0, 1],
       },
-      temperature: {
+      volume: {
         nice: true,
       },
     });
@@ -125,8 +125,16 @@ export default {
       showCrosshairs: true,
       shared: true,
     });
-    this.chart.point().position("month*temperature").color("city").shape("smooth");
-    this.chart.line().position("month*temperature").color("city").shape("smooth");
+    this.chart
+      .point()
+      .position("day*volume")
+      .color("contract_name")
+      .shape("smooth");
+    this.chart
+      .line()
+      .position("day*volume")
+      .color("contract_name")
+      .shape("smooth");
     this.refresh();
   },
 };
