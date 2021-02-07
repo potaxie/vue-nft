@@ -7,7 +7,12 @@
   >
     <div ref="container" id="container"></div>
   </a-card>
-  <a-card title="Sale History" style="text-align: left">
+  <a-card
+    class="sale-history"
+    :tab-list="symbolTabs"
+    @tabChange="(key) => changeSymbolTab(key)"
+    title="Sale History"
+  >
     <a-table
       :columns="columns"
       :data-source="data"
@@ -20,7 +25,7 @@
         <a-avatar
           size="large"
           shape="square"
-          :src="'/app/file/get/' + record.image"
+          :src="'/app/file/get/' + record.image + '?flag=tumbnail'"
           @click="onImageDetail(record)"
         />
       </template>
@@ -68,14 +73,33 @@ export default {
       data: [],
       columns: columns,
       choice: "7",
+      symbol: "All",
+      symbolTabs: [
+        {
+          key: "All",
+          tab: "All",
+        },
+        {
+          key: "Hashmasks",
+          tab: "Hashmasks",
+        },
+        {
+          key: "CryptoKitties",
+          tab: "CryptoKitties",
+        },
+        {
+          key: "CryptoPunks",
+          tab: "CryptoPunks",
+        },
+      ],
       tabs: [
         {
           key: "7",
-          tab: "近一周",
+          tab: "Last week",
         },
         {
           key: "14",
-          tab: "近两周",
+          tab: "Last two week",
         },
       ],
     };
@@ -92,13 +116,19 @@ export default {
       this.choice = name;
       this.refresh();
     },
+    changeSymbolTab(name) {
+      this.symbol = name;
+      api.marketPlaceList(this.choice, this.symbol).then((res) => {
+        this.data = res.data;
+      });
+    },
     refresh() {
       let that = this;
       api.marketPlaceAnalysis(this.choice).then((res) => {
         that.chart.source(res.data);
         that.chart.render();
       });
-      api.marketPlaceList(this.choice).then((res) => {
+      api.marketPlaceList(this.choice, this.symbol).then((res) => {
         this.data = res.data;
       });
     },
@@ -125,16 +155,8 @@ export default {
       showCrosshairs: true,
       shared: true,
     });
-    this.chart
-      .point()
-      .position("day*volume")
-      .color("contract_name")
-      .shape("smooth");
-    this.chart
-      .line()
-      .position("day*volume")
-      .color("contract_name")
-      .shape("smooth");
+    this.chart.point().position("day*volume").color("contract_name").shape("smooth");
+    this.chart.line().position("day*volume").color("contract_name").shape("smooth");
     this.refresh();
   },
 };
@@ -143,8 +165,17 @@ export default {
 .history-volume {
   text-align: left;
   margin-bottom: 20px;
+  .ant-tabs-tab {
+    font-size: 14px;
+  }
   .ant-card-body {
     padding: 24px 24px 10px 25px;
+  }
+}
+.sale-history {
+  text-align: left;
+  .ant-tabs-tab {
+    font-size: 14px;
   }
 }
 </style>

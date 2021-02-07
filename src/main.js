@@ -6,12 +6,19 @@ import Antd from "ant-design-vue";
 import { Form } from "ant-design-vue";
 import "ant-design-vue/dist/antd.css";
 import * as G2 from "@antv/g2";
+import VMdEditor from '@kangc/v-md-editor';
+import '@kangc/v-md-editor/lib/style/base-editor.css';
+import enUS from '@kangc/v-md-editor/lib/lang/en-US';
+import githubTheme from '@kangc/v-md-editor/lib/theme/github.js';
+import '@kangc/v-md-editor/lib/theme/style/github.css';
+VMdEditor.use(githubTheme);
+VMdEditor.lang.use('en-US', enUS);
 
 const app = createApp(App);
 app.config.globalProperties.G2 = G2;
-app
-  .use(store)
+app.use(store)
   .use(router)
   .use(Antd)
   .use(Form)
+  .use(VMdEditor)
   .mount("#app");

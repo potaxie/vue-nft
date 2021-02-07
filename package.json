@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@antv/g2": "^3.5.17",
+    "@kangc/v-md-editor": "^2.2.0",
     "ant-design-vue": "^2.0.0-rc.6",
     "axios": "^0.21.0",
     "core-js": "^3.6.5",

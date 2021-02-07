@@ -10,4 +10,11 @@
   text-align: center;
   color: #2c3e50;
 }
+.ant-modal-body {
+  max-height: calc(90vh);
+  overflow: scroll;
+}
+.ant-card {
+  margin-bottom: 10px !important;
+}
 </style>

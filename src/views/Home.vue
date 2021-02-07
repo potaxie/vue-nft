@@ -25,7 +25,10 @@
               /><a-avatar v-else :size="28"
                 ><template #icon><UserOutlined /></template
               ></a-avatar>
-              <a class="ant-dropdown-link" @click="(e) => e.preventDefault()">
+              <a
+                class="ant-dropdown-link hearder-text"
+                @click="(e) => e.preventDefault()"
+              >
                 {{ getCurrentUser().nickname || getCurrentUser().username }}
               </a>
             </a-space>
@@ -34,12 +37,14 @@
                 ><a-menu-item
                   ><a href="javascript:;" @click="userSetting">Setting</a></a-menu-item
                 ><a-menu-item
-                  ><a href="javascript:;" @click="logout">Sign out</a></a-menu-item
+                  ><a href="javascript:;" @click="logout">Logout</a></a-menu-item
                 ></a-menu
               ></template
             >
           </a-dropdown>
-          <a-button v-else type="link" @click="goLogin">Sign in</a-button></a-col
+          <a-button v-else type="link" class="hearder-text" @click="goLogin"
+            >Login</a-button
+          ></a-col
         ></a-row
       ></a-layout-header
     ><a-layout-content
@@ -191,6 +196,10 @@ export default {
       vertical-align: middle;
       width: 45px;
     }
+  }
+  .hearder-text {
+    color: rgba(255, 255, 255, 0.65);
+    font-weight: bold;
   }
 }
 </style>
