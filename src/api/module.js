@@ -18,8 +18,8 @@ export default {
   },
 
   //MarketPlace
-  marketPlaceList: (choice) => {
-    return api.get({ url: "/request_picture/" + choice });
+  marketPlaceList: (choice, symbol) => {
+    return api.get({ url: "/request_picture/" + choice + "/" + symbol });
   },
 
   marketPlaceAnalysis: (choice) => {

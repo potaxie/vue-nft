@@ -1,52 +1,60 @@
 <template>
   <a-modal
     title="Information"
-    :width="410"
+    :width="500"
+    centered
     v-model:visible="showDetail"
     :footer="null"
     style="font-size: 10px"
     wrapClassName="information"
   >
-    <div v-if="detail">
-      <p>
-        <span style="font-weight: bold; font-size: 16px">name: </span>
+    <div class="nft-image-detail" v-if="detail">
+      <a-image :width="450" :src="'/app/file/get/' + detail.id" />
+      <div class="detail-item">
+        <span class="title">name: </span>
         {{ detail.name }}
-      </p>
-      <p>
-        <span style="font-weight: bold; font-size: 16px">token_id: </span>
+      </div>
+      <div class="detail-item">
+        <a-tooltip>
+          <template #title>
+            {{ detail.description }}
+          </template>
+          <div class="line-clamp">
+            <span class="title">description: </span>
+            {{ detail.description }}
+          </div>
+        </a-tooltip>
+      </div>
+      <div class="detail-item">
+        <span class="title">token_id: </span>
         {{ detail.token_id }}
-      </p>
-      <p>
-        <span style="font-weight: bold; font-size: 16px"
-          >transaction_time:
-        </span>
+      </div>
+      <div class="detail-item">
+        <span class="title">transaction_time: </span>
         {{ detail.transaction_time }}
-      </p>
-      <p>
-        <span style="font-weight: bold; font-size: 16px"
-          >transaction_hash:
-        </span>
-        {{ detail.transaction_hash }}
-      </p>
-      <p>
-        <span style="font-weight: bold; font-size: 16px"
-          >from_account_address:
-        </span>
-        <span>{{ detail.from_account_address }}</span>
-      </p>
-
-      <p>
-        <span style="font-weight: bold; font-size: 16px"
-          >to_account_address:
-        </span>
-        {{ detail.to_account_address }}
-      </p>
-      <p>
-        <span style="font-weight: bold; font-size: 16px">external_link: </span>
-        <a target="_blank" :href="detail.external_link">{{
-          detail.external_link
-        }}</a>
-      </p>
+      </div>
+      <div class="detail-item">
+        <a-tooltip>
+          <template #title>
+            {{ detail.transaction_hash }}
+          </template>
+          <div class="line-clamp">
+            <span class="title">transaction_hash: </span>
+            {{ detail.transaction_hash }}
+          </div>
+        </a-tooltip>
+      </div>
+      <div class="detail-item">
+        <a-tooltip>
+          <template #title>
+            {{ detail.external_link }}
+          </template>
+          <div class="line-clamp">
+            <span class="title">transaction_hash: </span>
+            <a target="_blank" :href="detail.external_link">{{ detail.external_link }}</a>
+          </div>
+        </a-tooltip>
+      </div>
     </div>
   </a-modal>
 </template>
@@ -60,3 +68,22 @@ export default {
   },
 };
 </script>
+<style lang="less">
+.nft-image-detail {
+  .detail-item {
+    margin-top: 10px;
+    .title {
+      font-weight: bold;
+      font-size: 16px;
+    }
+    .line-clamp {
+      -webkit-line-clamp: 1;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      text-overflow: ellipsis;
+      word-break: break-all;
+      overflow: hidden;
+    }
+  }
+}
+</style>

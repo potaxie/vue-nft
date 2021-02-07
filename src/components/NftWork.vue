@@ -14,32 +14,13 @@
         <a-card>
           <template #cover>
             <img
-              :src="'/app/file/get/' + image.id"
+              :src="'/app/file/get/' + image.id + '?flag=tumbnail'"
               height="280"
               @click="handleImage(image)"
             />
           </template>
           <a-card-meta :title="image.name">
             <template #description>
-              <a-tooltip>
-                <template #title>
-                  {{ image.description }}
-                </template>
-                <div
-                  style="
-                    font-size: 16px;
-                    -webkit-line-clamp: 2;
-                    display: -webkit-box;
-                    -webkit-box-orient: vertical;
-                    text-overflow: ellipsis;
-                    word-break: break-all;
-                    overflow: hidden;
-                  "
-                >
-                  {{ image.description }}
-                </div>
-              </a-tooltip>
-
               <span style="color: green; font-size: 16px; font-weight: bold">
                 {{ image.price }} ETH</span
               >
@@ -90,7 +71,7 @@ export default {
     },
     star(image) {
       if (!this.getCurrentUser()) {
-        message.warn("Please sign in...");
+        message.warn("Please login...");
         return;
       }
       if (image.stared) {

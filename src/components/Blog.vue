@@ -1,102 +1,73 @@
 <template>
-  <div class="blog" style="padding-left: 25%; padding-right: 25%">
-    <a-card
-      class="edit-article-card"
-      title="Your Blog"
-      style="text-align: left; margin-bottom: 20px"
-      v-if="getCurrentUser()"
+  <div class="blog">
+    <a-modal
+      title="Write blog"
+      okText="Submit"
+      width="calc(80vw)"
+      centered
+      v-model:visible="showWrite"
+      @ok="submitBlog"
     >
-      <a-form
-        ref="form"
-        :model="form"
-        :rules="rules"
-        :label-col="{ span: 0 }"
-        :wrapper-col="{ span: 24 }"
-      >
-        <a-form-item name="content">
-          <a-textarea
-            v-model:value="form.content"
-            placeholder="..."
-            :rows="4"
-          />
-        </a-form-item>
-        <a-form-item>
-          <a-upload
-            name="file"
-            list-type="picture"
-            v-model:fileList="fileList"
-            class="upload-list-inline"
-            action="/app/file/upload"
-          >
-            <a-button shape="circle"> <FileImageOutlined /> </a-button> image
-          </a-upload>
-          <div style="text-align: right">
-            <a-button type="primary" @click="onSubmit"> Submit </a-button>
-          </div>
-        </a-form-item>
-      </a-form>
-    </a-card>
-    <a-card
-      v-for="article in data"
-      :key="article.id"
-      style="text-align: left; margin-bottom: 10px"
-    >
-      <p style="font-weight: bold; font-size: 25px">
-        <a-avatar
-          v-if="article.head_avatar"
-          :src="'/app/file/get/' + article.head_avatar"
-          :size="30"
-        />
-        <a-avatar v-else :size="30">
-          <template #icon><UserOutlined /></template>
-        </a-avatar>
-        {{ article.username }}
-      </p>
-      <p>{{ article.time }}</p>
-      <p style="font-size: 15px; color: black">{{ article.content }}</p>
-      <a-row type="flex" justify="space-between">
-        <a-col
-          :span="24"
-          style="margin-top: 3px"
-          v-for="image in article.picture"
-          :key="image"
-        >
-          <a-image
-            :width="'70%'"
-            :height="280"
-            :src="'/app/file/get/' + image"
-          />
+      <v-md-editor
+        v-model="form.content"
+        height="500px"
+        left-toolbar="undo redo clear | h bold italic strikethrough quote | ul ol table horizontal | link customImage code"
+        right-toolbar="preview toc fullscreen"
+        :toolbar="toolbar"
+        :disabled-menus="[]"
+        @upload-image="handleUploadImage"
+      />
+    </a-modal>
+    <div class="write-blog">
+      <a-button size="large" type="link" @click="writeBlog">
+        Write your blog...
+      </a-button>
+    </div>
+    <a-card v-for="article in data" :key="article.id" style="text-align: left">
+      <a-row type="flex" justify="space-between" align="bottom">
+        <a-col>
+          <a-space>
+            <a-avatar
+              v-if="article.head_avatar"
+              :src="'/app/file/get/' + article.head_avatar"
+              :size="30"
+            />
+            <a-avatar v-else :size="30">
+              <template #icon><UserOutlined /></template>
+            </a-avatar>
+            <span style="font-weight: bold; font-size: 25px">{{ article.username }}</span>
+          </a-space>
         </a-col>
+        <a-col>{{ article.time }}</a-col>
       </a-row>
-      <a-row :gutter="16" style="margin-top: 5px; margin-left: 5px">
-        <a-col :span="3">
+      <v-md-editor v-model="article.content" mode="preview"></v-md-editor>
+      <a-row :gutter="16">
+        <a-col :span="2">
           <a href="javascript:;" @click="openComments(article)"
-            ><MessageOutlined :style="{ fontSize: '20px' }"
-          /></a>
-          {{ article.commentNumber }}
+            ><MessageOutlined :style="{ fontSize: '20px' }" />
+            {{ article.commentNumber }}
+          </a>
         </a-col>
-        <a-col :span="3">
+        <a-col :span="2">
           <a href="javascript:;" @click="like(article)">
             <LikeFilled
               v-if="article.liked"
               :style="{ fontSize: '20px', color: '#52c41a' }"
             />
             <LikeOutlined v-else :style="{ fontSize: '20px' }" />
+            {{ article.likeNumber }}
           </a>
-          {{ article.likeNumber }}
         </a-col>
       </a-row>
       <div v-if="article.opened">
-        <a-row style="margin-top: 5px; margin-left: 5px">
+        <a-row style="margin-top: 5px">
           <a-input
-            :placeholder="getCurrentUser() ? '...' : '登陆后评论'"
+            :placeholder="getCurrentUser() ? '...' : 'Please login first'"
             :disabled="!getCurrentUser()"
             v-model:value="article.myComment"
           >
             <template #addonAfter>
-              <a href="javascript:;" @click="submitComment(article)"
-                ><SendOutlined
-              /></a>
+              <a href="javascript:;" @click="submitComment(article)"><SendOutlined /></a>
             </template>
           </a-input>
         </a-row>
@@ -107,10 +78,7 @@
         >
           <template #renderItem="{ item }">
             <a-list-item>
-              <a-comment
-                :author="item.author"
-                :avatar="'/app/file/get/' + item.avatar"
-              >
+              <a-comment :author="item.author" :avatar="'/app/file/get/' + item.avatar">
                 <template #content>
                   <p>
                     {{ item.content }}
@@ -118,9 +86,7 @@
                 </template>
                 <template #datetime>
                   <a-tooltip :title="item.time">
-                    <span>{{
-                      moment(item.time, "yyyy-MM-dd HH:mm:ss").fromNow()
-                    }}</span>
+                    <span>{{ moment(item.time, "yyyy-MM-dd HH:mm:ss").fromNow() }}</span>
                   </a-tooltip>
                 </template>
               </a-comment>
@@ -133,7 +99,6 @@
 </template>
 <script>
 import {
-  FileImageOutlined,
   UserOutlined,
   LikeOutlined,
   MessageOutlined,
@@ -144,10 +109,12 @@ import { message } from "ant-design-vue";
 import api from "@/api/module";
 import { mapGetters } from "vuex";
 import moment from "moment";
+import axios from "axios";
+import { image } from "@kangc/v-md-editor/lib/utils/constants/command";
+import { filesFilter } from "@kangc/v-md-editor/lib/utils/file";
 
 export default {
   components: {
-    FileImageOutlined,
     UserOutlined,
     LikeOutlined,
     MessageOutlined,
@@ -156,15 +123,33 @@ export default {
   },
   data() {
     return {
+      showWrite: false,
       data: [],
       moment,
       comments: [],
       form: {},
-      fileList: [],
-      rules: {
-        content: [
-          { required: true, message: "Content is Empty.", trigger: "blur" },
-        ],
+      toolbar: {
+        customImage: {
+          title: "Insert Image",
+          icon: "v-md-icon-img",
+          action(editor) {
+            editor.$nextTick(async () => {
+              const event = await editor.$refs.uploadFile.upload();
+              const files = filesFilter(event.target.files, editor.uploadImgConfig);
+              if (editor.hasUploadImage && files.length) {
+                event.preventDefault();
+                editor.$emit(
+                  "upload-image",
+                  event,
+                  function (imageRef) {
+                    editor.execCommand(image, imageRef);
+                  },
+                  files
+                );
+              }
+            });
+          },
+        },
       },
     };
   },
@@ -172,20 +157,38 @@ export default {
     ...mapGetters(["getCurrentUser"]),
   },
   methods: {
-    onSubmit() {
-      this.$refs.form.validate().then(() => {
-        const files = this.fileList.map((f) => f.response);
-        this.form.files = files;
-        api.submit({ ...this.form }).then((res) => {
-          if (res.data.code === 1) {
-            this.form = {};
-            this.fileList = [];
-            message.success("success");
-            this.list();
-          } else {
-            message.error(res.data.description);
-          }
+    writeBlog() {
+      if (!this.getCurrentUser()) {
+        message.warn("Please login...");
+      } else {
+        this.showWrite = true;
+      }
+    },
+    handleUploadImage(event, insertImage, files) {
+      let param = new FormData();
+      param.append("file", files[0]);
+      let config = {
+        headers: { "Content-Type": "multipart/form-data" },
+      };
+      axios.post("/app/file/upload", param, config).then((response) => {
+        insertImage({
+          url: "/app/file/get/" + response.data,
+          desc: "image",
+          width: "500",
+          height: "auto",
         });
+      });
+    },
+    submitBlog() {
+      api.submit({ ...this.form }).then((res) => {
+        if (res.data.code === 1) {
+          this.form = {};
+          message.success("success");
+          this.showWrite = false;
+          this.list();
+        } else {
+          message.error(res.data.description);
+        }
       });
     },
     list() {
@@ -250,41 +253,21 @@ export default {
 </script>
 <style lang="less">
 .blog {
-  .upload-list-inline ::v-deep(.ant-upload-list-item) {
-    float: left;
-    width: 200px;
-    margin-right: 8px;
-  }
-  .upload-list-inline ::v-deep(.ant-upload-animate-enter) {
-    animation-name: uploadAnimateInlineIn;
-  }
-  .upload-list-inline ::v-deep(.ant-upload-animate-leave) {
-    animation-name: uploadAnimateInlineOut;
-  }
-  .edit-article-card {
+  padding-left: 25%;
+  padding-right: 25%;
+  min-width: 500px;
+  .write-blog {
     text-align: left;
-    margin-bottom: 20px;
-    .ant-card-body {
-      padding: 12px 24px;
-    }
-    .ant-card-head {
-      min-height: 30px;
-      font-size: 13px;
+    .ant-btn-lg {
+      padding: 0 0 15px 0;
+      font-weight: bolder;
     }
   }
-  .ant-image-img {
-    height: 100% !important;
+  .v-md-editor-preview {
+    padding: 0;
   }
-  .ant-form-item {
-    margin-bottom: 0 !important;
-  }
-  .ant-list-item {
-    padding: 0 !important;
-  }
-  .ant-comment-content-detail {
-    p {
-      margin-bottom: 0 !important;
-    }
+  .ant-comment-inner {
+    padding: 0;
   }
 }
 </style>

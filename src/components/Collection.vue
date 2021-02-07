@@ -1,13 +1,14 @@
 <template>
-  <a-card
-    :title="'Price Verb: ' + (current ? current.name : '')"
-    :tab-list="tabs"
-    @tabChange="(key) => changeTab(key)"
-    style="text-align: left"
-  >
+  <a-card style="text-align: left">
+    <template #title>
+      Price Verb:
+      <a href="javascript:;" style="font-size: 14px; font-weight: 400">{{
+        current ? current.name : ""
+      }}</a>
+    </template>
     <div ref="container" id="container"></div>
   </a-card>
-  <a-card title="My collections" style="text-align: left; font-weight: bold">
+  <a-card title="My collections" style="text-align: left">
     <a-table
       :columns="columns"
       :data-source="data"
@@ -30,7 +31,7 @@
         <a-avatar
           size="large"
           shape="square"
-          :src="'/app/file/get/' + record.image"
+          :src="'/app/file/get/' + record.image + '?flag=tumbnail'"
           @click="onImageDetail(record)"
         />
       </template>
@@ -80,30 +81,13 @@ export default {
       choice: "7",
       columns: columns,
       chart: undefined,
-      tabs: [
-        {
-          key: "7",
-          tab: "近一周",
-        },
-        {
-          key: "14",
-          tab: "近两周",
-        },
-      ],
     };
   },
   methods: {
-    changeTab(name) {
-      this.choice = name;
-      this.refresh();
-    },
     refresh() {
       let that = this;
       api
-        .collectionList(
-          this.choice,
-          this.current ? this.current.token_id : null
-        )
+        .collectionList(this.choice, this.current ? this.current.token_id : null)
         .then((res) => {
           that.chart.source(res.data);
           that.chart.render();
@@ -136,12 +120,9 @@ export default {
       height: 200,
       padding: [40, 40, 20, 40],
     });
-    this.chart
-      .line()
-      .position("date*price")
-      .tooltip({
-        showMarkers: false,
-      });
+    this.chart.line().position("date*price").tooltip({
+      showMarkers: false,
+    });
     this.detail();
   },
 };

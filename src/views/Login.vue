@@ -16,13 +16,31 @@
         @submit.prevent
       >
         <a-form-item>
-          <a-input
-            v-model:value="form.username"
-            size="large"
-            placeholder="Username"
-          >
+          <a-input v-model:value="form.username" size="large" placeholder="Username">
             <template #prefix>
               <UserOutlined style="color: rgba(0, 0, 0, 0.25)" />
+            </template>
+          </a-input>
+        </a-form-item>
+        <a-form-item v-if="action === 'signup'">
+          <a-input-search
+            v-model:value="form.email"
+            placeholder="Email"
+            size="large"
+            @search="sendEmail"
+          >
+            <template #prefix>
+              <SendOutlined style="color: rgba(0, 0, 0, 0.25)" />
+            </template>
+            <template #enterButton>
+              <a-button>Send</a-button>
+            </template>
+          </a-input-search>
+        </a-form-item>
+        <a-form-item v-if="action === 'signup'">
+          <a-input v-model:value="form.code" size="large" placeholder="Email Code">
+            <template #prefix>
+              <NotificationOutlined style="color: rgba(0, 0, 0, 0.25)" />
             </template>
           </a-input>
         </a-form-item>
@@ -49,9 +67,7 @@
           </a-input-password>
         </a-form-item>
         <a-form-item style="text-align: left" v-if="action === 'login'">
-          <a-checkbox v-model:checked="form['remember-me']"
-            >Remember me</a-checkbox
-          >
+          <a-checkbox v-model:checked="form['remember-me']">Remember me</a-checkbox>
           <a
             style="float: right; line-height: 40px"
             href="javascript:;;"
@@ -64,7 +80,7 @@
             style="float: right; line-height: 40px"
             href="javascript:;;"
             @click="action = 'login'"
-            >Back Signin</a
+            >Back Login</a
           >
         </a-form-item>
         <a-form-item>
@@ -74,7 +90,7 @@
             type="primary"
             html-type="submit"
             size="large"
-            >{{ action === "login" ? "Sign In" : "Create Account" }}</a-button
+            >{{ action === "login" ? "Login" : "Create Account" }}</a-button
           >
         </a-form-item>
       </a-form>
@@ -84,13 +100,20 @@
 </template>
 <script>
 import api from "@/api/user";
-import { UserOutlined, LockOutlined } from "@ant-design/icons-vue";
+import {
+  UserOutlined,
+  LockOutlined,
+  NotificationOutlined,
+  SendOutlined,
+} from "@ant-design/icons-vue";
 import { message } from "ant-design-vue";
 import { mapActions } from "vuex";
 export default {
   components: {
     UserOutlined,
     LockOutlined,
+    NotificationOutlined,
+    SendOutlined,
   },
   data() {
     return {
@@ -100,11 +123,25 @@ export default {
         username: "",
         password: "",
         confirmPassword: "",
+        email: "",
+        code: "",
       },
     };
   },
   methods: {
     ...mapActions(["setCurrentUser"]),
+    sendEmail() {
+      if (this.form.email) {
+        api.verifyEmail(this.form.email).then((res) => {
+          console.log(res);
+          if (res.data.code === 1) {
+            message.success("Send email code success");
+          } else {
+            message.error(res.data.description);
+          }
+        });
+      }
+    },
     handleSubmit() {
       this.loggingIn = true;
       if (this.action === "login") {
@@ -120,16 +157,26 @@ export default {
       } else if (this.form.password !== this.form.confirmPassword) {
         this.loggingIn = false;
         message.error("Please confirm password!");
+      } else if (
+        !this.form.username ||
+        !this.form.password ||
+        !this.form.email ||
+        !this.form.code
+      ) {
+        this.loggingIn = false;
+        message.error("Please complate information!");
       } else {
-        api.signup(this.form.username, this.form.password).then((res) => {
-          this.loggingIn = false;
-          if (res.data.code === 1) {
-            message.success("Create account success.");
-            this.action = "login";
-          } else {
-            message.error(res.data.description);
-          }
-        });
+        api
+          .signup(this.form.username, this.form.password, this.form.email, this.form.code)
+          .then((res) => {
+            this.loggingIn = false;
+            if (res.data.code === 1) {
+              message.success("Create account success.");
+              this.action = "login";
+            } else {
+              message.error(res.data.description);
+            }
+          });
       }
     },
   },
