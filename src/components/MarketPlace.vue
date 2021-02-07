@@ -1,13 +1,13 @@
 <template>
   <a-card
-    title="HISTORY VOLUME"
+    title="Volume History"
     :tab-list="tabs"
     @tabChange="(key) => changeTab(key)"
     class="history-volume"
   >
     <div ref="container" id="container"></div>
   </a-card>
-  <a-card title="HISTORY SALES" style="text-align: left">
+  <a-card title="Sale History" style="text-align: left">
     <a-table
       :columns="columns"
       :data-source="data"

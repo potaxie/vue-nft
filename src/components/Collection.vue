@@ -1,16 +1,13 @@
 <template>
   <a-card
-    :title="(current ? current.name : '') + ':PRICE VERB '"
+    :title="'Price Verb: ' + (current ? current.name : '')"
     :tab-list="tabs"
     @tabChange="(key) => changeTab(key)"
     style="text-align: left"
   >
     <div ref="container" id="container"></div>
   </a-card>
-  <a-card
-    title="PERSON COLLECTIONS"
-    style="text-align: left; font-weight: bold"
-  >
+  <a-card title="My collections" style="text-align: left; font-weight: bold">
     <a-table
       :columns="columns"
       :data-source="data"
