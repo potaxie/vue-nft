@@ -35,6 +35,7 @@
 </template>
 <script>
 import ImageDetail from "@/components/ImageDetail";
+import { Chart } from "@antv/g2";
 import api from "@/api/module";
 const columns = [
   {
@@ -125,7 +126,7 @@ export default {
     refresh() {
       let that = this;
       api.marketPlaceAnalysis(this.choice).then((res) => {
-        that.chart.source(res.data);
+        that.chart.data(res.data);
         that.chart.render();
       });
       api.marketPlaceList(this.choice, this.symbol).then((res) => {
@@ -136,7 +137,7 @@ export default {
   mounted() {
     let containerRef = this.$refs["container"];
     let scrollWidth = containerRef.scrollWidth;
-    this.chart = new this.G2.Chart({
+    this.chart = new Chart({
       container: "container",
       autoFit: true,
       width: scrollWidth,

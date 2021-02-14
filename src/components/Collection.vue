@@ -35,12 +35,19 @@
           @click="onImageDetail(record)"
         />
       </template>
+      <template #action="{ record }">
+        <a-popconfirm title="Confirm cancel?" @confirm="cancelCollect(record)">
+          <a-button size="small" type="link">cancel</a-button>
+        </a-popconfirm>
+      </template>
     </a-table>
   </a-card>
   <image-detail ref="image-detail" />
 </template>
 <script>
 import ImageDetail from "@/components/ImageDetail";
+import { Chart } from "@antv/g2";
+import { message } from "ant-design-vue";
 import api from "@/api/module";
 const columns = [
   {
@@ -69,6 +76,11 @@ const columns = [
     title: "Time",
     dataIndex: "time",
   },
+  {
+    title: "Action",
+    key: "action",
+    slots: { customRender: "action" },
+  },
 ];
 export default {
   components: {
@@ -89,7 +101,7 @@ export default {
       api
         .collectionList(this.choice, this.current ? this.current.token_id : null)
         .then((res) => {
-          that.chart.source(res.data);
+          that.chart.data(res.data);
           that.chart.render();
         });
     },
@@ -109,11 +121,20 @@ export default {
         this.refresh();
       });
     },
+    cancelCollect(image) {
+      api.nftWorkCancelCollect(image.name + "TT" + image.token_id).then((res) => {
+        if (res.data.code === 1) {
+          this.detail();
+        } else {
+          message.error(res.data.description);
+        }
+      });
+    },
   },
   mounted() {
     let containerRef = this.$refs["container"];
     let scrollWidth = containerRef.scrollWidth;
-    this.chart = new this.G2.Chart({
+    this.chart = new Chart({
       container: "container",
       autoFit: true,
       width: scrollWidth,
