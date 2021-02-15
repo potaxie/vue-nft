@@ -315,7 +315,7 @@ export default {
           message.success("submit success");
           item.myComment = "";
           api.comments(item.id).then((res1) => {
-            item.comments = res1.data;
+            this.comments = res1.data;
           });
         } else {
           message.error(res.data.description);
