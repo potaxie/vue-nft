@@ -8,6 +8,38 @@
       v-model:visible="showWrite"
       @ok="submitBlog"
     >
+      <a-form
+        ref="form"
+        :model="form"
+        :rules="rules"
+        :label-col="{ span: 2 }"
+        :wrapper-col="{ span: 20 }"
+      >
+        <a-form-item label="Title" name="title">
+          <a-input v-model:value="form.title" />
+        </a-form-item>
+        <a-form-item label="Cover"
+          ><a-upload
+            v-model:fileList="fileList"
+            name="file"
+            list-type="picture-card"
+            class="avatar-uploader"
+            :show-upload-list="false"
+            action="/app/file/upload"
+            @change="handleCoverChange"
+            ><a-avatar
+              v-if="form.cover"
+              :src="'/app/file/get/' + form.cover"
+              shape="square"
+              :size="100"
+            />
+            <div v-else>
+              <loading-outlined v-if="loading" /><plus-outlined v-else />
+              <div class="ant-upload-text">Upload</div>
+            </div></a-upload
+          ></a-form-item
+        >
+      </a-form>
       <v-md-editor
         v-model="form.content"
         height="500px"
@@ -18,6 +50,20 @@
         @upload-image="handleUploadImage"
       />
     </a-modal>
+    <a-modal
+      :title="viewArticle ? viewArticle.title : ''"
+      width="calc(80vw)"
+      :footer="null"
+      centered
+      v-model:visible="showViewModal"
+    >
+      <v-md-editor
+        v-if="viewArticle"
+        v-model="viewArticle.content"
+        mode="preview"
+      ></v-md-editor>
+    </a-modal>
+
     <div class="write-blog">
       <a-button size="large" type="link" @click="writeBlog">
         Write your blog...
@@ -40,7 +86,24 @@
         </a-col>
         <a-col>{{ article.time }}</a-col>
       </a-row>
-      <v-md-editor v-model="article.content" mode="preview"></v-md-editor>
+      <!-- <v-md-editor v-model="article.content" mode="preview"></v-md-editor> -->
+      <div
+        @click="
+          viewArticle = article;
+          showViewModal = true;
+        "
+        style="cursor: pointer"
+      >
+        <div class="article-title">{{ article.title }}</div>
+        <div class="article-cover">
+          <a-image
+            :width="'70%'"
+            :src="'/app/file/get/' + article.cover"
+            :preview="false"
+            v-if="article.cover"
+          />
+        </div>
+      </div>
       <a-row :gutter="16">
         <a-col :span="2">
           <a href="javascript:;" @click="openComments(article)"
@@ -104,6 +167,8 @@ import {
   MessageOutlined,
   SendOutlined,
   LikeFilled,
+  PlusOutlined,
+  LoadingOutlined,
 } from "@ant-design/icons-vue";
 import { message } from "ant-design-vue";
 import api from "@/api/module";
@@ -120,13 +185,21 @@ export default {
     MessageOutlined,
     SendOutlined,
     LikeFilled,
+    PlusOutlined,
+    LoadingOutlined,
   },
   data() {
     return {
       showWrite: false,
+      showViewModal: false,
       data: [],
       moment,
       comments: [],
+      rules: {
+        title: [{ required: true, message: "Title not empty", trigger: "blur" }],
+      },
+      fileList: [],
+      loading: false,
       form: {},
       toolbar: {
         customImage: {
@@ -157,6 +230,17 @@ export default {
     ...mapGetters(["getCurrentUser"]),
   },
   methods: {
+    handleCoverChange(info) {
+      if (info.file.status === "uploading") {
+        this.loading = true;
+        return;
+      }
+
+      if (info.file.status === "done") {
+        this.form.cover = info.file.response;
+        this.loading = false;
+      }
+    },
     writeBlog() {
       if (!this.getCurrentUser()) {
         message.warn("Please login...");
@@ -263,11 +347,26 @@ export default {
       font-weight: bolder;
     }
   }
+  .article-title {
+    font-size: 24px;
+    color: black;
+    margin-bottom: 5px;
+  }
+  .article-cover {
+    margin-bottom: 10px;
+  }
   .v-md-editor-preview {
     padding: 0;
   }
   .ant-comment-inner {
     padding: 0;
   }
+}
+.ant-form-item {
+  margin-bottom: 0 !important;
+}
+.ant-modal-body {
+  max-height: calc(80vh);
+  overflow: scroll;
 }
 </style>
