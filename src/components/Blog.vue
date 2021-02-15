@@ -9,16 +9,15 @@
       @ok="submitBlog"
     >
       <a-form
-        ref="form"
         :model="form"
         :rules="rules"
-        :label-col="{ span: 2 }"
-        :wrapper-col="{ span: 20 }"
+        :label-col="{ span: 0 }"
+        :wrapper-col="{ span: 24 }"
       >
-        <a-form-item label="Title" name="title">
-          <a-input v-model:value="form.title" />
+        <a-form-item name="title">
+          <a-input v-model:value="form.title" placeholder="Title" />
         </a-form-item>
-        <a-form-item label="Cover"
+        <a-form-item name="cover"
           ><a-upload
             v-model:fileList="fileList"
             name="file"
@@ -51,17 +50,13 @@
       />
     </a-modal>
     <a-modal
-      :title="viewArticle ? viewArticle.title : ''"
+      :title="article ? article.title : ''"
       width="calc(80vw)"
       :footer="null"
       centered
       v-model:visible="showViewModal"
     >
-      <v-md-editor
-        v-if="viewArticle"
-        v-model="viewArticle.content"
-        mode="preview"
-      ></v-md-editor>
+      <v-md-editor v-if="article" v-model="article.content" mode="preview"></v-md-editor>
     </a-modal>
 
     <div class="write-blog">
@@ -69,60 +64,64 @@
         Write your blog...
       </a-button>
     </div>
-    <a-card v-for="article in data" :key="article.id" style="text-align: left">
-      <a-row type="flex" justify="space-between" align="bottom">
-        <a-col>
-          <a-space>
-            <a-avatar
-              v-if="article.head_avatar"
-              :src="'/app/file/get/' + article.head_avatar"
-              :size="30"
-            />
-            <a-avatar v-else :size="30">
-              <template #icon><UserOutlined /></template>
-            </a-avatar>
-            <span style="font-weight: bold; font-size: 25px">{{ article.username }}</span>
-          </a-space>
-        </a-col>
-        <a-col>{{ article.time }}</a-col>
-      </a-row>
-      <!-- <v-md-editor v-model="article.content" mode="preview"></v-md-editor> -->
-      <div
-        @click="
-          viewArticle = article;
-          showViewModal = true;
-        "
-        style="cursor: pointer"
-      >
-        <div class="article-title">{{ article.title }}</div>
-        <div class="article-cover">
-          <a-image
-            :width="'70%'"
-            :src="'/app/file/get/' + article.cover"
-            :preview="false"
-            v-if="article.cover"
-          />
-        </div>
-      </div>
-      <a-row :gutter="16">
-        <a-col :span="2">
-          <a href="javascript:;" @click="openComments(article)"
-            ><MessageOutlined :style="{ fontSize: '20px' }" />
-            {{ article.commentNumber }}
-          </a>
-        </a-col>
-        <a-col :span="2">
-          <a href="javascript:;" @click="like(article)">
-            <LikeFilled
-              v-if="article.liked"
-              :style="{ fontSize: '20px', color: '#52c41a' }"
-            />
-            <LikeOutlined v-else :style="{ fontSize: '20px' }" />
-            {{ article.likeNumber }}
-          </a>
-        </a-col>
-      </a-row>
-      <div v-if="article.opened">
+
+    <a-list item-layout="vertical" size="large" :pagination="false" :data-source="data">
+      <template #renderItem="{ item }">
+        <a-list-item key="item.title">
+          <template #actions>
+            <span @click="openComments(item)">
+              <message-outlined :style="{ fontSize: '20px' }" key="comments" />
+              {{ item.commentNumber }}
+            </span>
+            <span @click="like(item)">
+              <like-filled
+                v-if="item.liked"
+                :style="{ fontSize: '20px', color: '#52c41a' }"
+              />
+              <like-outlined v-else :style="{ fontSize: '20px' }" />
+              {{ item.likeNumber }}
+            </span>
+          </template>
+          <template #extra>
+            <img width="220" alt="cover" :src="'/app/file/get/' + item.cover" />
+          </template>
+          <a-list-item-meta
+            :description="moment(item.time, 'yyyy-MM-dd HH:mm:ss').fromNow()"
+          >
+            <template #title>
+              {{ item.username }}
+            </template>
+            <template #avatar>
+              <a-avatar
+                v-if="item.head_avatar"
+                :src="'/app/file/get/' + item.head_avatar"
+              />
+              <a-avatar v-else>
+                <template #icon><UserOutlined /></template>
+              </a-avatar>
+            </template>
+          </a-list-item-meta>
+          <div
+            class="blog-title"
+            @click="
+              article = item;
+              showViewModal = true;
+            "
+          >
+            {{ item.title }}
+          </div>
+        </a-list-item>
+      </template>
+    </a-list>
+
+    <a-modal
+      title="comments"
+      width="calc(80vw)"
+      :footer="null"
+      centered
+      v-model:visible="showComments"
+    >
+      <div v-if="article">
         <a-row style="margin-top: 5px">
           <a-input
             :placeholder="getCurrentUser() ? '...' : 'Please login first'"
@@ -134,11 +133,7 @@
             </template>
           </a-input>
         </a-row>
-        <a-list
-          class="comment-list"
-          item-layout="horizontal"
-          :data-source="article.comments"
-        >
+        <a-list class="comment-list" item-layout="horizontal" :data-source="comments">
           <template #renderItem="{ item }">
             <a-list-item>
               <a-comment :author="item.author" :avatar="'/app/file/get/' + item.avatar">
@@ -157,7 +152,7 @@
           </template>
         </a-list>
       </div>
-    </a-card>
+    </a-modal>
   </div>
 </template>
 <script>
@@ -192,11 +187,14 @@ export default {
     return {
       showWrite: false,
       showViewModal: false,
+      showComments: false,
       data: [],
+      article: null,
       moment,
       comments: [],
       rules: {
-        title: [{ required: true, message: "Title not empty", trigger: "blur" }],
+        title: [{ required: true, message: "Title is empty", trigger: "blur" }],
+        cover: [{ required: true, message: "Cover is empty" }],
       },
       fileList: [],
       loading: false,
@@ -235,7 +233,6 @@ export default {
         this.loading = true;
         return;
       }
-
       if (info.file.status === "done") {
         this.form.cover = info.file.response;
         this.loading = false;
@@ -302,16 +299,12 @@ export default {
       }
     },
     openComments(item) {
-      if (item.opened) {
-        item.opened = false;
-        item.comments = [];
-      } else {
-        api.comments(item.id).then((res) => {
-          item.myComment = "";
-          item.comments = res.data;
-          item.opened = true;
-        });
-      }
+      this.article = item;
+      api.comments(item.id).then((res) => {
+        item.myComment = "";
+        this.comments = res.data;
+        this.showComments = true;
+      });
     },
     submitComment(item) {
       if (!item.myComment) {
@@ -340,8 +333,8 @@ export default {
   padding-left: 25%;
   padding-right: 25%;
   min-width: 500px;
+  text-align: left;
   .write-blog {
-    text-align: left;
     .ant-btn-lg {
       padding: 0 0 15px 0;
       font-weight: bolder;
@@ -358,8 +351,18 @@ export default {
   .v-md-editor-preview {
     padding: 0;
   }
-  .ant-comment-inner {
-    padding: 0;
+  .ant-list-vertical .ant-list-item-extra {
+    margin-left: 10px;
+  }
+  .ant-list-item-meta-title {
+    font-size: 20px !important;
+  }
+  .ant-list-item-meta-description {
+    font-size: 16px !important;
+  }
+  .blog-title {
+    font-size: 18px;
+    cursor: pointer;
   }
 }
 .ant-form-item {
@@ -368,5 +371,8 @@ export default {
 .ant-modal-body {
   max-height: calc(80vh);
   overflow: scroll;
+}
+.ant-comment-inner {
+  padding: 0 !important;
 }
 </style>
