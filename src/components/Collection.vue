@@ -122,7 +122,7 @@ export default {
       });
     },
     cancelCollect(image) {
-      api.nftWorkCancelCollect(image.name + "TT" + image.token_id).then((res) => {
+      api.nftWorkCancelCollect(image.name + "tTTt" + image.token_id).then((res) => {
         if (res.data.code === 1) {
           this.detail();
         } else {
