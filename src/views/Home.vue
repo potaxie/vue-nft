@@ -117,9 +117,8 @@ export default {
 
   data() {
     return {
-      current: "Blog",
+      current: "NftWork",
       form: {},
-
       showUserModal: false,
       fileList: [],
       loading: false,

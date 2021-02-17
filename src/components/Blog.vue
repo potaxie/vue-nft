@@ -65,7 +65,12 @@
       </a-button>
     </div>
 
-    <a-list item-layout="vertical" size="large" :pagination="false" :data-source="data">
+    <a-list
+      item-layout="vertical"
+      size="large"
+      :pagination="pagination"
+      :data-source="data"
+    >
       <template #renderItem="{ item }">
         <a-list-item key="item.title">
           <template #actions>
@@ -83,10 +88,15 @@
             </span>
           </template>
           <template #extra>
-            <img width="220" alt="cover" :src="'/app/file/get/' + item.cover" />
+            <img
+              width="280"
+              height="155"
+              alt="cover"
+              :src="'/app/file/get/' + item.cover"
+            />
           </template>
           <a-list-item-meta
-            :description="moment(item.time, 'yyyy-MM-dd HH:mm:ss').fromNow()"
+            :description="moment(item.time, 'YYYY-MM-DD hh:mm:ss').fromNow()"
           >
             <template #title>
               {{ item.username }}
@@ -144,7 +154,7 @@
                 </template>
                 <template #datetime>
                   <a-tooltip :title="item.time">
-                    <span>{{ moment(item.time, "yyyy-MM-dd HH:mm:ss").fromNow() }}</span>
+                    <span>{{ moment(item.time, "YYYY-MM-DD hh:mm:ss").fromNow() }}</span>
                   </a-tooltip>
                 </template>
               </a-comment>
@@ -189,6 +199,15 @@ export default {
       showViewModal: false,
       showComments: false,
       data: [],
+      pagination: {
+        onChange: (page) => {
+          this.pagination.current = page;
+          this.list();
+        },
+        total: 0,
+        current: 0,
+        pageSize: 5,
+      },
       article: null,
       moment,
       comments: [],
@@ -273,8 +292,9 @@ export default {
       });
     },
     list() {
-      api.list().then((res) => {
-        this.data = res.data;
+      api.list(this.pagination.current, this.pagination.pageSize).then((res) => {
+        this.pagination.total = res.data.total;
+        this.data = res.data.blog_list;
       });
     },
     like(item) {
@@ -361,8 +381,26 @@ export default {
     font-size: 16px !important;
   }
   .blog-title {
+    -webkit-line-clamp: 1;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    word-break: break-all;
+    overflow: hidden;
     font-size: 18px;
     cursor: pointer;
+  }
+  .blog-title:hover {
+    -webkit-line-clamp: 1;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    word-break: break-all;
+    overflow: hidden;
+    font-size: 18px;
+    cursor: pointer;
+    color: #0767c8;
+    text-decoration: underline;
   }
 }
 .ant-form-item {
