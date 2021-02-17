@@ -38,8 +38,8 @@ export default {
   submit: (data) => {
     return api.post({ url: "/article/submit", data: data });
   },
-  list: () => {
-    return api.get({ url: "/article/submit/reback" });
+  list: (page, limit) => {
+    return api.get({ url: "/article/submit/reback?page=" + page + "&limit=" + limit });
   },
   like: (id) => {
     return api.get({ url: "/article/star/" + id });
