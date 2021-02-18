@@ -9,13 +9,13 @@
     >
       {{ group.name }}
     </a-row>
-    <a-row :gutter="20" type="flex" justify="start">
-      <a-col :span="4" v-for="image in group.images" :key="image.id">
+    <a-row :gutter="60" type="flex" justify="start">
+      <a-col :span="6" v-for="image in group.images" :key="image.id">
         <a-card>
           <template #cover>
             <img
               :src="'/app/file/get/' + image.id + '?flag=tumbnail'"
-              height="280"
+              height="300"
               @click="handleImage(image)"
             />
           </template>
