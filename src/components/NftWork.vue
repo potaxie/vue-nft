@@ -9,20 +9,20 @@
     >
       {{ group.name }}
     </a-row>
-    <a-row :gutter="20" type="flex" justify="start">
+    <a-row :gutter="50" type="flex" justify="start">
       <a-col :span="4" v-for="image in group.images" :key="image.id">
         <a-card>
           <template #cover>
             <img
               :src="'/app/file/get/' + image.id + '?flag=tumbnail'"
-              height="280"
+              height="300"
               @click="handleImage(image)"
             />
           </template>
           <a-card-meta :title="image.name">
             <template #description>
               <span style="color: green; font-size: 16px; font-weight: bold">
-                {{ image.price }} ETH</span
+                ${{ image.price }}({{ image.numbers }}ETH)</span
               >
               <br />
               <a href="javascript:;" @click="star(image)">

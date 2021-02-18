@@ -3,7 +3,7 @@
     ><a-layout-header
       style="text-align: left; line-height: 50px; height: 50px; padding: 0 0 0 50px"
       ><a-row
-        ><a-col :span="1"><a-avatar src="/favicon.ico" :size="40" /></a-col
+        ><a-col :span="1"><a-avatar src="/favicon2.svg" :size="50"/></a-col
         ><a-col :span="16"
           ><a-menu
             theme="dark"
@@ -35,9 +35,13 @@
             <template #overlay
               ><a-menu
                 ><a-menu-item
-                  ><a href="javascript:;" @click="userSetting">Setting</a></a-menu-item
+                  ><a href="javascript:;" @click="userSetting"
+                    >Setting</a
+                  ></a-menu-item
                 ><a-menu-item
-                  ><a href="javascript:;" @click="logout">Logout</a></a-menu-item
+                  ><a href="javascript:;" @click="logout"
+                    >Logout</a
+                  ></a-menu-item
                 ></a-menu
               ></template
             >
@@ -48,25 +52,31 @@
         ></a-row
       ></a-layout-header
     ><a-layout-content
-      ><div :style="{ background: '#fff', padding: '24px', minHeight: '280px' }">
+      ><div
+        :style="{ background: '#fff', padding: '24px', minHeight: '280px' }"
+      >
         <NftWork v-if="current === 'NftWork'" /><Collection
           v-if="current === 'Collection'"
         /><MarketPlace v-if="current === 'MarketPlace'" /><Blog
           v-if="current === 'Blog'"
         /></div></a-layout-content
     ><a-layout-footer style="text-align: center"
-      >Simple Web ©2020 Created by novicezk
+      >Ginkgo Nft ©2020 Created by ginkgo
     </a-layout-footer></a-layout
   ><a-modal
     :visible="showUserModal"
     title="User Setting"
     @ok="handleOk"
     @cancel="showUserModal = false"
-    ><a-form ref="form" :model="form" :label-col="{ span: 4 }" :wrapper-col="{ span: 18 }"
+    ><a-form
+      ref="form"
+      :model="form"
+      :label-col="{ span: 4 }"
+      :wrapper-col="{ span: 18 }"
       ><a-form-item label="Username" name="username"
-        ><a-input v-model:value="form.username" disabled /></a-form-item
+        ><a-input v-model:value="form.username" disabled/></a-form-item
       ><a-form-item label="Nickname"
-        ><a-input v-model:value="form.nickname" /></a-form-item
+        ><a-input v-model:value="form.nickname"/></a-form-item
       ><a-form-item label="Avatar"
         ><a-upload
           v-model:fileList="fileList"
@@ -97,7 +107,11 @@ import Collection from "@/components/Collection";
 import MarketPlace from "@/components/MarketPlace";
 import Blog from "@/components/Blog";
 
-import { UserOutlined, PlusOutlined, LoadingOutlined } from "@ant-design/icons-vue";
+import {
+  UserOutlined,
+  PlusOutlined,
+  LoadingOutlined,
+} from "@ant-design/icons-vue";
 
 import { mapGetters, mapActions } from "vuex";
 
