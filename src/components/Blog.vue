@@ -205,7 +205,7 @@ export default {
           this.list();
         },
         total: 0,
-        current: 0,
+        current: 1,
         pageSize: 5,
       },
       article: null,
@@ -323,6 +323,7 @@ export default {
       api.comments(item.id).then((res) => {
         item.myComment = "";
         this.comments = res.data;
+        item.commentNumber = res.data.length;
         this.showComments = true;
       });
     },
@@ -336,6 +337,7 @@ export default {
           item.myComment = "";
           api.comments(item.id).then((res1) => {
             this.comments = res1.data;
+            item.commentNumber = res1.data.length;
           });
         } else {
           message.error(res.data.description);
