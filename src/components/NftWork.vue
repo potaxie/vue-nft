@@ -9,8 +9,8 @@
     >
       {{ group.name }}
     </a-row>
-    <a-row :gutter="60" type="flex" justify="start">
-      <a-col :span="6" v-for="image in group.images" :key="image.id">
+    <a-row :gutter="50" type="flex" justify="start">
+      <a-col :span="4" v-for="image in group.images" :key="image.id">
         <a-card>
           <template #cover>
             <img
