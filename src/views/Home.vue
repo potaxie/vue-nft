@@ -1,15 +1,19 @@
 <template>
   <a-layout id="admin-layout" class="layout"
     ><a-layout-header
-      style="text-align: left; line-height: 50px; height: 50px; padding: 0 0 0 50px"
+      style="text-align: left; line-height: 50px; height: 50px; padding: 0 10px"
       ><a-row
-        ><a-col :span="1"><a-avatar src="/favicon2.svg" :size="50"/></a-col
-        ><a-col :span="16"
+        ><a-col :span="3"><a-image src="/favicon1.ico" height="45px" /></a-col
+        ><a-col :span="15"
           ><a-menu
-            theme="dark"
             mode="horizontal"
             @click="handleSelect"
-            :style="{ lineHeight: '50px', fontWeight: 'bold' }"
+            :style="{
+              lineHeight: '50px',
+              fontWeight: 'bold',
+              height: '48px',
+              borderBottom: 'unset',
+            }"
             ><a-menu-item key="NftWork">NftWork </a-menu-item
             ><a-menu-item key="MarketPlace">MarketPlace </a-menu-item
             ><a-menu-item key="Collection">Collection </a-menu-item
@@ -35,13 +39,9 @@
             <template #overlay
               ><a-menu
                 ><a-menu-item
-                  ><a href="javascript:;" @click="userSetting"
-                    >Setting</a
-                  ></a-menu-item
+                  ><a href="javascript:;" @click="userSetting">Setting</a></a-menu-item
                 ><a-menu-item
-                  ><a href="javascript:;" @click="logout"
-                    >Logout</a
-                  ></a-menu-item
+                  ><a href="javascript:;" @click="logout">Logout</a></a-menu-item
                 ></a-menu
               ></template
             >
@@ -52,9 +52,7 @@
         ></a-row
       ></a-layout-header
     ><a-layout-content
-      ><div
-        :style="{ background: '#fff', padding: '24px', minHeight: '280px' }"
-      >
+      ><div :style="{ background: '#fff', padding: '24px', minHeight: '280px' }">
         <NftWork v-if="current === 'NftWork'" /><Collection
           v-if="current === 'Collection'"
         /><MarketPlace v-if="current === 'MarketPlace'" /><Blog
@@ -68,15 +66,11 @@
     title="User Setting"
     @ok="handleOk"
     @cancel="showUserModal = false"
-    ><a-form
-      ref="form"
-      :model="form"
-      :label-col="{ span: 4 }"
-      :wrapper-col="{ span: 18 }"
+    ><a-form ref="form" :model="form" :label-col="{ span: 4 }" :wrapper-col="{ span: 18 }"
       ><a-form-item label="Username" name="username"
-        ><a-input v-model:value="form.username" disabled/></a-form-item
+        ><a-input v-model:value="form.username" disabled /></a-form-item
       ><a-form-item label="Nickname"
-        ><a-input v-model:value="form.nickname"/></a-form-item
+        ><a-input v-model:value="form.nickname" /></a-form-item
       ><a-form-item label="Avatar"
         ><a-upload
           v-model:fileList="fileList"
@@ -107,11 +101,7 @@ import Collection from "@/components/Collection";
 import MarketPlace from "@/components/MarketPlace";
 import Blog from "@/components/Blog";
 
-import {
-  UserOutlined,
-  PlusOutlined,
-  LoadingOutlined,
-} from "@ant-design/icons-vue";
+import { UserOutlined, PlusOutlined, LoadingOutlined } from "@ant-design/icons-vue";
 
 import { mapGetters, mapActions } from "vuex";
 
@@ -202,16 +192,12 @@ export default {
 <style lang="less">
 #admin-layout {
   min-height: 100%;
-  .logo {
-    float: left;
-    line-height: 50px;
-    img {
-      vertical-align: middle;
-      width: 45px;
-    }
+  .ant-layout-header {
+    border-bottom: 1px solid #f0f0f0;
+    background: #ffffff;
   }
   .hearder-text {
-    color: rgba(255, 255, 255, 0.65);
+    color: rgba(0, 0, 0, 0.85);
     font-weight: bold;
   }
 }
