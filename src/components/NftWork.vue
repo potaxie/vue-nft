@@ -22,7 +22,7 @@
           <a-card-meta :title="image.name">
             <template #description>
               <span style="color: green; font-size: 16px; font-weight: bold">
-                {{ image.price }} ETH</span
+                $ {{ image.price }} ( {{ image.numbers }} ETH)</span
               >
               <br />
               <a href="javascript:;" @click="star(image)">
