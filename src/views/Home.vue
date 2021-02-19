@@ -3,7 +3,8 @@
     ><a-layout-header
       style="text-align: left; line-height: 50px; height: 50px; padding: 0 10px"
       ><a-row
-        ><a-col :span="3"><a-image src="/favicon1.ico" height="45px" /></a-col
+        ><a-col :span="3"
+          ><a-image src="/logo.svg" height="42px" weight="80px"/></a-col
         ><a-col :span="15"
           ><a-menu
             mode="horizontal"
@@ -39,9 +40,13 @@
             <template #overlay
               ><a-menu
                 ><a-menu-item
-                  ><a href="javascript:;" @click="userSetting">Setting</a></a-menu-item
+                  ><a href="javascript:;" @click="userSetting"
+                    >Setting</a
+                  ></a-menu-item
                 ><a-menu-item
-                  ><a href="javascript:;" @click="logout">Logout</a></a-menu-item
+                  ><a href="javascript:;" @click="logout"
+                    >Logout</a
+                  ></a-menu-item
                 ></a-menu
               ></template
             >
@@ -52,7 +57,9 @@
         ></a-row
       ></a-layout-header
     ><a-layout-content
-      ><div :style="{ background: '#fff', padding: '24px', minHeight: '280px' }">
+      ><div
+        :style="{ background: '#fff', padding: '24px', minHeight: '280px' }"
+      >
         <NftWork v-if="current === 'NftWork'" /><Collection
           v-if="current === 'Collection'"
         /><MarketPlace v-if="current === 'MarketPlace'" /><Blog
@@ -66,11 +73,15 @@
     title="User Setting"
     @ok="handleOk"
     @cancel="showUserModal = false"
-    ><a-form ref="form" :model="form" :label-col="{ span: 4 }" :wrapper-col="{ span: 18 }"
+    ><a-form
+      ref="form"
+      :model="form"
+      :label-col="{ span: 4 }"
+      :wrapper-col="{ span: 18 }"
       ><a-form-item label="Username" name="username"
-        ><a-input v-model:value="form.username" disabled /></a-form-item
+        ><a-input v-model:value="form.username" disabled/></a-form-item
       ><a-form-item label="Nickname"
-        ><a-input v-model:value="form.nickname" /></a-form-item
+        ><a-input v-model:value="form.nickname"/></a-form-item
       ><a-form-item label="Avatar"
         ><a-upload
           v-model:fileList="fileList"
@@ -101,7 +112,11 @@ import Collection from "@/components/Collection";
 import MarketPlace from "@/components/MarketPlace";
 import Blog from "@/components/Blog";
 
-import { UserOutlined, PlusOutlined, LoadingOutlined } from "@ant-design/icons-vue";
+import {
+  UserOutlined,
+  PlusOutlined,
+  LoadingOutlined,
+} from "@ant-design/icons-vue";
 
 import { mapGetters, mapActions } from "vuex";
 

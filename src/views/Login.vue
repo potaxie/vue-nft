@@ -1,7 +1,7 @@
 <template>
   <div class="login-container">
     <div class="top">
-      <a-image src="/favicon1.ico" width="200px" />
+      <a-image src="/logo.svg" width="200px" />
     </div>
     <div class="desc">
       <span> </span>
@@ -15,7 +15,11 @@
         @submit.prevent
       >
         <a-form-item>
-          <a-input v-model:value="form.username" size="large" placeholder="Username">
+          <a-input
+            v-model:value="form.username"
+            size="large"
+            placeholder="Username"
+          >
             <template #prefix>
               <UserOutlined style="color: rgba(0, 0, 0, 0.25)" />
             </template>
@@ -37,7 +41,11 @@
           </a-input-search>
         </a-form-item>
         <a-form-item v-if="action === 'signup'">
-          <a-input v-model:value="form.code" size="large" placeholder="Email Code">
+          <a-input
+            v-model:value="form.code"
+            size="large"
+            placeholder="Email Code"
+          >
             <template #prefix>
               <NotificationOutlined style="color: rgba(0, 0, 0, 0.25)" />
             </template>
@@ -66,7 +74,9 @@
           </a-input-password>
         </a-form-item>
         <a-form-item style="text-align: left" v-if="action === 'login'">
-          <a-checkbox v-model:checked="form['remember-me']">Remember me</a-checkbox>
+          <a-checkbox v-model:checked="form['remember-me']"
+            >Remember me</a-checkbox
+          >
           <a
             style="float: right; line-height: 40px"
             href="javascript:;;"
@@ -166,7 +176,12 @@ export default {
         message.error("Please complate information!");
       } else {
         api
-          .signup(this.form.username, this.form.password, this.form.email, this.form.code)
+          .signup(
+            this.form.username,
+            this.form.password,
+            this.form.email,
+            this.form.code
+          )
           .then((res) => {
             this.loggingIn = false;
             if (res.data.code === 1) {
