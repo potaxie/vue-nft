@@ -50,8 +50,10 @@
             {{ detail.external_link }}
           </template>
           <div class="line-clamp">
-            <span class="title">transaction_hash: </span>
-            <a target="_blank" :href="detail.external_link">{{ detail.external_link }}</a>
+            <span class="title">external_link: </span>
+            <a target="_blank" :href="detail.external_link">{{
+              detail.external_link
+            }}</a>
           </div>
         </a-tooltip>
       </div>
