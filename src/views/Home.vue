@@ -36,12 +36,16 @@
                 v-if="getCurrentUser().head_avatar"
                 :src="'/app/file/get/' + getCurrentUser().head_avatar"
                 :size="28"
-              /><a-avatar v-else :size="28"
+              /><a-avatar
+                v-else
+                :size="28"
+                style="font-size: 18px; margin-top: 00px;"
                 ><template #icon><UserOutlined /></template
               ></a-avatar>
               <a
                 class="ant-dropdown-link hearder-text"
                 @click="(e) => e.preventDefault()"
+                style="font-size: 18px; margin-top: 00px;margin-right: 30px;color:#3291E6"
               >
                 {{ getCurrentUser().nickname || getCurrentUser().username }}
               </a>
