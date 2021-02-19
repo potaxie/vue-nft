@@ -1,24 +1,33 @@
 <template>
   <a-layout id="admin-layout" class="layout"
     ><a-layout-header
-      style="text-align: left; line-height: 50px; height: 50px; padding: 0px 0px 0px 0px"
+      style="text-align: left; line-height: 30px; height: 50px; padding: 0px 0px 0px 0px"
       ><a-row
         ><a-col :span="3"
-          ><a-image src="/logo.svg" height="42px" weight="80px"/></a-col
+          ><a-image
+            src="/logo.svg"
+            height="44px"
+            weight="80px"
+            style="margin-left: 0px;margin-top: 0px"/></a-col
         ><a-col :span="15"
           ><a-menu
             mode="horizontal"
             @click="handleSelect"
             :style="{
-              lineHeight: '50px',
+              lineHeight: '48px',
               fontWeight: 'bold',
-              height: '48px',
+              height: '40px',
               borderBottom: 'unset',
             }"
-            ><a-menu-item key="NftWork">NftWork </a-menu-item
-            ><a-menu-item key="MarketPlace">MarketPlace </a-menu-item
-            ><a-menu-item key="Collection">Collection </a-menu-item
-            ><a-menu-item key="Blog">Blog </a-menu-item></a-menu
+            ><a-menu-item key="NftWork" style="font-size: 18px; margin-top: 1px"
+              >NftWork </a-menu-item
+            ><a-menu-item key="MarketPlace" style="font-size: 18px;"
+              >MarketPlace </a-menu-item
+            ><a-menu-item key="Collection" style="font-size: 18px;"
+              >Collection </a-menu-item
+            ><a-menu-item key="Blog" style="font-size: 18px;">
+              Blog
+            </a-menu-item></a-menu
           ></a-col
         ><a-col :span="6" style="text-align: right">
           <a-dropdown v-if="getCurrentUser()">
@@ -51,7 +60,12 @@
               ></template
             >
           </a-dropdown>
-          <a-button v-else type="link" class="hearder-text" @click="goLogin"
+          <a-button
+            v-else
+            type="link"
+            class="hearder-text"
+            @click="goLogin"
+            style="font-size: 18px; margin-top: 10px;margin-right: 30px;color:#3291E6"
             >Login</a-button
           ></a-col
         ></a-row
