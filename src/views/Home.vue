@@ -1,7 +1,7 @@
 <template>
   <a-layout id="admin-layout" class="layout"
     ><a-layout-header
-      style="text-align: left; line-height: 30px; height: 50px; padding: 0px 0px 0px 0px"
+      style="text-align: left; line-height: 50px; height: 50px; padding: 0px 0px 0px 0px"
       ><a-row
         ><a-col :span="3"
           ><a-image
