@@ -12,7 +12,7 @@
 }
 .ant-modal-body {
   max-height: calc(90vh);
-  overflow: scroll;
+  overflow: auto;
 }
 .ant-card {
   margin-bottom: 10px !important;

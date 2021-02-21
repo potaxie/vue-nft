@@ -6,14 +6,13 @@
         current ? current.name : ""
       }}</a>
     </template>
-    <div ref="container" id="container"></div>
+    <div id="container"></div>
   </a-card>
   <a-card title="My collections" style="text-align: left">
     <a-table
       :columns="columns"
       :data-source="data"
-      :scroll="{ y: 300 }"
-      :pagination="false"
+      :pagination="pagination"
       rowKey="token_id"
       size="middle"
     >
@@ -37,7 +36,7 @@
       </template>
       <template #action="{ record }">
         <a-popconfirm title="Confirm cancel?" @confirm="cancelCollect(record)">
-          <a-button size="small" type="link">cancel</a-button>
+          <a-button size="small" type="link">Unstar</a-button>
         </a-popconfirm>
       </template>
     </a-table>
@@ -48,6 +47,7 @@
 import ImageDetail from "@/components/ImageDetail";
 import { Chart } from "@antv/g2";
 import { message } from "ant-design-vue";
+import { mapGetters } from "vuex";
 import api from "@/api/module";
 const columns = [
   {
@@ -93,7 +93,19 @@ export default {
       choice: "7",
       columns: columns,
       chart: undefined,
+      pagination: {
+        onChange: (page) => {
+          this.pagination.current = page;
+          this.detail();
+        },
+        total: 0,
+        current: 1,
+        pageSize: 10,
+      },
     };
+  },
+  computed: {
+    ...mapGetters(["getCurrentUser"]),
   },
   methods: {
     refresh() {
@@ -113,16 +125,19 @@ export default {
       });
     },
     detail() {
-      api.collectionDetail().then((res) => {
-        this.data = res.data;
-        if (this.data) {
-          this.current = this.data[0];
-        }
-        this.refresh();
-      });
+      api
+        .collectionDetail(this.pagination.current, this.pagination.pageSize)
+        .then((res) => {
+          this.pagination.total = res.data.total;
+          this.data = res.data.result_list;
+          if (this.data) {
+            this.current = this.data[0];
+          }
+          this.refresh();
+        });
     },
-    cancelCollect(image) {
-      api.nftWorkCancelCollect(image.name + "tTTt" + image.token_id).then((res) => {
+    cancelCollect(item) {
+      api.nftWorkCancelCollect(item.image).then((res) => {
         if (res.data.code === 1) {
           this.detail();
         } else {
@@ -132,14 +147,13 @@ export default {
     },
   },
   mounted() {
-    let containerRef = this.$refs["container"];
-    let scrollWidth = containerRef.scrollWidth;
+    if (!this.getCurrentUser()) {
+      message.warn("Please login...");
+    }
     this.chart = new Chart({
       container: "container",
       autoFit: true,
-      width: scrollWidth,
       height: 200,
-      padding: [40, 40, 20, 40],
     });
     this.chart.line().position("date*price").tooltip({
       showMarkers: false,

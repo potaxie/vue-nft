@@ -18,28 +18,37 @@ export default {
   },
 
   //MarketPlace
-  marketPlaceList: (choice, symbol) => {
-    return api.get({ url: "/request_picture/" + choice + "/" + symbol });
+  marketPlaceList: (choice, symbol, keyword, page, pageSize) => {
+    return api.get({
+      url: "/marketplace_list", params: {
+        choice: choice, symbol: symbol, keyword: keyword,
+        page: page, pageSize: pageSize
+      }
+    });
   },
 
   marketPlaceAnalysis: (choice) => {
-    return api.get({ url: "/request_picture_analysis/" + choice });
+    return api.get({ url: "/marketplace_analysis/" + choice });
   },
 
   //Collection
   collectionList: (choice, id) => {
     return api.get({ url: "/collection_data_dash/" + choice + "/" + id });
   },
-  collectionDetail: () => {
-    return api.get({ url: "/collection_data_detail" });
+  collectionDetail: (page, pageSize) => {
+    return api.get({
+      url: "/collection_data_detail", params: {
+        page: page, pageSize: pageSize
+      }
+    });
   },
 
   //Blog
   submit: (data) => {
     return api.post({ url: "/article/submit", data: data });
   },
-  list: (page, limit) => {
-    return api.get({ url: "/article/submit/reback?page=" + page + "&limit=" + limit });
+  list: (page, pageSize) => {
+    return api.get({ url: "/article/submit/reback?page=" + page + "&pageSize=" + pageSize });
   },
   like: (id) => {
     return api.get({ url: "/article/star/" + id });

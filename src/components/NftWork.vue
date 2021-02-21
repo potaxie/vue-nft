@@ -1,9 +1,6 @@
 <template>
-  <h1 style="font-weight: bold; font-size: 50px; margin-bottom: 50px">
-    🌟 Welcome NFT Social! 🌟
-  </h1>
-
-  <div v-for="group in groups" :key="group.name" style="margin-bottom: 30px">
+  <div class="nft-title">Welcome Ginkgo</div>
+  <div v-for="group in groups" :key="group.name" style="margin-bottom: 20px">
     <a-row
       style="text-align: left; font-size: 32px; font-family: Roboto,-apple-system,BlinkMacSystemFont,Arial,sans-serif;sans-serif;font-weight: bold; margin-bottom: 10px;color: #3291E6"
     >
@@ -21,17 +18,13 @@
           </template>
           <a-card-meta :title="image.name">
             <template #description>
-              <span style="color: green; font-size: 16px; font-weight: bold">
-                ${{ image.price }}({{ image.numbers }}ETH)</span
-              >
-              <br />
-              <a href="javascript:;" @click="star(image)">
-                <StarFilled
-                  v-if="image.stared"
-                  :style="{ fontSize: '20px', color: '#52c41a' }"
-                />
-                <StarOutlined v-else :style="{ fontSize: '20px' }" />
-              </a>
+              <div style="font-size: 16px; font-weight: bold">
+                <span style="color: green"
+                  >${{ image.price }}({{ image.numbers }}ETH)</span
+                >
+                <br />
+                <span>{{ image.time }}</span>
+              </div>
             </template>
           </a-card-meta>
         </a-card>
@@ -42,19 +35,11 @@
 </template>
 
 <script>
-import { StarOutlined, StarFilled } from "@ant-design/icons-vue";
-import { message } from "ant-design-vue";
-import { mapGetters } from "vuex";
 import ImageDetail from "@/components/ImageDetail";
 import api from "@/api/module";
 export default {
   components: {
-    StarOutlined,
-    StarFilled,
     ImageDetail,
-  },
-  computed: {
-    ...mapGetters(["getCurrentUser"]),
   },
   data() {
     return {
@@ -69,29 +54,6 @@ export default {
         imageDetail.showDetail = true;
       });
     },
-    star(image) {
-      if (!this.getCurrentUser()) {
-        message.warn("Please login...");
-        return;
-      }
-      if (image.stared) {
-        api.nftWorkCancelCollect(image.id).then((res) => {
-          if (res.data.code === 1) {
-            image.stared = false;
-          } else {
-            message.error(res.data.description);
-          }
-        });
-      } else {
-        api.nftWorkCollect(image.id).then((res) => {
-          if (res.data.code === 1) {
-            image.stared = true;
-          } else {
-            message.error(res.data.description);
-          }
-        });
-      }
-    },
   },
   mounted() {
     api.imageGroups().then((res) => {
@@ -101,6 +63,12 @@ export default {
 };
 </script>
 <style lang="less">
+.nft-title {
+  font-size: 55px;
+  color: #076b41;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
 .ant-card-meta-detail > div:not(:last-child) {
   font-size: 24px;
   font-weight: bolder;
@@ -109,5 +77,11 @@ export default {
   .ant-modal-title {
     font-size: 21px;
   }
+}
+.ant-card-cover img {
+  cursor: pointer;
+}
+.ant-card-cover img:hover {
+  border: 4px solid #17a2b8;
 }
 </style>

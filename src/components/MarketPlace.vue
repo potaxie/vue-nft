@@ -5,19 +5,27 @@
     @tabChange="(key) => changeTab(key)"
     class="history-volume"
   >
-    <div ref="container" id="container"></div>
+    <div id="container"></div>
   </a-card>
   <a-card
     class="sale-history"
     :tab-list="symbolTabs"
     @tabChange="(key) => changeSymbolTab(key)"
-    title="Sale History"
   >
+    <template #title>
+      Sale History
+      <a-input-search
+        v-model:value="keyword"
+        placeholder="Input keyword"
+        enter-button
+        style="width: 250px; float: right"
+        @search="refreshSaleHistory"
+      />
+    </template>
     <a-table
       :columns="columns"
       :data-source="data"
-      :pagination="false"
-      :scroll="{ y: 300 }"
+      :pagination="pagination"
       rowKey="token_id"
       size="middle"
     >
@@ -71,8 +79,18 @@ export default {
   data() {
     return {
       chart: undefined,
+      keyword: "",
       data: [],
       columns: columns,
+      pagination: {
+        onChange: (page) => {
+          this.pagination.current = page;
+          this.refreshSaleHistory();
+        },
+        total: 0,
+        current: 1,
+        pageSize: 10,
+      },
       choice: "7",
       symbol: "All",
       symbolTabs: [
@@ -115,34 +133,38 @@ export default {
     },
     changeTab(name) {
       this.choice = name;
-      this.refresh();
+      this.refreshVolumeHistory();
     },
     changeSymbolTab(name) {
       this.symbol = name;
-      api.marketPlaceList(this.choice, this.symbol).then((res) => {
-        this.data = res.data;
-      });
+      this.refreshSaleHistory();
     },
-    refresh() {
-      let that = this;
+    refreshSaleHistory() {
+      api
+        .marketPlaceList(
+          this.choice,
+          this.symbol,
+          this.keyword,
+          this.pagination.current,
+          this.pagination.pageSize
+        )
+        .then((res) => {
+          this.pagination.total = res.data.total;
+          this.data = res.data.result_list;
+        });
+    },
+    refreshVolumeHistory() {
       api.marketPlaceAnalysis(this.choice).then((res) => {
-        that.chart.data(res.data);
-        that.chart.render();
-      });
-      api.marketPlaceList(this.choice, this.symbol).then((res) => {
-        this.data = res.data;
+        this.chart.data(res.data);
+        this.chart.render();
       });
     },
   },
   mounted() {
-    let containerRef = this.$refs["container"];
-    let scrollWidth = containerRef.scrollWidth;
     this.chart = new Chart({
       container: "container",
       autoFit: true,
-      width: scrollWidth,
-      height: 250,
-      padding: [30, 40, 60, 30],
+      height: 200,
     });
     this.chart.scale({
       day: {
@@ -158,7 +180,8 @@ export default {
     });
     this.chart.point().position("day*volume").color("contract_name").shape("smooth");
     this.chart.line().position("day*volume").color("contract_name").shape("smooth");
-    this.refresh();
+    this.refreshSaleHistory();
+    this.refreshVolumeHistory();
   },
 };
 </script>
