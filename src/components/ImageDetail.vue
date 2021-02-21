@@ -1,6 +1,5 @@
 <template>
   <a-modal
-    title="Information"
     :width="500"
     centered
     v-model:visible="showDetail"
@@ -8,6 +7,16 @@
     style="font-size: 10px"
     wrapClassName="information"
   >
+    <template #title>
+      Information
+      <a-button size="small" v-if="detail" @click="star()" style="margin-left: 5px">
+        <template #icon>
+          <StarFilled v-if="detail.stared" />
+          <StarOutlined v-else
+        /></template>
+        {{ detail.stared ? "Unstar" : "Star" }}
+      </a-button>
+    </template>
     <div class="nft-image-detail" v-if="detail">
       <a-image :width="450" :src="'/app/file/get/' + detail.id" />
       <div class="detail-item">
@@ -51,9 +60,7 @@
           </template>
           <div class="line-clamp">
             <span class="title">external_link: </span>
-            <a target="_blank" :href="detail.external_link">{{
-              detail.external_link
-            }}</a>
+            <a target="_blank" :href="detail.external_link">{{ detail.external_link }}</a>
           </div>
         </a-tooltip>
       </div>
@@ -61,12 +68,48 @@
   </a-modal>
 </template>
 <script>
+import { StarOutlined, StarFilled } from "@ant-design/icons-vue";
+import { message } from "ant-design-vue";
+import { mapGetters } from "vuex";
+import api from "@/api/module";
 export default {
+  components: {
+    StarOutlined,
+    StarFilled,
+  },
   data() {
     return {
       showDetail: false,
       detail: null,
     };
+  },
+  computed: {
+    ...mapGetters(["getCurrentUser"]),
+  },
+  methods: {
+    star() {
+      if (!this.getCurrentUser()) {
+        message.warn("Please login...");
+        return;
+      }
+      if (this.detail.stared) {
+        api.nftWorkCancelCollect(this.detail.id).then((res) => {
+          if (res.data.code === 1) {
+            this.detail.stared = false;
+          } else {
+            message.error(res.data.description);
+          }
+        });
+      } else {
+        api.nftWorkCollect(this.detail.id).then((res) => {
+          if (res.data.code === 1) {
+            this.detail.stared = true;
+          } else {
+            message.error(res.data.description);
+          }
+        });
+      }
+    },
   },
 };
 </script>

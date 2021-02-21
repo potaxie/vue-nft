@@ -1,7 +1,7 @@
 <template>
   <div class="login-container">
     <div class="top">
-      <a-image src="/logo.svg" width="200px" />
+      <a-image src="/logo.svg" width="200px" :preview="false"/>
     </div>
     <div class="desc">
       <span> </span>
