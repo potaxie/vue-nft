@@ -212,5 +212,11 @@ export default {
     color: rgba(0, 0, 0, 0.85);
     font-weight: bold;
   }
+  .hover-img img {
+    cursor: pointer;
+  }
+  .hover-img img:hover {
+    border: 2px solid #17a2b8;
+  }
 }
 </style>

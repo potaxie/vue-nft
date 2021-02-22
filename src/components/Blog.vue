@@ -126,7 +126,7 @@
 
     <a-modal
       title="comments"
-      width="calc(80vw)"
+      width="calc(50vw)"
       :footer="null"
       centered
       v-model:visible="showComments"

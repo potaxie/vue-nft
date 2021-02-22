@@ -5,7 +5,7 @@
     @tabChange="(key) => changeTab(key)"
     class="history-volume"
   >
-    <div id="container"></div>
+    <div ref="container" id="container"></div>
   </a-card>
   <a-card
     class="sale-history"
@@ -31,7 +31,8 @@
     >
       <template #image="{ record }">
         <a-avatar
-          size="large"
+          class="hover-img"
+          :size="50"
           shape="square"
           :src="'/app/file/get/' + record.image + '?flag=tumbnail'"
           @click="onImageDetail(record)"
@@ -49,11 +50,14 @@ const columns = [
   {
     title: "Name",
     dataIndex: "name",
+    width: 250,
+    ellipsis: true,
   },
   {
     title: "Image",
     dataIndex: "image",
     slots: { customRender: "image" },
+    width: 120,
   },
   {
     title: "Symbol",
@@ -62,6 +66,8 @@ const columns = [
   {
     title: "Token_id",
     dataIndex: "token_id",
+    width: 100,
+    ellipsis: true,
   },
   {
     title: "price",
@@ -161,9 +167,11 @@ export default {
     },
   },
   mounted() {
+    let containerRef = this.$refs["container"];
+    let scrollWidth = containerRef.scrollWidth;
     this.chart = new Chart({
       container: "container",
-      autoFit: true,
+      width: scrollWidth,
       height: 200,
     });
     this.chart.scale({

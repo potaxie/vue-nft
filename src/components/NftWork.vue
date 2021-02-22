@@ -1,50 +1,119 @@
 <template>
   <div class="nft-title">Welcome Ginkgo</div>
-  <div v-for="group in groups" :key="group.name" style="margin-bottom: 20px">
+  <div v-for="group in groups" :key="group.name" style="margin: 10px 10%">
     <a-row
-      style="text-align: left; font-size: 32px; font-family: Roboto,-apple-system,BlinkMacSystemFont,Arial,sans-serif;sans-serif;font-weight: bold; margin-bottom: 10px;color: #3291E6"
+      type="flex"
+      justify="space-between"
+      style="margin-bottom: 10px; margin-right: 60px"
     >
-      {{ group.name }}
+      <a-col class="group-title">{{ group.name }}</a-col>
+      <a-col class="group-chat" @click="openComments(group.name)"
+        >Chat<DoubleRightOutlined
+      /></a-col>
     </a-row>
-    <a-row :gutter="50" type="flex" justify="start">
-      <a-col :span="4" v-for="image in group.images" :key="image.id">
-        <a-card>
-          <template #cover>
-            <img
-              :src="'/app/file/get/' + image.id + '?flag=tumbnail'"
-              height="300"
-              @click="handleImage(image)"
-            />
-          </template>
-          <a-card-meta :title="image.name">
-            <template #description>
-              <div style="font-size: 16px; font-weight: bold">
-                <span style="color: green"
-                  >${{ image.price }}({{ image.numbers }}ETH)</span
-                >
-                <br />
-                <span>{{ image.time }}</span>
-              </div>
+    <a-carousel autoplay :speed="3000" :autoplaySpeed="6500">
+      <a-row
+        class="carousel-img"
+        :gutter="50"
+        type="flex"
+        justify="start"
+        v-for="i in Math.ceil(group.images.length / 4)"
+        :key="i"
+      >
+        <a-col
+          :span="6"
+          v-for="image in group.images.slice((i - 1) * 4, i * 4)"
+          :key="image.id"
+        >
+          <a-card>
+            <template #cover>
+              <img
+                :src="'/app/file/get/' + image.id + '?flag=tumbnail'"
+                height="300"
+                @click="handleImage(image)"
+              />
             </template>
-          </a-card-meta>
-        </a-card>
-      </a-col>
-    </a-row>
+            <a-card-meta :title="image.name">
+              <template #description>
+                <div style="font-size: 16px; font-weight: bold">
+                  <span style="color: green"
+                    >${{ image.price }}({{ image.numbers }}ETH)</span
+                  >
+                  <br />
+                  <span>{{ image.time }}</span>
+                </div>
+              </template>
+            </a-card-meta>
+          </a-card>
+        </a-col>
+      </a-row>
+    </a-carousel>
   </div>
   <image-detail ref="image-detail" />
+  <a-modal
+    :title="currentGroup + ' Comments'"
+    width="calc(50vw)"
+    :footer="null"
+    centered
+    v-model:visible="showComments"
+  >
+    <a-row style="margin-top: 5px">
+      <a-input
+        :placeholder="getCurrentUser() ? '...' : 'Please login first'"
+        :disabled="!getCurrentUser()"
+        v-model:value="myComment"
+      >
+        <template #addonAfter>
+          <a href="javascript:;" @click="submitComment()"><SendOutlined /></a>
+        </template>
+      </a-input>
+    </a-row>
+    <a-list class="comment-list" item-layout="horizontal" :data-source="comments">
+      <template #renderItem="{ item }">
+        <a-list-item>
+          <a-comment :author="item.author" :avatar="'/app/file/get/' + item.avatar">
+            <template #content>
+              <p>
+                {{ item.content }}
+              </p>
+            </template>
+            <template #datetime>
+              <a-tooltip :title="item.time">
+                <span>{{ moment(item.time, "YYYY-MM-DD hh:mm:ss").fromNow() }}</span>
+              </a-tooltip>
+            </template>
+          </a-comment>
+        </a-list-item>
+      </template>
+    </a-list>
+  </a-modal>
 </template>
 
 <script>
 import ImageDetail from "@/components/ImageDetail";
+import { DoubleRightOutlined, SendOutlined } from "@ant-design/icons-vue";
+import { mapGetters } from "vuex";
+import { message } from "ant-design-vue";
 import api from "@/api/module";
+import moment from "moment";
 export default {
   components: {
     ImageDetail,
+    DoubleRightOutlined,
+    SendOutlined,
   },
   data() {
     return {
       groups: [],
+      currentGroup: "",
+      showComments: false,
+      comments: [],
+      myComment: "",
+      moment,
     };
+  },
+  computed: {
+    ...mapGetters(["getCurrentUser"]),
   },
   methods: {
     handleImage(image) {
@@ -52,6 +121,32 @@ export default {
         let imageDetail = this.$refs["image-detail"];
         imageDetail.detail = res.data;
         imageDetail.showDetail = true;
+      });
+    },
+    openComments(groupName) {
+      this.currentGroup = groupName;
+      // this.currentGroup
+      api.comments("0012").then((res) => {
+        this.myComment = "";
+        this.comments = res.data;
+        this.showComments = true;
+      });
+    },
+    submitComment() {
+      if (!this.myComment) {
+        return;
+      }
+      // this.currentGroup
+      api.submitComment("0012", this.myComment).then((res) => {
+        if (res.data.code === 1) {
+          message.success("submit success");
+          this.myComment = "";
+          api.comments("0012").then((res1) => {
+            this.comments = res1.data;
+          });
+        } else {
+          message.error(res.data.description);
+        }
       });
     },
   },
@@ -69,6 +164,24 @@ export default {
   font-weight: bold;
   margin-bottom: 20px;
 }
+.group-title {
+  font-size: 32px;
+  font-family: Roboto, -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  font-weight: bold;
+  color: #3291e6;
+}
+.group-chat {
+  font-size: 16px;
+  top: 20px;
+  font-weight: bold;
+}
+.group-chat:hover {
+  font-size: 16px;
+  top: 20px;
+  font-weight: bold;
+  color: #3291e6;
+  cursor: pointer;
+}
 .ant-card-meta-detail > div:not(:last-child) {
   font-size: 24px;
   font-weight: bolder;
@@ -82,6 +195,9 @@ export default {
   cursor: pointer;
 }
 .ant-card-cover img:hover {
-  border: 4px solid #17a2b8;
+  border: 3px solid #17a2b8;
+}
+.carousel-img {
+  display: flex !important;
 }
 </style>
