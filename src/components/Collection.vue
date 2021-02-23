@@ -106,7 +106,7 @@ export default {
         },
         total: 0,
         current: 1,
-        pageSize: 10,
+        pageSize: 7,
       },
     };
   },
@@ -117,7 +117,10 @@ export default {
     refresh() {
       let that = this;
       api
-        .collectionList(this.choice, this.current ? this.current.token_id : null)
+        .collectionList(
+          this.choice,
+          this.current ? this.current.token_id : null
+        )
         .then((res) => {
           that.chart.data(res.data);
           that.chart.render();
@@ -163,9 +166,12 @@ export default {
       width: scrollWidth,
       height: 200,
     });
-    this.chart.line().position("date*price").tooltip({
-      showMarkers: false,
-    });
+    this.chart
+      .line()
+      .position("date*price")
+      .tooltip({
+        showMarkers: false,
+      });
     this.detail();
   },
 };

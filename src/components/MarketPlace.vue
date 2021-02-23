@@ -95,7 +95,7 @@ export default {
         },
         total: 0,
         current: 1,
-        pageSize: 10,
+        pageSize: 7,
       },
       choice: "7",
       symbol: "All",
@@ -186,8 +186,16 @@ export default {
       showCrosshairs: true,
       shared: true,
     });
-    this.chart.point().position("day*volume").color("contract_name").shape("smooth");
-    this.chart.line().position("day*volume").color("contract_name").shape("smooth");
+    this.chart
+      .point()
+      .position("day*volume")
+      .color("contract_name")
+      .shape("smooth");
+    this.chart
+      .line()
+      .position("day*volume")
+      .color("contract_name")
+      .shape("smooth");
     this.refreshSaleHistory();
     this.refreshVolumeHistory();
   },

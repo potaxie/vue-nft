@@ -9,9 +9,15 @@
   >
     <template #title>
       Information
-      <a-button size="small" shape="round" v-if="detail" @click="star()" style="margin-left: 5px">
+      <a-button
+        size="small"
+        shape="round"
+        v-if="detail"
+        @click="star()"
+        style="margin-left: 5px"
+      >
         <template #icon>
-          <StarFilled v-if="detail.stared" />
+          <StarFilled v-if="detail.stared"/>
           <StarOutlined v-else
         /></template>
         {{ detail.stared ? "Unstar" : "Star" }}
@@ -60,7 +66,9 @@
           </template>
           <div class="line-clamp">
             <span class="title">external_link: </span>
-            <a target="_blank" :href="detail.external_link">{{ detail.external_link }}</a>
+            <a target="_blank" :href="detail.external_link">{{
+              detail.external_link
+            }}</a>
           </div>
         </a-tooltip>
       </div>

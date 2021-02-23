@@ -1,6 +1,6 @@
 <template>
   <div class="nft-title">Welcome Ginkgo</div>
-  <div v-for="group in groups" :key="group.name" style="margin: 10px 10%">
+  <div v-for="group in groups" :key="group.name" style="margin: 10px 15%">
     <a-row
       type="flex"
       justify="space-between"
@@ -11,7 +11,7 @@
         >Chat<DoubleRightOutlined
       /></a-col>
     </a-row>
-    <a-carousel autoplay :speed="3000" :autoplaySpeed="6500">
+    <a-carousel autoplay :speed="6000" :autoplaySpeed="7500">
       <a-row
         class="carousel-img"
         :gutter="50"
@@ -68,10 +68,17 @@
         </template>
       </a-input>
     </a-row>
-    <a-list class="comment-list" item-layout="horizontal" :data-source="comments">
+    <a-list
+      class="comment-list"
+      item-layout="horizontal"
+      :data-source="comments"
+    >
       <template #renderItem="{ item }">
         <a-list-item>
-          <a-comment :author="item.author" :avatar="'/app/file/get/' + item.avatar">
+          <a-comment
+            :author="item.author"
+            :avatar="'/app/file/get/' + item.avatar"
+          >
             <template #content>
               <p>
                 {{ item.content }}
@@ -79,7 +86,9 @@
             </template>
             <template #datetime>
               <a-tooltip :title="item.time">
-                <span>{{ moment(item.time, "YYYY-MM-DD hh:mm:ss").fromNow() }}</span>
+                <span>{{
+                  moment(item.time, "YYYY-MM-DD hh:mm:ss").fromNow()
+                }}</span>
               </a-tooltip>
             </template>
           </a-comment>
@@ -125,8 +134,8 @@ export default {
     },
     openComments(groupName) {
       this.currentGroup = groupName;
-      // this.currentGroup
-      api.comments("0012").then((res) => {
+      // this.currentGroup 0012
+      api.comments(this.currentGroup).then((res) => {
         this.myComment = "";
         this.comments = res.data;
         this.showComments = true;
@@ -137,11 +146,11 @@ export default {
         return;
       }
       // this.currentGroup
-      api.submitComment("0012", this.myComment).then((res) => {
+      api.submitComment(this.currentGroup, this.myComment).then((res) => {
         if (res.data.code === 1) {
           message.success("submit success");
           this.myComment = "";
-          api.comments("0012").then((res1) => {
+          api.comments(this.currentGroup).then((res1) => {
             this.comments = res1.data;
           });
         } else {
@@ -162,7 +171,8 @@ export default {
   font-size: 55px;
   color: #076b41;
   font-weight: bold;
-  margin-bottom: 20px;
+  margin-top: 0px;
+  margin-bottom: 35px;
 }
 .group-title {
   font-size: 32px;
