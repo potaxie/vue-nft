@@ -11,7 +11,7 @@
         >Chat<DoubleRightOutlined
       /></a-col>
     </a-row>
-    <a-carousel autoplay :speed="6000" :autoplaySpeed="7500">
+    <a-carousel autoplay :speed="8000" :autoplaySpeed="2000">
       <a-row
         class="carousel-img"
         :gutter="50"
@@ -30,7 +30,6 @@
               <img
                 :src="'/app/file/get/' + image.id + '?flag=tumbnail'"
                 height="280"
-                width="180"
                 @click="handleImage(image)"
               />
             </template>
