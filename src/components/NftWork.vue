@@ -29,7 +29,8 @@
             <template #cover>
               <img
                 :src="'/app/file/get/' + image.id + '?flag=tumbnail'"
-                height="300"
+                height="280"
+                width="180"
                 @click="handleImage(image)"
               />
             </template>
