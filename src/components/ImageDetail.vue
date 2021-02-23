@@ -9,7 +9,7 @@
   >
     <template #title>
       Information
-      <a-button size="small" v-if="detail" @click="star()" style="margin-left: 5px">
+      <a-button size="small" shape="round" v-if="detail" @click="star()" style="margin-left: 5px">
         <template #icon>
           <StarFilled v-if="detail.stared" />
           <StarOutlined v-else
