@@ -57,7 +57,7 @@ const columns = [
     title: "Image",
     dataIndex: "image",
     slots: { customRender: "image" },
-    width: 120,
+    width: 220,
   },
   {
     title: "Symbol",
@@ -66,7 +66,7 @@ const columns = [
   {
     title: "Token_id",
     dataIndex: "token_id",
-    width: 100,
+    width: 200,
     ellipsis: true,
   },
   {
