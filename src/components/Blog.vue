@@ -56,7 +56,11 @@
       centered
       v-model:visible="showViewModal"
     >
-      <v-md-editor v-if="article" v-model="article.content" mode="preview"></v-md-editor>
+      <v-md-editor
+        v-if="article"
+        v-model="article.content"
+        mode="preview"
+      ></v-md-editor>
     </a-modal>
 
     <div class="write-blog">
@@ -92,7 +96,7 @@
               width="280"
               height="155"
               alt="cover"
-              :src="'/app/file/get/' + item.cover"
+              :src="'/app/file/get/' + item.cover + '?flag=tumbnail'"
             />
           </template>
           <a-list-item-meta
@@ -139,14 +143,23 @@
             v-model:value="article.myComment"
           >
             <template #addonAfter>
-              <a href="javascript:;" @click="submitComment(article)"><SendOutlined /></a>
+              <a href="javascript:;" @click="submitComment(article)"
+                ><SendOutlined
+              /></a>
             </template>
           </a-input>
         </a-row>
-        <a-list class="comment-list" item-layout="horizontal" :data-source="comments">
+        <a-list
+          class="comment-list"
+          item-layout="horizontal"
+          :data-source="comments"
+        >
           <template #renderItem="{ item }">
             <a-list-item>
-              <a-comment :author="item.author" :avatar="'/app/file/get/' + item.avatar">
+              <a-comment
+                :author="item.author"
+                :avatar="'/app/file/get/' + item.avatar"
+              >
                 <template #content>
                   <p>
                     {{ item.content }}
@@ -154,7 +167,9 @@
                 </template>
                 <template #datetime>
                   <a-tooltip :title="item.time">
-                    <span>{{ moment(item.time, "YYYY-MM-DD hh:mm:ss").fromNow() }}</span>
+                    <span>{{
+                      moment(item.time, "YYYY-MM-DD hh:mm:ss").fromNow()
+                    }}</span>
                   </a-tooltip>
                 </template>
               </a-comment>
@@ -225,13 +240,16 @@ export default {
           action(editor) {
             editor.$nextTick(async () => {
               const event = await editor.$refs.uploadFile.upload();
-              const files = filesFilter(event.target.files, editor.uploadImgConfig);
+              const files = filesFilter(
+                event.target.files,
+                editor.uploadImgConfig
+              );
               if (editor.hasUploadImage && files.length) {
                 event.preventDefault();
                 editor.$emit(
                   "upload-image",
                   event,
-                  function (imageRef) {
+                  function(imageRef) {
                     editor.execCommand(image, imageRef);
                   },
                   files
@@ -292,10 +310,12 @@ export default {
       });
     },
     list() {
-      api.list(this.pagination.current, this.pagination.pageSize).then((res) => {
-        this.pagination.total = res.data.total;
-        this.data = res.data.blog_list;
-      });
+      api
+        .list(this.pagination.current, this.pagination.pageSize)
+        .then((res) => {
+          this.pagination.total = res.data.total;
+          this.data = res.data.blog_list;
+        });
     },
     like(item) {
       if (item.liked) {

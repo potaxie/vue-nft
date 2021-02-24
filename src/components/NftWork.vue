@@ -1,17 +1,17 @@
 <template>
   <div class="nft-title">Welcome Ginkgo</div>
-  <div v-for="group in groups" :key="group.name" style="margin: 10px 15%">
+  <div v-for="group in groups" :key="group.name" style="margin: 12px 11%">
     <a-row
       type="flex"
       justify="space-between"
-      style="margin-bottom: 10px; margin-right: 60px"
+      style="margin-bottom: 20px; margin-right: 60px"
     >
       <a-col class="group-title">{{ group.name }}</a-col>
       <a-col class="group-chat" @click="openComments(group.name)"
         >Chat<DoubleRightOutlined
       /></a-col>
     </a-row>
-    <a-carousel autoplay :speed="8000" :autoplaySpeed="2000">
+    <a-carousel autoplay :speed="16000" :autoplaySpeed="1000">
       <a-row
         class="carousel-img"
         :gutter="50"
@@ -171,7 +171,7 @@ export default {
   font-size: 55px;
   color: #076b41;
   font-weight: bold;
-  margin-top: 0px;
+  margin-top: 10px;
   margin-bottom: 35px;
 }
 .group-title {
@@ -179,11 +179,13 @@ export default {
   font-family: Roboto, -apple-system, BlinkMacSystemFont, Arial, sans-serif;
   font-weight: bold;
   color: #3291e6;
+  margin-top: 20px;
 }
 .group-chat {
   font-size: 16px;
   top: 20px;
   font-weight: bold;
+  margin-top: 20px;
 }
 .group-chat:hover {
   font-size: 16px;
