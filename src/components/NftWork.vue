@@ -1,17 +1,17 @@
 <template>
   <div class="nft-title">Welcome Ginkgo</div>
-  <div v-for="group in groups" :key="group.name" style="margin: 10px 10%">
+  <div v-for="group in groups" :key="group.name" style="margin: 10px 13%">
     <a-row
       type="flex"
       justify="space-between"
-      style="margin-bottom: 10px; margin-right: 60px"
+      style="margin-bottom: 20px; margin-right: 60px"
     >
       <a-col class="group-title">{{ group.name }}</a-col>
       <a-col class="group-chat" @click="openComments(group.name)"
         >Chat<DoubleRightOutlined
       /></a-col>
     </a-row>
-    <a-carousel autoplay :speed="3000" :autoplaySpeed="6500">
+    <a-carousel autoplay :speed="16000" :autoplaySpeed="1000">
       <a-row
         class="carousel-img"
         :gutter="50"
@@ -29,7 +29,7 @@
             <template #cover>
               <img
                 :src="'/app/file/get/' + image.id + '?flag=tumbnail'"
-                height="300"
+                height="280"
                 @click="handleImage(image)"
               />
             </template>
@@ -68,10 +68,17 @@
         </template>
       </a-input>
     </a-row>
-    <a-list class="comment-list" item-layout="horizontal" :data-source="comments">
+    <a-list
+      class="comment-list"
+      item-layout="horizontal"
+      :data-source="comments"
+    >
       <template #renderItem="{ item }">
         <a-list-item>
-          <a-comment :author="item.author" :avatar="'/app/file/get/' + item.avatar">
+          <a-comment
+            :author="item.author"
+            :avatar="'/app/file/get/' + item.avatar"
+          >
             <template #content>
               <p>
                 {{ item.content }}
@@ -79,7 +86,9 @@
             </template>
             <template #datetime>
               <a-tooltip :title="item.time">
-                <span>{{ moment(item.time, "YYYY-MM-DD hh:mm:ss").fromNow() }}</span>
+                <span>{{
+                  moment(item.time, "YYYY-MM-DD hh:mm:ss").fromNow()
+                }}</span>
               </a-tooltip>
             </template>
           </a-comment>
@@ -125,8 +134,8 @@ export default {
     },
     openComments(groupName) {
       this.currentGroup = groupName;
-      // this.currentGroup
-      api.comments("0012").then((res) => {
+      // this.currentGroup 0012
+      api.comments(this.currentGroup).then((res) => {
         this.myComment = "";
         this.comments = res.data;
         this.showComments = true;
@@ -137,11 +146,11 @@ export default {
         return;
       }
       // this.currentGroup
-      api.submitComment("0012", this.myComment).then((res) => {
+      api.submitComment(this.currentGroup, this.myComment).then((res) => {
         if (res.data.code === 1) {
           message.success("submit success");
           this.myComment = "";
-          api.comments("0012").then((res1) => {
+          api.comments(this.currentGroup).then((res1) => {
             this.comments = res1.data;
           });
         } else {
@@ -162,18 +171,21 @@ export default {
   font-size: 55px;
   color: #076b41;
   font-weight: bold;
-  margin-bottom: 20px;
+  margin-top: 10px;
+  margin-bottom: 35px;
 }
 .group-title {
   font-size: 32px;
   font-family: Roboto, -apple-system, BlinkMacSystemFont, Arial, sans-serif;
   font-weight: bold;
   color: #3291e6;
+  margin-top: 20px;
 }
 .group-chat {
   font-size: 16px;
   top: 20px;
   font-weight: bold;
+  margin-top: 20px;
 }
 .group-chat:hover {
   font-size: 16px;
