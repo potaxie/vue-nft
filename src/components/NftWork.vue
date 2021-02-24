@@ -1,6 +1,6 @@
 <template>
   <div class="nft-title">Welcome Ginkgo</div>
-  <div v-for="group in groups" :key="group.name" style="margin: 12px 11%">
+  <div v-for="group in groups" :key="group.name" style="margin: 12px 12%">
     <a-row
       type="flex"
       justify="space-between"
