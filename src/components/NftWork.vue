@@ -1,53 +1,61 @@
 <template>
   <div class="nft-title">Welcome Ginkgo</div>
-  <div v-for="group in groups" :key="group.name" style="margin: 10px 13%">
-    <a-row
-      type="flex"
-      justify="space-between"
-      style="margin-bottom: 20px; margin-right: 60px"
-    >
-      <a-col class="group-title">{{ group.name }}</a-col>
-      <a-col class="group-chat" @click="openComments(group.name)"
-        >Chat<DoubleRightOutlined
-      /></a-col>
-    </a-row>
-    <a-carousel autoplay :speed="16000" :autoplaySpeed="1000">
-      <a-row
-        class="carousel-img"
-        :gutter="50"
-        type="flex"
-        justify="start"
-        v-for="i in Math.ceil(group.images.length / 4)"
-        :key="i"
-      >
-        <a-col
-          :span="6"
-          v-for="image in group.images.slice((i - 1) * 4, i * 4)"
-          :key="image.id"
-        >
-          <a-card>
-            <template #cover>
-              <img
-                :src="'/app/file/get/' + image.id + '?flag=tumbnail'"
-                height="280"
-                @click="handleImage(image)"
-              />
-            </template>
-            <a-card-meta :title="image.name">
-              <template #description>
-                <div style="font-size: 16px; font-weight: bold">
-                  <span style="color: green"
-                    >${{ image.price }}({{ image.numbers }}ETH)</span
-                  >
-                  <br />
-                  <span>{{ image.time }}</span>
-                </div>
-              </template>
-            </a-card-meta>
-          </a-card>
-        </a-col>
+  <div style="margin: 10px 12%">
+    <div v-for="group in groups" :key="group.name">
+      <a-row type="flex" justify="space-between" style="margin: 0 25px 10px 20px">
+        <a-col class="group-title">{{ group.name }}</a-col>
+        <a-col class="group-chat" @click="openComments(group.name)"
+          >Chat<DoubleRightOutlined
+        /></a-col>
       </a-row>
-    </a-carousel>
+      <a-carousel arrows :speed="1600">
+        <template #prevArrow>
+          <div class="custom-slick-arrow" style="left: -25px">
+            <LeftOutlined />
+          </div>
+        </template>
+        <template #nextArrow>
+          <div class="custom-slick-arrow" style="right: -25px">
+            <RightOutlined />
+          </div>
+        </template>
+        <a-row
+          class="carousel-img"
+          :gutter="40"
+          type="flex"
+          justify="space-around"
+          v-for="i in Math.ceil(group.images.length / 4)"
+          :key="i"
+        >
+          <a-col
+            :span="6"
+            v-for="image in group.images.slice((i - 1) * 4, i * 4)"
+            :key="image.id"
+          >
+            <a-card>
+              <template #cover>
+                <img
+                  :src="'/app/file/get/' + image.id + '?flag=tumbnail'"
+                  height="280"
+                  @click="handleImage(image)"
+                />
+              </template>
+              <a-card-meta :title="image.name">
+                <template #description>
+                  <div style="font-size: 16px; font-weight: bold">
+                    <span style="color: green"
+                      >${{ image.price }}({{ image.numbers }}ETH)</span
+                    >
+                    <br />
+                    <span>{{ image.time }}</span>
+                  </div>
+                </template>
+              </a-card-meta>
+            </a-card>
+          </a-col>
+        </a-row>
+      </a-carousel>
+    </div>
   </div>
   <image-detail ref="image-detail" />
   <a-modal
@@ -68,17 +76,10 @@
         </template>
       </a-input>
     </a-row>
-    <a-list
-      class="comment-list"
-      item-layout="horizontal"
-      :data-source="comments"
-    >
+    <a-list class="comment-list" item-layout="horizontal" :data-source="comments">
       <template #renderItem="{ item }">
         <a-list-item>
-          <a-comment
-            :author="item.author"
-            :avatar="'/app/file/get/' + item.avatar"
-          >
+          <a-comment :author="item.author" :avatar="'/app/file/get/' + item.avatar">
             <template #content>
               <p>
                 {{ item.content }}
@@ -86,9 +87,7 @@
             </template>
             <template #datetime>
               <a-tooltip :title="item.time">
-                <span>{{
-                  moment(item.time, "YYYY-MM-DD hh:mm:ss").fromNow()
-                }}</span>
+                <span>{{ moment(item.time, "YYYY-MM-DD hh:mm:ss").fromNow() }}</span>
               </a-tooltip>
             </template>
           </a-comment>
@@ -100,7 +99,12 @@
 
 <script>
 import ImageDetail from "@/components/ImageDetail";
-import { DoubleRightOutlined, SendOutlined } from "@ant-design/icons-vue";
+import {
+  DoubleRightOutlined,
+  SendOutlined,
+  LeftOutlined,
+  RightOutlined,
+} from "@ant-design/icons-vue";
 import { mapGetters } from "vuex";
 import { message } from "ant-design-vue";
 import api from "@/api/module";
@@ -110,6 +114,8 @@ export default {
     ImageDetail,
     DoubleRightOutlined,
     SendOutlined,
+    LeftOutlined,
+    RightOutlined,
   },
   data() {
     return {
@@ -172,7 +178,7 @@ export default {
   color: #076b41;
   font-weight: bold;
   margin-top: 10px;
-  margin-bottom: 35px;
+  margin-bottom: 10px;
 }
 .group-title {
   font-size: 32px;
@@ -211,5 +217,16 @@ export default {
 }
 .carousel-img {
   display: flex !important;
+  margin-left: 0 !important;
+}
+.custom-slick-arrow {
+  font-size: 30px !important;
+  color: #afafca !important;
+}
+.ant-carousel .slick-prev::before {
+  content: "" !important;
+}
+.ant-carousel .slick-next::before {
+  content: "" !important;
 }
 </style>

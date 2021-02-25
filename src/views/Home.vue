@@ -43,15 +43,19 @@
                 {{ getCurrentUser().nickname || getCurrentUser().username }}
               </a>
             </a-space>
-            <template #overlay
-              ><a-menu
-                ><a-menu-item
-                  ><a href="javascript:;" @click="userSetting">Setting</a></a-menu-item
-                ><a-menu-item
-                  ><a href="javascript:;" @click="logout">Logout</a></a-menu-item
-                ></a-menu
-              ></template
-            >
+            <template #overlay>
+              <a-menu>
+                <a-menu-item>
+                  <UserOutlined />
+                  <span @click="userSetting"> Setting</span>
+                </a-menu-item>
+                <a-menu-divider />
+                <a-menu-item>
+                  <LogoutOutlined />
+                  <span @click="logout"> Logout </span>
+                </a-menu-item>
+              </a-menu>
+            </template>
           </a-dropdown>
           <a-button
             v-else
@@ -113,7 +117,12 @@ import Collection from "@/components/Collection";
 import MarketPlace from "@/components/MarketPlace";
 import Blog from "@/components/Blog";
 
-import { UserOutlined, PlusOutlined, LoadingOutlined } from "@ant-design/icons-vue";
+import {
+  UserOutlined,
+  PlusOutlined,
+  LoadingOutlined,
+  LogoutOutlined,
+} from "@ant-design/icons-vue";
 
 import { mapGetters, mapActions } from "vuex";
 
@@ -129,6 +138,7 @@ export default {
     UserOutlined,
     PlusOutlined,
     LoadingOutlined,
+    LogoutOutlined,
   },
 
   data() {
