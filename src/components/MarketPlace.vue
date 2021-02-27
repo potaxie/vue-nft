@@ -1,10 +1,28 @@
 <template>
-  <a-card
-    title="Volume History"
-    :tab-list="tabs"
-    @tabChange="(key) => changeTab(key)"
-    class="history-volume"
-  >
+  <a-card class="history-volume">
+    <template #title>
+      <div style="margin-bottom: 10px">Volume History</div>
+      <div style="margin-left: 2px">
+        <a-select
+          v-model:value="choice"
+          size="large"
+          style="font-size: 14px"
+          @change="changeTab"
+        >
+          <a-select-option value="7">Last 1 Week</a-select-option>
+          <a-select-option value="14">Last 2 Weeks</a-select-option>
+          <a-select-option value="30">Last 1 Month</a-select-option>
+          <a-select-option value="60">Last 2 Months</a-select-option>
+        </a-select>
+        <a-space style="margin-left: 10px; font-size: 14px">
+          <span v-for="item in titleVolumes" :key="item.contract_name">
+            {{ item.contract_name }} &nbsp;<span style="color: #3291e6"
+              >Ξ{{ item.volume }}</span
+            >
+          </span>
+        </a-space>
+      </div>
+    </template>
     <div ref="container" id="container"></div>
   </a-card>
   <a-card
@@ -19,7 +37,8 @@
         placeholder="Input keyword"
         enter-button
         style="width: 250px; float: right"
-        @search="refreshSaleHistory"
+        @pressEnter="keywordSearch"
+        @search="keywordSearch"
       />
     </template>
     <a-table
@@ -28,6 +47,7 @@
       :pagination="pagination"
       rowKey="token_id"
       size="middle"
+      @change="onTableChange"
     >
       <template #image="{ record }">
         <a-avatar
@@ -70,12 +90,14 @@ const columns = [
     ellipsis: true,
   },
   {
-    title: "price",
+    title: "Price",
     dataIndex: "price",
+    sorter: true,
   },
   {
     title: "Time",
     dataIndex: "time",
+    sorter: true,
   },
 ];
 export default {
@@ -85,8 +107,10 @@ export default {
   data() {
     return {
       chart: undefined,
+      titleVolumes: [],
       keyword: "",
       data: [],
+      sort: null,
       columns: columns,
       pagination: {
         onChange: (page) => {
@@ -95,7 +119,7 @@ export default {
         },
         total: 0,
         current: 1,
-        pageSize: 7,
+        pageSize: 6,
       },
       choice: "7",
       symbol: "All",
@@ -120,16 +144,33 @@ export default {
       tabs: [
         {
           key: "7",
-          tab: "Last week",
+          tab: "Last 1 week",
         },
         {
           key: "14",
-          tab: "Last two week",
+          tab: "Last 2 week",
         },
       ],
     };
   },
   methods: {
+    onTableChange(pagination, filters, sorter) {
+      var changed = false;
+      if (sorter && sorter.columnKey) {
+        let sortBy = sorter.columnKey;
+        if (!sorter.order && this.sort) {
+          this.sort = null;
+          changed = true;
+        } else {
+          let asc = sorter.order === "ascend";
+          changed = !this.sort || this.sort.sortBy !== sortBy || this.sort.asc !== asc;
+          this.sort = { sortBy: sortBy, asc: asc };
+        }
+      }
+      if (changed) {
+        this.refreshSaleHistory();
+      }
+    },
     onImageDetail(record) {
       api.imageDetail(record.image).then((res) => {
         let imageDetail = this.$refs["image-detail"];
@@ -143,6 +184,12 @@ export default {
     },
     changeSymbolTab(name) {
       this.symbol = name;
+      this.pagination.current = 1;
+      this.keyword = "";
+      this.refreshSaleHistory();
+    },
+    keywordSearch() {
+      this.pagination.current = 1;
       this.refreshSaleHistory();
     },
     refreshSaleHistory() {
@@ -152,7 +199,8 @@ export default {
           this.symbol,
           this.keyword,
           this.pagination.current,
-          this.pagination.pageSize
+          this.pagination.pageSize,
+          this.sort
         )
         .then((res) => {
           this.pagination.total = res.data.total;
@@ -161,7 +209,8 @@ export default {
     },
     refreshVolumeHistory() {
       api.marketPlaceAnalysis(this.choice).then((res) => {
-        this.chart.data(res.data);
+        this.titleVolumes = res.data.title_volume;
+        this.chart.data(res.data.volume);
         this.chart.render();
       });
     },
@@ -180,22 +229,15 @@ export default {
       },
       volume: {
         nice: true,
+        formatter: (val) => `Ξ${val}`,
       },
     });
     this.chart.tooltip({
       showCrosshairs: true,
       shared: true,
     });
-    this.chart
-      .point()
-      .position("day*volume")
-      .color("contract_name")
-      .shape("smooth");
-    this.chart
-      .line()
-      .position("day*volume")
-      .color("contract_name")
-      .shape("smooth");
+    this.chart.point().position("day*volume").color("contract_name").shape("smooth");
+    this.chart.line().position("day*volume").color("contract_name").shape("smooth");
     this.refreshSaleHistory();
     this.refreshVolumeHistory();
   },
@@ -204,12 +246,8 @@ export default {
 <style lang="less">
 .history-volume {
   text-align: left;
-  margin-bottom: 20px;
-  .ant-tabs-tab {
-    font-size: 14px;
-  }
-  .ant-card-body {
-    padding: 24px 24px 10px 25px;
+  .ant-card-head-title {
+    padding: 16px 0 4px 0;
   }
 }
 .sale-history {

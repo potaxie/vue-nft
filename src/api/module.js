@@ -18,13 +18,17 @@ export default {
   },
 
   //MarketPlace
-  marketPlaceList: (choice, symbol, keyword, page, pageSize) => {
-    return api.get({
-      url: "/marketplace_list", params: {
-        choice: choice, symbol: symbol, keyword: keyword,
-        page: page, pageSize: pageSize
-      }
-    });
+  marketPlaceList: (choice, symbol, keyword, page, pageSize, sort) => {
+    let params = {
+      choice: choice, symbol: symbol, keyword: keyword,
+      page: page, pageSize: pageSize,
+      sortBy: "", asc: true
+    };
+    if (sort) {
+      params.sortBy = sort.sortBy;
+      params.asc = sort.asc;
+    }
+    return api.get({ url: "/marketplace_list", params: params });
   },
 
   marketPlaceAnalysis: (choice) => {
@@ -35,12 +39,16 @@ export default {
   collectionList: (choice, id) => {
     return api.get({ url: "/collection_data_dash/" + choice + "/" + id });
   },
-  collectionDetail: (page, pageSize) => {
-    return api.get({
-      url: "/collection_data_detail", params: {
-        page: page, pageSize: pageSize
-      }
-    });
+  collectionDetail: (page, pageSize, sort) => {
+    let params = {
+      page: page, pageSize: pageSize,
+      sortBy: "", asc: true
+    };
+    if (sort) {
+      params.sortBy = sort.sortBy;
+      params.asc = sort.asc;
+    }
+    return api.get({ url: "/collection_data_detail", params: params });
   },
 
   //Blog

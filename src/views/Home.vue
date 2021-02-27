@@ -23,7 +23,7 @@
             ><a-menu-item key="NftWork">NftWork </a-menu-item
             ><a-menu-item key="MarketPlace">MarketPlace </a-menu-item
             ><a-menu-item key="Collection">Collection </a-menu-item
-            ><a-menu-item key="Blog"> Blog </a-menu-item></a-menu
+            ><a-menu-item key="Blog"> Paper </a-menu-item></a-menu
           ></a-col
         ><a-col :span="6" style="text-align: right">
           <a-dropdown v-if="getCurrentUser()">
