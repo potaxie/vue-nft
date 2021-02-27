@@ -70,9 +70,10 @@
         :placeholder="getCurrentUser() ? '...' : 'Please login first'"
         :disabled="!getCurrentUser()"
         v-model:value="myComment"
+        @pressEnter="submitComment"
       >
         <template #addonAfter>
-          <a href="javascript:;" @click="submitComment()"><SendOutlined /></a>
+          <a href="javascript:;" @click="submitComment"><SendOutlined /></a>
         </template>
       </a-input>
     </a-row>

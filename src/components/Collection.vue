@@ -1,20 +1,16 @@
 <template>
-  <a-card style="text-align: left">
-    <template #title>
-      Price Verb:
-      <a href="javascript:;" style="font-size: 14px; font-weight: 400">{{
-        current ? current.name : ""
-      }}</a>
-    </template>
-    <div ref="container" id="container"></div>
-  </a-card>
-  <a-card title="My collections" style="text-align: left">
+  <a-card
+    title="My collections"
+    style="text-align: left"
+    :bodyStyle="{ padding: '0 24px' }"
+  >
     <a-table
       :columns="columns"
       :data-source="data"
       :pagination="pagination"
       rowKey="token_id"
       size="middle"
+      @change="onTableChange"
     >
       <template #name="{ record }">
         <a
@@ -29,7 +25,7 @@
       <template #image="{ record }">
         <a-avatar
           class="hover-img"
-          :size="50"
+          :size="40"
           shape="square"
           :src="'/app/file/get/' + record.image + '?flag=tumbnail'"
           @click="onImageDetail(record)"
@@ -41,6 +37,15 @@
         </a-popconfirm>
       </template>
     </a-table>
+  </a-card>
+  <a-card style="text-align: left">
+    <template #title>
+      Price History:
+      <a href="javascript:;" style="font-size: 14px; font-weight: 400">{{
+        current ? current.name : ""
+      }}</a>
+    </template>
+    <div ref="container" id="container"></div>
   </a-card>
   <image-detail ref="image-detail" />
 </template>
@@ -75,12 +80,14 @@ const columns = [
     ellipsis: true,
   },
   {
-    title: "price",
+    title: "Price",
     dataIndex: "price",
+    sorter: true,
   },
   {
     title: "Time",
     dataIndex: "time",
+    sorter: true,
   },
   {
     title: "Action",
@@ -95,6 +102,7 @@ export default {
   data() {
     return {
       data: [],
+      sort: null,
       current: null,
       choice: "7",
       columns: columns,
@@ -106,7 +114,7 @@ export default {
         },
         total: 0,
         current: 1,
-        pageSize: 7,
+        pageSize: 6,
       },
     };
   },
@@ -114,13 +122,27 @@ export default {
     ...mapGetters(["getCurrentUser"]),
   },
   methods: {
+    onTableChange(pagination, filters, sorter) {
+      var changed = false;
+      if (sorter && sorter.columnKey) {
+        let sortBy = sorter.columnKey;
+        if (!sorter.order && this.sort) {
+          this.sort = null;
+          changed = true;
+        } else {
+          let asc = sorter.order === "ascend";
+          changed = !this.sort || this.sort.sortBy !== sortBy || this.sort.asc !== asc;
+          this.sort = { sortBy: sortBy, asc: asc };
+        }
+      }
+      if (changed) {
+        this.detail();
+      }
+    },
     refresh() {
       let that = this;
       api
-        .collectionList(
-          this.choice,
-          this.current ? this.current.token_id : null
-        )
+        .collectionList(this.choice, this.current ? this.current.token_id : null)
         .then((res) => {
           that.chart.data(res.data);
           that.chart.render();
@@ -135,7 +157,7 @@ export default {
     },
     detail() {
       api
-        .collectionDetail(this.pagination.current, this.pagination.pageSize)
+        .collectionDetail(this.pagination.current, this.pagination.pageSize, this.sort)
         .then((res) => {
           this.pagination.total = res.data.total;
           this.data = res.data.result_list;
@@ -166,12 +188,22 @@ export default {
       width: scrollWidth,
       height: 200,
     });
-    this.chart
-      .line()
-      .position("date*price")
-      .tooltip({
-        showMarkers: false,
-      });
+    this.chart.scale({
+      date: {
+        range: [0, 1],
+      },
+      price: {
+        min: 0,
+        nice: true,
+        formatter: (val) => `Ξ${val}`,
+      },
+    });
+    this.chart.tooltip({
+      showCrosshairs: true,
+      shared: true,
+    });
+    this.chart.line().position("date*price");
+    this.chart.point().position("date*price");
     this.detail();
   },
 };
