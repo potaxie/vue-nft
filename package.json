@@ -5,6 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "deploy": "npm run build && scp -r dist/* potaxie@139.196.39.186:~/potaxie_work/vue-nft/dist",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
