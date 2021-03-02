@@ -73,4 +73,14 @@ export default {
       data: { id: id, comment: myComment },
     });
   },
+
+  // Forum
+  searchForum: (label, page, pageSize) => {
+    let params = {
+      label: label,
+      page: page, pageSize: pageSize,
+    };
+    return api.get({ url: "/forum/get_forum", params: params });
+  },
+
 };
