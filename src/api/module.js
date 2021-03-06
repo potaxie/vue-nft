@@ -58,6 +58,9 @@ export default {
   list: (page, pageSize) => {
     return api.get({ url: "/article/submit/reback?page=" + page + "&pageSize=" + pageSize });
   },
+  getBlogDetail: (id) => {
+    return api.get({ url: "/article/submit/reback_article?id=" + id });
+  },
   like: (id) => {
     return api.get({ url: "/article/star/" + id });
   },
@@ -83,4 +86,24 @@ export default {
     return api.get({ url: "/forum/get_forum", params: params });
   },
 
+  submitForum: (data) => {
+    return api.post({ url: "/forum/submit_forum", data: data });
+  },
+
+  getForumDetail: (id) => {
+    return api.get({ url: "/forum/get_forum_content?id=" + id });
+  },
+
+  getForumComments: (id) => {
+    return api.get({ url: "/forum/get_forum_comments?id=" + id });
+  },
+
+  submitForumComment: (id, comment) => {
+    return api.post({
+      url: "/forum/submit_forum_comment", data: {
+        id: id,
+        comment: comment
+      }
+    });
+  }
 };

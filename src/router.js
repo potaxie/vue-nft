@@ -5,6 +5,9 @@ import MarketPlace from "./views/MarketPlace";
 import Collection from "./views/Collection";
 import Blog from "./views/Blog";
 import Forum from "./views/Forum";
+import ForumContent from "./views/ForumContent";
+import BlogContent from "./views/BlogContent";
+import AboutUs from "./views/AboutUs";
 
 const routes = [
   {
@@ -33,10 +36,25 @@ const routes = [
     component: Blog,
   },
   {
+    path: "/blog-content",
+    name: "BlogContent",
+    component: BlogContent,
+  },
+  {
     path: "/forum",
     name: "Forum",
     component: Forum,
   },
+  {
+    path: "/forum-content",
+    name: "ForumContent",
+    component: ForumContent,
+  },
+  {
+    path: "/about-us",
+    name: "AboutUs",
+    component: AboutUs,
+  }
 ];
 
 const router = createRouter({

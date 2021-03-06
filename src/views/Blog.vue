@@ -52,23 +52,13 @@
             @upload-image="handleUploadImage"
           />
         </a-modal>
-        <a-modal
-          :title="article ? article.title : ''"
-          width="calc(80vw)"
-          :footer="null"
-          centered
-          v-model:visible="showViewModal"
+        <div
+          class="write-blog"
+          v-if="getCurrentUser() && getCurrentUser().username === 'potaxie'"
         >
-          <v-md-editor
-            v-if="article"
-            v-model="article.content"
-            mode="preview"
-          ></v-md-editor>
-        </a-modal>
-
-        <div class="write-blog">
           <a-button size="large" type="link" @click="writeBlog">
-            Write your paper...
+            <template #icon><EditOutlined /></template>
+            发布
           </a-button>
         </div>
 
@@ -81,16 +71,16 @@
           <template #renderItem="{ item }">
             <a-list-item key="item.title">
               <template #actions>
-                <span @click="openComments(item)">
-                  <message-outlined :style="{ fontSize: '20px' }" key="comments" />
+                <span>
+                  阅读
+                  {{ item.readNumber }}
+                </span>
+                <span>
+                  评论
                   {{ item.commentNumber }}
                 </span>
-                <span @click="like(item)">
-                  <like-filled
-                    v-if="item.liked"
-                    :style="{ fontSize: '20px', color: '#52c41a' }"
-                  />
-                  <like-outlined v-else :style="{ fontSize: '20px' }" />
+                <span>
+                  点赞
                   {{ item.likeNumber }}
                 </span>
               </template>
@@ -118,82 +108,26 @@
                   </a-avatar>
                 </template>
               </a-list-item-meta>
-              <div
-                class="blog-title"
-                @click="
-                  article = item;
-                  showViewModal = true;
-                "
-              >
+              <div class="blog-title" @click="goBlogContent(item.id)">
                 {{ item.title }}
               </div>
             </a-list-item>
           </template>
         </a-list>
-
-        <a-modal
-          title="comments"
-          width="calc(50vw)"
-          :footer="null"
-          centered
-          v-model:visible="showComments"
-        >
-          <div v-if="article">
-            <a-row style="margin-top: 5px">
-              <a-input
-                :placeholder="getCurrentUser() ? '...' : 'Please login first'"
-                :disabled="!getCurrentUser()"
-                v-model:value="article.myComment"
-                @pressEnter="submitComment(article)"
-              >
-                <template #addonAfter>
-                  <a href="javascript:;" @click="submitComment(article)"
-                    ><SendOutlined
-                  /></a>
-                </template>
-              </a-input>
-            </a-row>
-            <a-list class="comment-list" item-layout="horizontal" :data-source="comments">
-              <template #renderItem="{ item }">
-                <a-list-item>
-                  <a-comment
-                    :author="item.author"
-                    :avatar="'/app/file/get/' + item.avatar"
-                  >
-                    <template #content>
-                      <p>
-                        {{ item.content }}
-                      </p>
-                    </template>
-                    <template #datetime>
-                      <a-tooltip :title="item.time">
-                        <span>{{
-                          moment(item.time, "YYYY-MM-DD hh:mm:ss").fromNow()
-                        }}</span>
-                      </a-tooltip>
-                    </template>
-                  </a-comment>
-                </a-list-item>
-              </template>
-            </a-list>
-          </div>
-        </a-modal>
       </div>
     </a-layout-content>
-    <a-layout-footer>Ginkgo Nft ©2020 Created by ginkgo </a-layout-footer>
+    <main-footer />
   </a-layout>
 </template>
 <script>
 import {
   UserOutlined,
-  LikeOutlined,
-  MessageOutlined,
-  SendOutlined,
-  LikeFilled,
   PlusOutlined,
   LoadingOutlined,
+  EditOutlined,
 } from "@ant-design/icons-vue";
 import MainHeader from "@/components/MainHeader";
+import MainFooter from "@/components/MainFooter";
 import { message } from "ant-design-vue";
 import api from "@/api/module";
 import { mapGetters } from "vuex";
@@ -205,19 +139,15 @@ import { filesFilter } from "@kangc/v-md-editor/lib/utils/file";
 export default {
   components: {
     MainHeader,
+    MainFooter,
     UserOutlined,
-    LikeOutlined,
-    MessageOutlined,
-    SendOutlined,
-    LikeFilled,
     PlusOutlined,
     LoadingOutlined,
+    EditOutlined,
   },
   data() {
     return {
       showWrite: false,
-      showViewModal: false,
-      showComments: false,
       data: [],
       pagination: {
         onChange: (page) => {
@@ -230,7 +160,6 @@ export default {
       },
       article: null,
       moment,
-      comments: [],
       rules: {
         title: [{ required: true, message: "Title is empty", trigger: "blur" }],
         cover: [{ required: true, message: "Cover is empty" }],
@@ -267,6 +196,9 @@ export default {
     ...mapGetters(["getCurrentUser"]),
   },
   methods: {
+    goBlogContent(id) {
+      location.href = "/#/blog-content?id=" + id;
+    },
     handleCoverChange(info) {
       if (info.file.status === "uploading") {
         this.loading = true;
@@ -315,53 +247,6 @@ export default {
       api.list(this.pagination.current, this.pagination.pageSize).then((res) => {
         this.pagination.total = res.data.total;
         this.data = res.data.blog_list;
-      });
-    },
-    like(item) {
-      if (item.liked) {
-        api.unlike(item.id).then((res) => {
-          if (res.data.code === 1) {
-            item.likeNumber -= 1;
-            item.liked = false;
-          } else {
-            message.error(res.data.description);
-          }
-        });
-      } else {
-        api.like(item.id).then((res) => {
-          if (res.data.code === 1) {
-            item.likeNumber += 1;
-            item.liked = true;
-          } else {
-            message.error(res.data.description);
-          }
-        });
-      }
-    },
-    openComments(item) {
-      this.article = item;
-      api.comments(item.id).then((res) => {
-        item.myComment = "";
-        this.comments = res.data;
-        item.commentNumber = res.data.length;
-        this.showComments = true;
-      });
-    },
-    submitComment(item) {
-      if (!item.myComment) {
-        return;
-      }
-      api.submitComment(item.id, item.myComment).then((res) => {
-        if (res.data.code === 1) {
-          message.success("submit success");
-          item.myComment = "";
-          api.comments(item.id).then((res1) => {
-            this.comments = res1.data;
-            item.commentNumber = res1.data.length;
-          });
-        } else {
-          message.error(res.data.description);
-        }
       });
     },
   },
@@ -413,26 +298,11 @@ export default {
     cursor: pointer;
   }
   .blog-title:hover {
-    -webkit-line-clamp: 1;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    text-overflow: ellipsis;
-    word-break: break-all;
-    overflow: hidden;
-    font-size: 18px;
-    cursor: pointer;
     color: #0767c8;
     text-decoration: underline;
   }
 }
 .ant-form-item {
   margin-bottom: 0 !important;
-}
-.ant-modal-body {
-  max-height: calc(80vh);
-  overflow: scroll;
-}
-.ant-comment-inner {
-  padding: 0 !important;
 }
 </style>

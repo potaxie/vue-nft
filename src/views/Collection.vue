@@ -52,12 +52,13 @@
       </a-card>
       <image-detail ref="image-detail" />
     </a-layout-content>
-    <a-layout-footer>Ginkgo Nft ©2020 Created by ginkgo </a-layout-footer>
+    <main-footer />
   </a-layout>
 </template>
 <script>
 import ImageDetail from "@/components/ImageDetail";
 import MainHeader from "@/components/MainHeader";
+import MainFooter from "@/components/MainFooter";
 import { Chart } from "@antv/g2";
 import { message } from "ant-design-vue";
 import { mapGetters } from "vuex";
@@ -106,6 +107,7 @@ export default {
   components: {
     ImageDetail,
     MainHeader,
+    MainFooter,
   },
   data() {
     return {

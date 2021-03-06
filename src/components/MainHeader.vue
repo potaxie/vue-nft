@@ -8,7 +8,7 @@
           height="32px"
           weight="80px"
           style="margin-top: -5px" /></a-col
-      ><a-col :span="15"
+      ><a-col :span="11"
         ><a-menu
           mode="horizontal"
           @click="handleSelect"
@@ -18,52 +18,85 @@
             borderBottom: 'unset',
             background: '#f5f5f5',
           }"
-          ><a-menu-item key="/#/">NftWork </a-menu-item
-          ><a-menu-item key="/#/market-place">MarketPlace </a-menu-item
-          ><a-menu-item key="/#/collection">Collection </a-menu-item
-          ><a-menu-item key="/#/blog"> Paper </a-menu-item></a-menu
+          ><a-menu-item key="/#/"> 展品 </a-menu-item
+          ><a-menu-item key="/#/market-place"> 市场 </a-menu-item
+          ><a-menu-item key="/#/blog"> 研报 </a-menu-item></a-menu
         ></a-col
-      ><a-col :span="6" style="text-align: right">
+      >
+      <a-col :span="6" style="text-align: right">
+        <a-input-search
+          v-model:value="keyword"
+          placeholder="搜索类目"
+          style="width: 250px; border-radius: 16px"
+          @pressEnter="onSearch()"
+          @search="onSearch()"
+      /></a-col>
+      <a-col :span="1" style="text-align: center">
+        <WeiboCircleOutlined
+          class="header-icon active-header-icon"
+          style="color: #737373"
+          @click="goWeibo()"
+        />
+      </a-col>
+      <a-col :span="1">
+        <a-popover>
+          <template #title
+            ><div style="text-align: center"><span>微信公众号</span></div></template
+          >
+          <template #content>
+            <div>
+              <a-image
+                src="/ginkgo-mp.jpg"
+                :preview="false"
+                width="150px"
+                height="150px"
+              /></div
+          ></template>
+          <WechatOutlined class="header-icon" style="color: #737373" />
+        </a-popover>
+      </a-col>
+      <a-col :span="2" style="text-align: right; padding-right: 25px">
         <a-dropdown v-if="getCurrentUser()">
-          <a-space>
+          <span>
             <a-avatar
               v-if="getCurrentUser().head_avatar"
               :src="'/app/file/get/' + getCurrentUser().head_avatar"
-              :size="28"
-            /><a-avatar v-else :size="28" style="font-size: 16px"
+              :size="32"
+            /><a-avatar v-else :size="32"
               ><template #icon><UserOutlined /></template
             ></a-avatar>
-            <a
-              class="ant-dropdown-link hearder-text"
-              @click="(e) => e.preventDefault()"
-              style="font-size: 16px; margin-right: 30px; color: #3291e6"
-            >
-              {{ getCurrentUser().nickname || getCurrentUser().username }}
-            </a>
-          </a-space>
+            <CaretDownOutlined :style="{ fontSize: '12px', marginLeft: '4px' }" />
+          </span>
           <template #overlay>
             <a-menu>
               <a-menu-item>
+                <span> {{ getCurrentUser().nickname || getCurrentUser().username }}</span>
+              </a-menu-item>
+              <a-menu-item>
+                <WalletOutlined />
+                <span @click="collcetion()"> 个人收藏 </span>
+              </a-menu-item>
+              <a-menu-item>
                 <UserOutlined />
-                <span @click="userSetting"> Setting</span>
+                <span @click="userSetting()"> 用户设置</span>
               </a-menu-item>
               <a-menu-divider />
               <a-menu-item>
                 <LogoutOutlined />
-                <span @click="logout"> Logout </span>
+                <span @click="logout()"> 注销 </span>
               </a-menu-item>
             </a-menu>
           </template>
         </a-dropdown>
-        <a-button
+        <a
           v-else
-          type="link"
           class="hearder-text"
+          style="font-size: 14px; color: #3291e6"
+          href="javascript:void(0)"
           @click="goLogin"
-          style="font-size: 16px; margin-right: 30px; color: #3291e6"
-          >Login</a-button
-        ></a-col
-      ></a-row
+          >登录/注册</a
+        >
+      </a-col></a-row
     ></a-layout-header
   >
   <a-modal
@@ -107,6 +140,10 @@ import {
   PlusOutlined,
   LoadingOutlined,
   LogoutOutlined,
+  WalletOutlined,
+  WechatOutlined,
+  CaretDownOutlined,
+  WeiboCircleOutlined,
 } from "@ant-design/icons-vue";
 import { mapGetters, mapActions } from "vuex";
 import { message } from "ant-design-vue";
@@ -118,9 +155,14 @@ export default {
     PlusOutlined,
     LoadingOutlined,
     LogoutOutlined,
+    WalletOutlined,
+    WechatOutlined,
+    CaretDownOutlined,
+    WeiboCircleOutlined,
   },
   data() {
     return {
+      keyword: "",
       form: {},
       showUserModal: false,
       fileList: [],
@@ -134,6 +176,15 @@ export default {
     ...mapActions(["setCurrentUser"]),
     handleSelect(item) {
       location.href = item.key;
+    },
+    onSearch() {
+      location.href = "/#/market-place?keyword=" + this.keyword;
+    },
+    goWeibo() {
+      window.open("https://weibo.com/");
+    },
+    collcetion() {
+      location.href = "/#/collection";
     },
     userSetting() {
       this.form = {
@@ -165,11 +216,9 @@ export default {
         }
       });
     },
-
     goLogin() {
       location.href = "/#/login";
     },
-
     logout() {
       api.logout().then((res) => {
         if (res.data.code === 1) {
@@ -179,6 +228,12 @@ export default {
         }
       });
     },
+  },
+  created() {
+    let key = this.$route.query.keyword;
+    if (key && this.keyword != key) {
+      this.keyword = key;
+    }
   },
 };
 </script>

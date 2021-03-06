@@ -2,13 +2,13 @@
   <a-layout class="layout admin-layout">
     <main-header />
     <a-layout-content>
-      <div class="nft-title">Welcome Ginkgo</div>
+      <div class="nft-title">Welcome to the NFT valley!</div>
       <div style="margin: 10px 12%">
         <div v-for="group in groups" :key="group.name">
           <a-row type="flex" justify="space-between" style="margin: 0 25px 10px 20px">
             <a-col class="group-title">{{ group.name }}</a-col>
             <a-col class="group-chat" @click="goForum(group.name)"
-              >Forum<DoubleRightOutlined
+              >贴吧<DoubleRightOutlined
             /></a-col>
           </a-row>
           <a-carousel arrows :speed="1600">
@@ -62,29 +62,24 @@
       </div>
       <image-detail ref="image-detail" />
     </a-layout-content>
-    <a-layout-footer>Ginkgo Nft ©2020 Created by ginkgo </a-layout-footer>
+    <main-footer />
   </a-layout>
 </template>
 
 <script>
 import ImageDetail from "@/components/ImageDetail";
 import MainHeader from "@/components/MainHeader";
-import {
-  DoubleRightOutlined,
-  SendOutlined,
-  LeftOutlined,
-  RightOutlined,
-} from "@ant-design/icons-vue";
+import MainFooter from "@/components/MainFooter";
+import { DoubleRightOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons-vue";
 import { mapGetters } from "vuex";
-import { message } from "ant-design-vue";
 import api from "@/api/module";
 import moment from "moment";
 export default {
   components: {
     ImageDetail,
     MainHeader,
+    MainFooter,
     DoubleRightOutlined,
-    SendOutlined,
     LeftOutlined,
     RightOutlined,
   },
