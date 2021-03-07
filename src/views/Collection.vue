@@ -1,56 +1,64 @@
 <template>
-  <a-card
-    title="My collections"
-    style="text-align: left"
-    :bodyStyle="{ padding: '0 24px' }"
-  >
-    <a-table
-      :columns="columns"
-      :data-source="data"
-      :pagination="pagination"
-      rowKey="token_id"
-      size="middle"
-      @change="onTableChange"
-    >
-      <template #name="{ record }">
-        <a
-          href="javascript:;"
-          @click="
-            current = record;
-            refresh();
-          "
-          >{{ record.name }}</a
+  <a-layout class="layout admin-layout">
+    <main-header />
+    <a-layout-content>
+      <a-card
+        :title="$t('my-collections')"
+        style="text-align: left"
+        :bodyStyle="{ padding: '0 24px' }"
+      >
+        <a-table
+          :columns="columns"
+          :data-source="data"
+          :pagination="pagination"
+          rowKey="token_id"
+          size="middle"
+          @change="onTableChange"
         >
-      </template>
-      <template #image="{ record }">
-        <a-avatar
-          class="hover-img"
-          :size="40"
-          shape="square"
-          :src="'/app/file/get/' + record.image + '?flag=tumbnail'"
-          @click="onImageDetail(record)"
-        />
-      </template>
-      <template #action="{ record }">
-        <a-popconfirm title="Confirm cancel?" @confirm="cancelCollect(record)">
-          <a-button size="small" type="link">Unstar</a-button>
-        </a-popconfirm>
-      </template>
-    </a-table>
-  </a-card>
-  <a-card style="text-align: left">
-    <template #title>
-      Price History:
-      <a href="javascript:;" style="font-size: 14px; font-weight: 400">{{
-        current ? current.name : ""
-      }}</a>
-    </template>
-    <div ref="container" id="container"></div>
-  </a-card>
-  <image-detail ref="image-detail" />
+          <template #name="{ record }">
+            <a
+              href="javascript:;"
+              @click="
+                current = record;
+                refresh();
+              "
+              >{{ record.name }}</a
+            >
+          </template>
+          <template #image="{ record }">
+            <a-avatar
+              class="hover-img"
+              :size="40"
+              shape="square"
+              :src="'/app/file/get/' + record.image + '?flag=tumbnail'"
+              @click="onImageDetail(record)"
+            />
+          </template>
+          <template #action="{ record }">
+            <a-popconfirm title="Confirm cancel?" @confirm="cancelCollect(record)">
+              <a-button size="small" type="link">Unstar</a-button>
+            </a-popconfirm>
+          </template>
+        </a-table>
+      </a-card>
+      <a-card style="text-align: left">
+        <template #title>
+          {{ $t("price-history") }}:
+          <a href="javascript:;" style="font-size: 14px; font-weight: 400">{{
+            current ? current.name : ""
+          }}</a>
+        </template>
+        <div ref="container" id="container"></div>
+      </a-card>
+      <image-detail ref="image-detail" />
+    </a-layout-content>
+    <main-footer />
+  </a-layout>
 </template>
 <script>
 import ImageDetail from "@/components/ImageDetail";
+import MainHeader from "@/components/MainHeader";
+import MainFooter from "@/components/MainFooter";
 import { Chart } from "@antv/g2";
 import { message } from "ant-design-vue";
 import { mapGetters } from "vuex";
@@ -98,6 +106,8 @@ const columns = [
 export default {
   components: {
     ImageDetail,
+    MainHeader,
+    MainFooter,
   },
   data() {
     return {

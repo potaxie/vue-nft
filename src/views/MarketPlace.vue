@@ -1,69 +1,66 @@
 <template>
-  <a-card class="history-volume">
-    <template #title>
-      <div style="margin-bottom: 10px">Volume History</div>
-      <div style="margin-left: 2px">
-        <a-select
-          v-model:value="choice"
-          size="large"
-          style="font-size: 14px"
-          @change="changeTab"
+  <a-layout class="layout admin-layout">
+    <main-header />
+    <a-layout-content>
+      <a-card class="history-volume">
+        <template #title>
+          <div style="margin-bottom: 10px">{{ $t("volume-history") }}</div>
+          <div style="margin-left: 2px">
+            <a-select v-model:value="choice" style="font-size: 14px" @change="changeTab">
+              <a-select-option value="7">Last 1 Week</a-select-option>
+              <a-select-option value="14">Last 2 Weeks</a-select-option>
+              <a-select-option value="30">Last 1 Month</a-select-option>
+              <a-select-option value="60">Last 2 Months</a-select-option>
+            </a-select>
+            <a-space style="margin-left: 30px; font-size: 14px">
+              <span
+                v-for="item in titleVolumes"
+                :key="item.contract_name"
+                style="margin-left: 10px"
+              >
+                {{ item.contract_name }} &nbsp;<span style="color: #3291e6"
+                  >Ξ{{ item.volume }}</span
+                >
+              </span>
+            </a-space>
+          </div>
+        </template>
+        <div ref="container" id="container"></div>
+      </a-card>
+      <a-card
+        class="sale-history"
+        :title="$t('sale-history')"
+        :tab-list="symbolTabs"
+        @tabChange="(key) => changeSymbolTab(key)"
+      >
+        <a-table
+          :columns="columns"
+          :data-source="data"
+          :pagination="pagination"
+          rowKey="token_id"
+          size="middle"
+          @change="onTableChange"
         >
-          <a-select-option value="7">Last 1 Week</a-select-option>
-          <a-select-option value="14">Last 2 Weeks</a-select-option>
-          <a-select-option value="30">Last 1 Month</a-select-option>
-          <a-select-option value="60">Last 2 Months</a-select-option>
-        </a-select>
-        <a-space style="margin-left: 10px; font-size: 14px">
-          <span v-for="item in titleVolumes" :key="item.contract_name">
-            {{ item.contract_name }} &nbsp;<span style="color: #3291e6"
-              >Ξ{{ item.volume }}</span
-            >
-          </span>
-        </a-space>
-      </div>
-    </template>
-    <div ref="container" id="container"></div>
-  </a-card>
-  <a-card
-    class="sale-history"
-    :tab-list="symbolTabs"
-    @tabChange="(key) => changeSymbolTab(key)"
-  >
-    <template #title>
-      Sale History
-      <a-input-search
-        v-model:value="keyword"
-        placeholder="Input keyword"
-        enter-button
-        style="width: 250px; float: right"
-        @pressEnter="keywordSearch"
-        @search="keywordSearch"
-      />
-    </template>
-    <a-table
-      :columns="columns"
-      :data-source="data"
-      :pagination="pagination"
-      rowKey="token_id"
-      size="middle"
-      @change="onTableChange"
-    >
-      <template #image="{ record }">
-        <a-avatar
-          class="hover-img"
-          :size="50"
-          shape="square"
-          :src="'/app/file/get/' + record.image + '?flag=tumbnail'"
-          @click="onImageDetail(record)"
-        />
-      </template>
-    </a-table>
-  </a-card>
-  <image-detail ref="image-detail" />
+          <template #image="{ record }">
+            <a-avatar
+              class="hover-img"
+              :size="50"
+              shape="square"
+              :src="'/app/file/get/' + record.image + '?flag=tumbnail'"
+              @click="onImageDetail(record)"
+            />
+          </template>
+        </a-table>
+      </a-card>
+      <image-detail ref="image-detail" />
+    </a-layout-content>
+    <main-footer />
+  </a-layout>
 </template>
 <script>
 import ImageDetail from "@/components/ImageDetail";
+import MainHeader from "@/components/MainHeader";
+import MainFooter from "@/components/MainFooter";
 import { Chart } from "@antv/g2";
 import api from "@/api/module";
 const columns = [
@@ -103,12 +100,13 @@ const columns = [
 export default {
   components: {
     ImageDetail,
+    MainHeader,
+    MainFooter,
   },
   data() {
     return {
       chart: undefined,
       titleVolumes: [],
-      keyword: "",
       data: [],
       sort: null,
       columns: columns,
@@ -152,6 +150,16 @@ export default {
         },
       ],
     };
+  },
+  computed: {
+    keyword() {
+      return this.$route.query.keyword;
+    },
+  },
+  watch: {
+    keyword() {
+      this.keywordSearch();
+    },
   },
   methods: {
     onTableChange(pagination, filters, sorter) {
@@ -248,6 +256,9 @@ export default {
   text-align: left;
   .ant-card-head-title {
     padding: 16px 0 4px 0;
+  }
+  .ant-select-selector {
+    border-radius: 16px !important;
   }
 }
 .sale-history {
