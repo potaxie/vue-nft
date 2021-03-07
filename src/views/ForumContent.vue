@@ -3,7 +3,7 @@
     <main-header />
     <a-layout-content>
       <div class="forum-content" v-if="detail">
-        <a-row>
+        <a-row style="margin-bottom: 20px">
           <a-col>
             <a-avatar
               v-if="detail.authorAvatar"
@@ -16,10 +16,10 @@
           <a-col class="avatar-title">
             <span class="forum-author">{{ detail.author }}</span
             ><br />
-            <span class="forum-time">发表于 {{ detail.submitTime }}</span>
+            <span class="forum-time">{{ $t("submit-at") }} {{ detail.submitTime }}</span>
           </a-col>
         </a-row>
-        <a-card>
+        <a-card :bodyStyle="{ padding: '0' }">
           <v-md-editor
             v-if="detail"
             v-model="detail.content"
@@ -46,7 +46,7 @@
           </template>
         </a-list>
         <a-input
-          :placeholder="getCurrentUser() ? '发布评论...' : '请先登录'"
+          :placeholder="getCurrentUser() ? $t('submit-comment') : $t('first-login')"
           :disabled="!getCurrentUser()"
           v-model:value="myComment"
           @pressEnter="submitComment"

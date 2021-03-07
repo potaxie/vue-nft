@@ -8,7 +8,7 @@
           height="32px"
           weight="80px"
           style="margin-top: -5px" /></a-col
-      ><a-col :span="11"
+      ><a-col :span="10"
         ><a-menu
           mode="horizontal"
           @click="handleSelect"
@@ -18,30 +18,32 @@
             borderBottom: 'unset',
             background: '#f5f5f5',
           }"
-          ><a-menu-item key="/#/"> 展品 </a-menu-item
-          ><a-menu-item key="/#/market-place"> 市场 </a-menu-item
-          ><a-menu-item key="/#/blog"> 研报 </a-menu-item></a-menu
+          ><a-menu-item key="/#/"> {{ $t("nft-work") }} </a-menu-item
+          ><a-menu-item key="/#/market-place"> {{ $t("market-place") }} </a-menu-item
+          ><a-menu-item key="/#/blog"> {{ $t("paper") }} </a-menu-item></a-menu
         ></a-col
       >
       <a-col :span="6" style="text-align: right">
         <a-input-search
           v-model:value="keyword"
-          placeholder="搜索类目"
+          :placeholder="$t('search-item')"
           style="width: 250px; border-radius: 16px"
           @pressEnter="onSearch()"
           @search="onSearch()"
       /></a-col>
-      <a-col :span="1" style="text-align: center">
+      <a-col :span="1" style="text-align: right">
         <WeiboCircleOutlined
           class="header-icon active-header-icon"
           style="color: #737373"
           @click="goWeibo()"
         />
       </a-col>
-      <a-col :span="1">
+      <a-col :span="1" style="text-align: center">
         <a-popover>
           <template #title
-            ><div style="text-align: center"><span>微信公众号</span></div></template
+            ><div style="text-align: center">
+              <span>{{ $t("wx-mp") }}</span>
+            </div></template
           >
           <template #content>
             <div>
@@ -55,7 +57,14 @@
           <WechatOutlined class="header-icon" style="color: #737373" />
         </a-popover>
       </a-col>
-      <a-col :span="2" style="text-align: right; padding-right: 25px">
+      <a-col :span="1" style="text-align: left">
+        <TranslationOutlined
+          class="header-icon active-header-icon"
+          style="color: #737373"
+          @click="translation()"
+        />
+      </a-col>
+      <a-col :span="2" style="text-align: center; padding-right: 25px">
         <a-dropdown v-if="getCurrentUser()">
           <span>
             <a-avatar
@@ -74,16 +83,16 @@
               </a-menu-item>
               <a-menu-item>
                 <WalletOutlined />
-                <span @click="collcetion()"> 个人收藏 </span>
+                <span @click="collcetion()"> {{ $t("collection") }} </span>
               </a-menu-item>
               <a-menu-item>
                 <UserOutlined />
-                <span @click="userSetting()"> 用户设置</span>
+                <span @click="userSetting()"> {{ $t("setting") }} </span>
               </a-menu-item>
               <a-menu-divider />
               <a-menu-item>
                 <LogoutOutlined />
-                <span @click="logout()"> 注销 </span>
+                <span @click="logout()"> {{ $t("logout") }} </span>
               </a-menu-item>
             </a-menu>
           </template>
@@ -94,7 +103,7 @@
           style="font-size: 14px; color: #3291e6"
           href="javascript:void(0)"
           @click="goLogin"
-          >登录/注册</a
+          >{{ $t("login-signup") }}</a
         >
       </a-col></a-row
     ></a-layout-header
@@ -144,6 +153,7 @@ import {
   WechatOutlined,
   CaretDownOutlined,
   WeiboCircleOutlined,
+  TranslationOutlined,
 } from "@ant-design/icons-vue";
 import { mapGetters, mapActions } from "vuex";
 import { message } from "ant-design-vue";
@@ -159,6 +169,7 @@ export default {
     WechatOutlined,
     CaretDownOutlined,
     WeiboCircleOutlined,
+    TranslationOutlined,
   },
   data() {
     return {
@@ -179,6 +190,13 @@ export default {
     },
     onSearch() {
       location.href = "/#/market-place?keyword=" + this.keyword;
+    },
+    translation() {
+      if (this.$root.$i18n.locale === "en") {
+        this.$root.$i18n.locale = "zh-CN";
+      } else {
+        this.$root.$i18n.locale = "en";
+      }
     },
     goWeibo() {
       window.open("https://weibo.com/");

@@ -78,6 +78,11 @@ export default {
   },
 
   // Forum
+  getForumTitle: (label) => {
+    return api.get({ url: "/forum/get_forum_title?label=" + label });
+
+  },
+
   searchForum: (label, page, pageSize) => {
     let params = {
       label: label,

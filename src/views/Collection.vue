@@ -3,7 +3,7 @@
     <main-header />
     <a-layout-content>
       <a-card
-        title="My collections"
+        :title="$t('my-collections')"
         style="text-align: left"
         :bodyStyle="{ padding: '0 24px' }"
       >
@@ -43,7 +43,7 @@
       </a-card>
       <a-card style="text-align: left">
         <template #title>
-          Price History:
+          {{ $t("price-history") }}:
           <a href="javascript:;" style="font-size: 14px; font-weight: 400">{{
             current ? current.name : ""
           }}</a>

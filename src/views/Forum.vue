@@ -3,8 +3,27 @@
     <main-header />
     <a-layout-content>
       <div class="forum">
+        <div v-if="labelDetail" class="forum-cover">
+          <a-image
+            :height="150"
+            width="780px"
+            :preview="false"
+            :src="`/app/file/get/${labelDetail.logo}`"
+          />
+          <div style="margin-top: 15px">
+            <span style="font-size: 35px; font-weight: bolder">{{
+              labelDetail.title
+            }}</span>
+            <span style="margin-left: 25px; color: grey"
+              >{{ $t("tiezi") }}：{{ labelDetail.forum_num }}</span
+            >
+          </div>
+          <span style="color: grey">{{ labelDetail.description }}</span>
+        </div>
         <div style="font-size: 16px; margin-bottom: 10px">
-          <a href="javascript:void(0)" @click="writeForum"><EditOutlined /> 发布</a>
+          <a href="javascript:void(0)" @click="writeForum"
+            ><EditOutlined /> {{ $t("submit") }}</a
+          >
         </div>
         <a-table
           :columns="columns"
@@ -23,7 +42,7 @@
     <main-footer />
   </a-layout>
   <a-modal
-    title="Submit Forum"
+    :title="$t('submit-forum')"
     okText="Submit"
     width="calc(80vw)"
     centered
@@ -62,36 +81,6 @@ import { mapGetters } from "vuex";
 import api from "@/api/module";
 import axios from "axios";
 
-const columns = [
-  {
-    title: "阅读",
-    dataIndex: "read",
-    width: 100,
-  },
-  {
-    title: "评论",
-    dataIndex: "comment",
-    width: 100,
-  },
-  {
-    title: "标题",
-    dataIndex: "title",
-    ellipsis: true,
-    slots: {
-      customRender: "Title",
-    },
-  },
-  {
-    title: "作者",
-    dataIndex: "author",
-    width: 100,
-  },
-  {
-    title: "时间",
-    dataIndex: "lastModify",
-    width: 200,
-  },
-];
 export default {
   components: {
     MainHeader,
@@ -102,7 +91,37 @@ export default {
     return {
       activeKey: "all",
       data: [],
-      columns,
+      labelDetail: null,
+      columns: [
+        {
+          title: "Read",
+          dataIndex: "read",
+          width: 100,
+        },
+        {
+          title: "Comment",
+          dataIndex: "comment",
+          width: 100,
+        },
+        {
+          title: "Title",
+          dataIndex: "title",
+          ellipsis: true,
+          slots: {
+            customRender: "Title",
+          },
+        },
+        {
+          title: "Author",
+          dataIndex: "author",
+          width: 100,
+        },
+        {
+          title: "Time",
+          dataIndex: "lastModify",
+          width: 200,
+        },
+      ],
       pagination: {
         onChange: (page) => {
           this.pagination.current = page;
@@ -147,10 +166,16 @@ export default {
   },
   watch: {
     labelName() {
+      this.getForumTitle();
       this.search();
     },
   },
   methods: {
+    getForumTitle() {
+      api.getForumTitle(this.labelName).then((res) => {
+        this.labelDetail = res.data;
+      });
+    },
     search() {
       api
         .searchForum(this.labelName, this.pagination.current, this.pagination.pageSize)
@@ -196,6 +221,7 @@ export default {
   },
   created() {
     if (this.labelName) {
+      this.getForumTitle();
       this.search();
     }
   },
@@ -203,7 +229,14 @@ export default {
 </script>
 <style lang="less">
 .forum {
-  padding: 0 20%;
+  width: 780px;
+  margin: 0 auto;
   text-align: left;
+  .forum-cover {
+    margin-bottom: 20px;
+    .ant-image-img {
+      height: 100%;
+    }
+  }
 }
 </style>

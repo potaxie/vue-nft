@@ -8,7 +8,7 @@
           <a-row type="flex" justify="space-between" style="margin: 0 25px 10px 20px">
             <a-col class="group-title">{{ group.name }}</a-col>
             <a-col class="group-chat" @click="goForum(group.name)"
-              >贴吧<DoubleRightOutlined
+              >{{ $t("forum") }}<DoubleRightOutlined
             /></a-col>
           </a-row>
           <a-carousel arrows :speed="1600">

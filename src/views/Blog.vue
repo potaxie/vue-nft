@@ -58,7 +58,7 @@
         >
           <a-button size="large" type="link" @click="writeBlog">
             <template #icon><EditOutlined /></template>
-            发布
+            {{ $t("submit") }}
           </a-button>
         </div>
 
@@ -72,15 +72,15 @@
             <a-list-item key="item.title">
               <template #actions>
                 <span>
-                  阅读
+                  {{ $t("read") }}
                   {{ item.readNumber }}
                 </span>
                 <span>
-                  评论
+                  {{ $t("comment") }}
                   {{ item.commentNumber }}
                 </span>
                 <span>
-                  点赞
+                  {{ $t("like") }}
                   {{ item.likeNumber }}
                 </span>
               </template>

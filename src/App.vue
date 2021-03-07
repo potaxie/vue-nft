@@ -37,7 +37,7 @@
   }
   .ant-layout-content {
     background: rgb(255, 255, 255);
-    padding: 24px;
+    padding: 1%;
     min-height: calc(88vh);
   }
   .ant-layout-footer {

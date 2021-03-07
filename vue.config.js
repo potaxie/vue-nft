@@ -1,5 +1,6 @@
 module.exports = {
   lintOnSave: "warning",
+
   devServer: {
     port: 8200,
     disableHostCheck: true,
@@ -12,4 +13,15 @@ module.exports = {
       },
     },
   },
+
+  pluginOptions: {
+    i18n: {
+      locale: 'en',
+      fallbackLocale: 'en',
+      localeDir: 'locales',
+      runtimeOnly: false,
+      compositionOnly: true,
+      fullInstall: true
+    }
+  }
 };
