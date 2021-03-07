@@ -78,21 +78,21 @@
           </span>
           <template #overlay>
             <a-menu>
-              <a-menu-item>
+              <a-menu-item key="username">
                 <span> {{ getCurrentUser().nickname || getCurrentUser().username }}</span>
               </a-menu-item>
-              <a-menu-item>
+              <a-menu-item @click="collcetion">
                 <WalletOutlined />
-                <span @click="collcetion()"> {{ $t("collection") }} </span>
+                <span> {{ $t("collection") }} </span>
               </a-menu-item>
-              <a-menu-item>
+              <a-menu-item @click="userSetting">
                 <UserOutlined />
-                <span @click="userSetting()"> {{ $t("setting") }} </span>
+                <span> {{ $t("setting") }} </span>
               </a-menu-item>
               <a-menu-divider />
-              <a-menu-item>
+              <a-menu-item @click="logout">
                 <LogoutOutlined />
-                <span @click="logout()"> {{ $t("logout") }} </span>
+                <span> {{ $t("logout") }} </span>
               </a-menu-item>
             </a-menu>
           </template>
@@ -205,6 +205,7 @@ export default {
       location.href = "/#/collection";
     },
     userSetting() {
+      console.log(111);
       this.form = {
         ...this.getCurrentUser(),
       };
