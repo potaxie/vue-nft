@@ -1,5 +1,6 @@
 <template>
-  <a-layout-header style="text-align: left; line-height: 48px; height: 48px; padding: 0"
+  <a-layout-header
+    style="text-align: left; line-height: 48px; height: 48px; padding: 0"
     ><a-row
       ><a-col :span="3"
         ><a-image
@@ -7,7 +8,7 @@
           :preview="false"
           height="32px"
           weight="80px"
-          style="margin-top: -5px" /></a-col
+          style="margin-top: -5px"/></a-col
       ><a-col :span="10"
         ><a-menu
           mode="horizontal"
@@ -19,7 +20,8 @@
             background: '#f5f5f5',
           }"
           ><a-menu-item key="/#/"> {{ $t("nft-work") }} </a-menu-item
-          ><a-menu-item key="/#/market-place"> {{ $t("market-place") }} </a-menu-item
+          ><a-menu-item key="/#/market-place">
+            {{ $t("market-place") }} </a-menu-item
           ><a-menu-item key="/#/blog"> {{ $t("paper") }} </a-menu-item></a-menu
         ></a-col
       >
@@ -74,12 +76,18 @@
             /><a-avatar v-else :size="32"
               ><template #icon><UserOutlined /></template
             ></a-avatar>
-            <CaretDownOutlined :style="{ fontSize: '12px', marginLeft: '4px' }" />
+            <CaretDownOutlined
+              :style="{ fontSize: '12px', marginLeft: '4px' }"
+            />
           </span>
           <template #overlay>
             <a-menu>
               <a-menu-item key="username">
-                <span> {{ getCurrentUser().nickname || getCurrentUser().username }}</span>
+                <span>
+                  {{
+                    getCurrentUser().nickname || getCurrentUser().username
+                  }}</span
+                >
               </a-menu-item>
               <a-menu-item @click="collcetion">
                 <WalletOutlined />
@@ -113,11 +121,15 @@
     title="User Setting"
     @ok="handleOk"
     @cancel="showUserModal = false"
-    ><a-form ref="form" :model="form" :label-col="{ span: 4 }" :wrapper-col="{ span: 18 }"
+    ><a-form
+      ref="form"
+      :model="form"
+      :label-col="{ span: 4 }"
+      :wrapper-col="{ span: 18 }"
       ><a-form-item label="Username" name="username"
-        ><a-input v-model:value="form.username" disabled /></a-form-item
+        ><a-input v-model:value="form.username" disabled/></a-form-item
       ><a-form-item label="Nickname"
-        ><a-input v-model:value="form.nickname" /></a-form-item
+        ><a-input v-model:value="form.nickname"/></a-form-item
       ><a-form-item label="Avatar"
         ><a-upload
           v-model:fileList="fileList"
@@ -199,7 +211,7 @@ export default {
       }
     },
     goWeibo() {
-      window.open("https://weibo.com/");
+      window.open("https://weibo.com/u/5262212835");
     },
     collcetion() {
       location.href = "/#/collection";

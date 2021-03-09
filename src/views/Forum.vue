@@ -20,7 +20,7 @@
           </div>
           <span style="color: grey">{{ labelDetail.description }}</span>
         </div>
-        <div style="font-size: 16px; margin-bottom: 10px">
+        <div style="font-size: 16px; font-weight: bolder;margin-bottom: 10px">
           <a href="javascript:void(0)" @click="writeForum"
             ><EditOutlined /> {{ $t("submit") }}</a
           >
@@ -140,13 +140,16 @@ export default {
           action(editor) {
             editor.$nextTick(async () => {
               const event = await editor.$refs.uploadFile.upload();
-              const files = filesFilter(event.target.files, editor.uploadImgConfig);
+              const files = filesFilter(
+                event.target.files,
+                editor.uploadImgConfig
+              );
               if (editor.hasUploadImage && files.length) {
                 event.preventDefault();
                 editor.$emit(
                   "upload-image",
                   event,
-                  function (imageRef) {
+                  function(imageRef) {
                     editor.execCommand(image, imageRef);
                   },
                   files
@@ -178,7 +181,11 @@ export default {
     },
     search() {
       api
-        .searchForum(this.labelName, this.pagination.current, this.pagination.pageSize)
+        .searchForum(
+          this.labelName,
+          this.pagination.current,
+          this.pagination.pageSize
+        )
         .then((res) => {
           this.pagination.total = res.data.total;
           this.data = res.data.result_list;
@@ -192,7 +199,9 @@ export default {
       }
     },
     submitForum() {
-      api.submitForum({ ...this.form }).then((res) => {
+      let data = { ...this.form };
+      data.label = this.labelName;
+      api.submitForum(data).then((res) => {
         if (res.data.code === 1) {
           this.form = {};
           message.success("发布成功");
