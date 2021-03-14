@@ -44,6 +44,7 @@
                     style="
                       float: right;
                       padding: 3px 8px;
+                      text-align: center;
                       height: 40px;
                       line-height: 18px;
                       width: 74px;
