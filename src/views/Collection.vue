@@ -3,9 +3,10 @@
     <main-header />
     <a-layout-content>
       <a-card
+        class="collection-table"
         :title="$t('my-collections')"
         style="text-align: left"
-        :bodyStyle="{ padding: '0 24px' }"
+        :bodyStyle="{ padding: '10px 24px' }"
       >
         <a-table
           :columns="columns"
@@ -28,9 +29,9 @@
           <template #image="{ record }">
             <a-avatar
               class="hover-img"
-              :size="40"
+              :size="60"
               shape="square"
-              :src="'/app/file/get/' + record.image + '?flag=tumbnail'"
+              :src="'/app/file/get/tumbnail/' + record.image + '.png'"
               @click="onImageDetail(record)"
             />
           </template>
@@ -218,3 +219,16 @@ export default {
   },
 };
 </script>
+<style lang="less">
+.collection-table {
+  .ant-table.ant-table-middle
+    > .ant-table-content
+    > .ant-table-body
+    > table
+    > .ant-table-tbody
+    > tr
+    > td {
+    padding: 5px 8px !important;
+  }
+}
+</style>

@@ -3,7 +3,7 @@ import api from "@/api/index";
 export default {
   //NftWork
   imageGroups: () => {
-    return api.get({ url: "/request_picture_groups/test" });
+    return api.get({ url: "/request_picture_groups" });
   },
 
   imageDetail: (id) => {
@@ -80,7 +80,18 @@ export default {
   // Forum
   getForumTitle: (label) => {
     return api.get({ url: "/forum/get_forum_title?label=" + label });
+  },
 
+  clockInForum: (label) => {
+    return api.get({ url: "/forum/clock_in?label=" + label });
+  },
+
+  getClockInfoForum: (label) => {
+    return api.get({ url: "/forum/get_clock_info?label=" + label });
+  },
+
+  starForum: (id) => {
+    return api.get({ url: "/forum/star/" + id });
   },
 
   searchForum: (label, page, pageSize) => {

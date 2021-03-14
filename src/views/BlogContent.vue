@@ -7,7 +7,7 @@
           <a-col>
             <a-avatar
               v-if="detail.authorAvatar"
-              :src="`/app/file/get/${detail.authorAvatar}`"
+              :src="`/app/file/get/tumbnail/${detail.authorAvatar}.png`"
               :size="50"
             /><a-avatar v-else :size="50"
               ><template #icon><UserOutlined /></template
@@ -37,7 +37,10 @@
         <a-list class="comment-list" item-layout="horizontal" :data-source="comments">
           <template #renderItem="{ item }">
             <a-list-item>
-              <a-comment :author="item.author" :avatar="'/app/file/get/' + item.avatar">
+              <a-comment
+                :author="item.author"
+                :avatar="'/app/file/get/tumbnail/' + item.avatar + '.png'"
+              >
                 <template #content>
                   <p>
                     {{ item.content }}
@@ -135,16 +138,7 @@ export default {
       });
     },
     like() {
-      if (this.detail.liked) {
-        api.unlike(this.blogId).then((res) => {
-          if (res.data.code === 1) {
-            this.detail.likeNumber -= 1;
-            this.detail.liked = false;
-          } else {
-            message.error(res.data.description);
-          }
-        });
-      } else {
+      if (!this.detail.liked) {
         api.like(this.blogId).then((res) => {
           if (res.data.code === 1) {
             this.detail.likeNumber += 1;

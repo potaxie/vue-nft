@@ -5,11 +5,8 @@
       <div class="nft-title">Welcome to the NFT valley!</div>
       <div style="margin: 10px 12%">
         <div v-for="group in groups" :key="group.name">
-          <a-row type="flex" justify="space-between" style="margin: 0 25px 10px 20px">
+          <a-row style="margin: 0 25px 10px 20px">
             <a-col class="group-title">{{ group.name }}</a-col>
-            <a-col class="group-chat" @click="goForum(group.name)"
-              >{{ $t("forum") }}<DoubleRightOutlined
-            /></a-col>
           </a-row>
           <a-carousel arrows :speed="1600">
             <template #prevArrow>
@@ -38,7 +35,7 @@
                 <a-card>
                   <template #cover>
                     <img
-                      :src="'/app/file/get/' + image.id + '?flag=tumbnail'"
+                      :src="'/app/file/get/tumbnail/' + image.id + '.png'"
                       height="280"
                       @click="handleImage(image)"
                     />
@@ -70,7 +67,7 @@
 import ImageDetail from "@/components/ImageDetail";
 import MainHeader from "@/components/MainHeader";
 import MainFooter from "@/components/MainFooter";
-import { DoubleRightOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons-vue";
+import { LeftOutlined, RightOutlined } from "@ant-design/icons-vue";
 import { mapGetters } from "vuex";
 import api from "@/api/module";
 import moment from "moment";
@@ -79,7 +76,6 @@ export default {
     ImageDetail,
     MainHeader,
     MainFooter,
-    DoubleRightOutlined,
     LeftOutlined,
     RightOutlined,
   },

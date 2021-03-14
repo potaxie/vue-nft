@@ -17,14 +17,14 @@
         style="margin-left: 5px"
       >
         <template #icon>
-          <StarFilled v-if="detail.stared"/>
+          <StarFilled v-if="detail.stared" />
           <StarOutlined v-else
         /></template>
         {{ detail.stared ? "Unstar" : "Star" }}
       </a-button>
     </template>
     <div class="nft-image-detail" v-if="detail">
-      <a-image :width="450" :src="'/app/file/get/' + detail.id" />
+      <a-image :width="450" :src="'/app/file/get/' + detail.id + '.png'" />
       <div class="detail-item">
         <span class="title">name: </span>
         {{ detail.name }}
@@ -66,9 +66,7 @@
           </template>
           <div class="line-clamp">
             <span class="title">external_link: </span>
-            <a target="_blank" :href="detail.external_link">{{
-              detail.external_link
-            }}</a>
+            <a target="_blank" :href="detail.external_link">{{ detail.external_link }}</a>
           </div>
         </a-tooltip>
       </div>
