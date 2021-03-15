@@ -3,40 +3,81 @@
     <main-header />
     <a-layout-content>
       <div class="forum">
-        <div v-if="labelDetail" class="forum-cover">
-          <a-image
-            :height="150"
-            width="780px"
-            :preview="false"
-            :src="`/app/file/get/${labelDetail.logo}`"
-          />
-          <div style="margin-top: 15px">
-            <span style="font-size: 35px; font-weight: bolder">{{
-              labelDetail.title
-            }}</span>
-            <span style="margin-left: 25px; color: grey"
-              >{{ $t("tiezi") }}：{{ labelDetail.forum_num }}</span
+        <a-row :gutter="40">
+          <a-col :span="4">
+            <a-menu v-model:selectedKeys="activeKeys" mode="inline" @click="labelClick">
+              <a-menu-item :key="item" v-for="item in labels">{{ item }}</a-menu-item>
+            </a-menu>
+          </a-col>
+          <a-col :span="20">
+            <div v-if="labelDetail" class="forum-cover">
+              <a-image
+                :height="150"
+                width="calc(100%)"
+                :preview="false"
+                :src="`/app/file/get/${labelDetail.logo}.png`"
+              />
+              <a-row
+                justify="space-between"
+                align="middle"
+                style="background-color: #f2f4f7; padding: 5px"
+              >
+                <a-col>
+                  <span style="font-size: 35px; font-weight: bolder">{{
+                    labelDetail.title
+                  }}</span>
+                  <span style="margin-left: 25px; color: grey"
+                    >{{ $t("tiezi") }}：{{ labelDetail.forum_num }}</span
+                  >
+                </a-col>
+                <a-col v-if="clockInfo">
+                  <a-button
+                    type="primary"
+                    size="large"
+                    style="width: 85px"
+                    :disabled="clockInfo.clocked"
+                    @click="clockIn"
+                  >
+                    {{ clockInfo.clocked ? $t("clocked") : $t("clock-in") }}
+                  </a-button>
+                  <div
+                    style="
+                      float: right;
+                      padding: 3px 8px;
+                      text-align: center;
+                      height: 40px;
+                      line-height: 18px;
+                      width: 74px;
+                      font-size: 10px;
+                      background-color: #ffffff;
+                    "
+                  >
+                    {{ clockInfo.clock_time }}<br />
+                    {{ clockInfo.clock_desc }}
+                  </div>
+                </a-col>
+              </a-row>
+              <span style="color: grey">{{ labelDetail.description }}</span>
+            </div>
+            <div style="font-size: 16px; font-weight: bolder; margin-bottom: 10px">
+              <a href="javascript:void(0)" @click="writeForum"
+                ><EditOutlined /> {{ $t("submit") }}</a
+              >
+            </div>
+            <a-table
+              :columns="columns"
+              :data-source="data"
+              :pagination="pagination"
+              class="ant-table-striped"
+              rowKey="id"
+              size="middle"
             >
-          </div>
-          <span style="color: grey">{{ labelDetail.description }}</span>
-        </div>
-        <div style="font-size: 16px; font-weight: bolder;margin-bottom: 10px">
-          <a href="javascript:void(0)" @click="writeForum"
-            ><EditOutlined /> {{ $t("submit") }}</a
-          >
-        </div>
-        <a-table
-          :columns="columns"
-          :data-source="data"
-          :pagination="pagination"
-          class="ant-table-striped"
-          rowKey="id"
-          size="middle"
-        >
-          <template #Title="{ record }">
-            <a :href="`/#/forum-content?id=${record.id}`">{{ record.title }}</a>
-          </template>
-        </a-table>
+              <template #Title="{ record }">
+                <a :href="`/#/forum-content?id=${record.id}`">{{ record.title }}</a>
+              </template>
+            </a-table>
+          </a-col>
+        </a-row>
       </div>
     </a-layout-content>
     <main-footer />
@@ -89,19 +130,34 @@ export default {
   },
   data() {
     return {
-      activeKey: "all",
+      labels: [
+        "CryptoPunks",
+        "CryptoKitties",
+        "SuperRare",
+        "Hashmasks",
+        "Art Blocks",
+        "Rarible",
+        "Other Active",
+      ],
+      activeKeys: [],
+      clockInfo: null,
       data: [],
       labelDetail: null,
       columns: [
         {
           title: "Read",
           dataIndex: "read",
-          width: 100,
+          width: 80,
         },
         {
           title: "Comment",
           dataIndex: "comment",
-          width: 100,
+          width: 80,
+        },
+        {
+          title: "Like",
+          dataIndex: "like",
+          width: 80,
         },
         {
           title: "Title",
@@ -140,16 +196,13 @@ export default {
           action(editor) {
             editor.$nextTick(async () => {
               const event = await editor.$refs.uploadFile.upload();
-              const files = filesFilter(
-                event.target.files,
-                editor.uploadImgConfig
-              );
+              const files = filesFilter(event.target.files, editor.uploadImgConfig);
               if (editor.hasUploadImage && files.length) {
                 event.preventDefault();
                 editor.$emit(
                   "upload-image",
                   event,
-                  function(imageRef) {
+                  function (imageRef) {
                     editor.execCommand(image, imageRef);
                   },
                   files
@@ -164,16 +217,38 @@ export default {
   computed: {
     ...mapGetters(["getCurrentUser"]),
     labelName() {
-      return this.$route.query.label;
+      return this.$route.query.label || this.labels[0];
     },
   },
   watch: {
     labelName() {
+      this.activeKeys = [this.labelName];
+      this.getClockInfo();
       this.getForumTitle();
       this.search();
     },
   },
   methods: {
+    clockIn() {
+      if (this.clockInfo && this.clockInfo.clocked) {
+        return;
+      }
+      api.clockInForum(this.labelName).then((res) => {
+        if (res.data.code === 1) {
+          this.getClockInfo();
+        } else {
+          message.error(res.data.description);
+        }
+      });
+    },
+    getClockInfo() {
+      api.getClockInfoForum(this.labelName).then((res) => {
+        this.clockInfo = res.data;
+      });
+    },
+    labelClick(item) {
+      location.hash = "#/forum?label=" + item.key;
+    },
     getForumTitle() {
       api.getForumTitle(this.labelName).then((res) => {
         this.labelDetail = res.data;
@@ -181,11 +256,7 @@ export default {
     },
     search() {
       api
-        .searchForum(
-          this.labelName,
-          this.pagination.current,
-          this.pagination.pageSize
-        )
+        .searchForum(this.labelName, this.pagination.current, this.pagination.pageSize)
         .then((res) => {
           this.pagination.total = res.data.total;
           this.data = res.data.result_list;
@@ -193,7 +264,7 @@ export default {
     },
     writeForum() {
       if (!this.getCurrentUser()) {
-        message.warn("请先登录...");
+        message.warn("Please login first...");
       } else {
         this.showWrite = true;
       }
@@ -204,7 +275,7 @@ export default {
       api.submitForum(data).then((res) => {
         if (res.data.code === 1) {
           this.form = {};
-          message.success("发布成功");
+          message.success("Submit success");
           this.showWrite = false;
           this.search();
         } else {
@@ -220,7 +291,7 @@ export default {
       };
       axios.post("/app/file/upload", param, config).then((response) => {
         insertImage({
-          url: "/app/file/get/" + response.data,
+          url: "/app/file/get/tumbnail/" + response.data + ".png",
           desc: "image",
           width: "500",
           height: "auto",
@@ -230,6 +301,8 @@ export default {
   },
   created() {
     if (this.labelName) {
+      this.activeKeys = [this.labelName];
+      this.getClockInfo();
       this.getForumTitle();
       this.search();
     }
@@ -238,9 +311,15 @@ export default {
 </script>
 <style lang="less">
 .forum {
-  width: 780px;
-  margin: 0 auto;
+  margin: 0 18% 0 14%;
   text-align: left;
+  .ant-menu {
+    color: rgba(0, 0, 0, 0.85);
+    font-weight: 500;
+  }
+  .ant-menu-item:not(:last-child) {
+    margin-bottom: 25px !important;
+  }
   .forum-cover {
     margin-bottom: 20px;
     .ant-image-img {

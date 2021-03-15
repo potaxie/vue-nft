@@ -26,5 +26,7 @@
   "submit-forum": "Submit Forum",
   "submit-comment": "Submit Comment",
   "submit-at": "Submit At",
+  "clock-in": "签到",
+  "clocked": "已签到",
   "first-login": "Please Login First"
 }

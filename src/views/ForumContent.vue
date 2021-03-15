@@ -7,7 +7,7 @@
           <a-col>
             <a-avatar
               v-if="detail.authorAvatar"
-              :src="`/app/file/get/${detail.authorAvatar}`"
+              :src="`/app/file/get/tumbnail/${detail.authorAvatar}.png`"
               :size="50"
             /><a-avatar v-else :size="50"
               ><template #icon><UserOutlined /></template
@@ -26,11 +26,21 @@
             mode="preview"
           ></v-md-editor>
         </a-card>
-
+        <div style="text-align: center; font-size: 30px">
+          <a href="javascript:;;" @click="like()">
+            <like-filled v-if="detail.liked" /> <like-outlined v-else />
+            <span style="font-size: 20px; margin-left: 10px"
+              >{{ detail.like }}
+            </span>
+          </a>
+        </div>
         <a-list class="comment-list" item-layout="horizontal" :data-source="comments">
           <template #renderItem="{ item }">
             <a-list-item>
-              <a-comment :author="item.author" :avatar="'/app/file/get/' + item.avatar">
+              <a-comment
+                :author="item.author"
+                :avatar="'/app/file/get/tumbnail/' + item.avatar + '.png'"
+              >
                 <template #content>
                   <p>
                     {{ item.content }}
@@ -61,7 +71,12 @@
   </a-layout>
 </template>
 <script>
-import { UserOutlined, SendOutlined } from "@ant-design/icons-vue";
+import {
+  UserOutlined,
+  SendOutlined,
+  LikeOutlined,
+  LikeFilled,
+} from "@ant-design/icons-vue";
 import MainHeader from "@/components/MainHeader";
 import MainFooter from "@/components/MainFooter";
 import { message } from "ant-design-vue";
@@ -73,6 +88,8 @@ export default {
   components: {
     UserOutlined,
     SendOutlined,
+    LikeOutlined,
+    LikeFilled,
     MainHeader,
     MainFooter,
   },
@@ -119,6 +136,18 @@ export default {
           message.error(res.data.description);
         }
       });
+    },
+    like() {
+      if (!this.detail.liked) {
+        api.starForum(this.forumId).then((res) => {
+          if (res.data.code === 1) {
+            this.detail.like += 1;
+            this.detail.liked = true;
+          } else {
+            message.error(res.data.description);
+          }
+        });
+      }
     },
   },
   created() {

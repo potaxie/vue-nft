@@ -1,6 +1,5 @@
 <template>
-  <a-layout-header
-    style="text-align: left; line-height: 48px; height: 48px; padding: 0"
+  <a-layout-header style="text-align: left; line-height: 48px; height: 48px; padding: 0"
     ><a-row
       ><a-col :span="3"
         ><a-image
@@ -8,7 +7,7 @@
           :preview="false"
           height="32px"
           weight="80px"
-          style="margin-top: -5px"/></a-col
+          style="margin-top: -5px" /></a-col
       ><a-col :span="10"
         ><a-menu
           mode="horizontal"
@@ -20,9 +19,9 @@
             background: '#f5f5f5',
           }"
           ><a-menu-item key="/#/"> {{ $t("nft-work") }} </a-menu-item
-          ><a-menu-item key="/#/market-place">
-            {{ $t("market-place") }} </a-menu-item
-          ><a-menu-item key="/#/blog"> {{ $t("paper") }} </a-menu-item></a-menu
+          ><a-menu-item key="/#/market-place"> {{ $t("market-place") }} </a-menu-item>
+          <a-menu-item key="/#/forum"> {{ $t("forum") }} </a-menu-item>
+          <a-menu-item key="/#/blog"> {{ $t("paper") }} </a-menu-item></a-menu
         ></a-col
       >
       <a-col :span="6" style="text-align: right">
@@ -66,28 +65,22 @@
           @click="translation()"
         />
       </a-col>
-      <a-col :span="2" style="text-align: center; padding-right: 25px">
-        <a-dropdown v-if="getCurrentUser()">
+      <a-col v-if="getCurrentUser()" :span="2" style="text-align: center">
+        <a-dropdown>
           <span>
             <a-avatar
               v-if="getCurrentUser().head_avatar"
-              :src="'/app/file/get/' + getCurrentUser().head_avatar"
+              :src="'/app/file/get/tumbnail/' + getCurrentUser().head_avatar + '.png'"
               :size="32"
             /><a-avatar v-else :size="32"
               ><template #icon><UserOutlined /></template
             ></a-avatar>
-            <CaretDownOutlined
-              :style="{ fontSize: '12px', marginLeft: '4px' }"
-            />
+            <CaretDownOutlined :style="{ fontSize: '12px', marginLeft: '4px' }" />
           </span>
           <template #overlay>
             <a-menu>
               <a-menu-item key="username">
-                <span>
-                  {{
-                    getCurrentUser().nickname || getCurrentUser().username
-                  }}</span
-                >
+                <span> {{ getCurrentUser().nickname || getCurrentUser().username }}</span>
               </a-menu-item>
               <a-menu-item @click="collcetion">
                 <WalletOutlined />
@@ -105,31 +98,28 @@
             </a-menu>
           </template>
         </a-dropdown>
+      </a-col>
+      <a-col v-else :span="2" style="text-align: center">
         <a
-          v-else
           class="hearder-text"
           style="font-size: 14px; color: #3291e6"
           href="javascript:void(0)"
           @click="goLogin"
           >{{ $t("login-signup") }}</a
         >
-      </a-col></a-row
-    ></a-layout-header
+      </a-col>
+    </a-row></a-layout-header
   >
   <a-modal
     :visible="showUserModal"
     title="User Setting"
     @ok="handleOk"
     @cancel="showUserModal = false"
-    ><a-form
-      ref="form"
-      :model="form"
-      :label-col="{ span: 4 }"
-      :wrapper-col="{ span: 18 }"
+    ><a-form ref="form" :model="form" :label-col="{ span: 4 }" :wrapper-col="{ span: 18 }"
       ><a-form-item label="Username" name="username"
-        ><a-input v-model:value="form.username" disabled/></a-form-item
+        ><a-input v-model:value="form.username" disabled /></a-form-item
       ><a-form-item label="Nickname"
-        ><a-input v-model:value="form.nickname"/></a-form-item
+        ><a-input v-model:value="form.nickname" /></a-form-item
       ><a-form-item label="Avatar"
         ><a-upload
           v-model:fileList="fileList"
@@ -141,7 +131,7 @@
           @change="handleAvatarChange"
           ><a-avatar
             v-if="form.head_avatar"
-            :src="'/app/file/get/' + form.head_avatar"
+            :src="'/app/file/get/tumbnail/' + form.head_avatar + '.png'"
             shape="square"
             :size="100"
           />

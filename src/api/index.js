@@ -1,5 +1,6 @@
 import axios from "axios";
-// let baseURL = '/backend';
+import vuex from '../store';
+import { message } from "ant-design-vue";
 let baseURL = "/app";
 
 let get = axios.create({
@@ -13,16 +14,25 @@ let post = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
-let put = axios.create({
-  method: "PUT",
-  baseURL: baseURL,
-  headers: { "Content-Type": "application/json" },
-});
+get.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response && error.response.status === 403) {
+      vuex.dispatch('setCurrentUser', null);
+      message.error("Please login first...");
+    }
+  }
+);
 
-let del = axios.create({
-  method: "DELETE",
-  baseURL: baseURL,
-});
+post.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response && error.response.status === 403) {
+      vuex.dispatch('setCurrentUser', null);
+      message.error("Please login first...");
+    }
+  }
+);
 
 let syncGet = (opts) => {
   let xmlhttp = new XMLHttpRequest();
@@ -34,7 +44,6 @@ let syncGet = (opts) => {
 export default {
   get,
   post,
-  put,
-  del,
   syncGet,
 };
+

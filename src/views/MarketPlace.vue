@@ -44,9 +44,9 @@
           <template #image="{ record }">
             <a-avatar
               class="hover-img"
-              :size="50"
+              :size="60"
               shape="square"
-              :src="'/app/file/get/' + record.image + '?flag=tumbnail'"
+              :src="'/app/file/get/tumbnail/' + record.image + '.png'"
               @click="onImageDetail(record)"
             />
           </template>
@@ -265,6 +265,15 @@ export default {
   text-align: left;
   .ant-tabs-tab {
     font-size: 14px;
+  }
+  .ant-table.ant-table-middle
+    > .ant-table-content
+    > .ant-table-body
+    > table
+    > .ant-table-tbody
+    > tr
+    > td {
+    padding: 5px 8px !important;
   }
 }
 </style>

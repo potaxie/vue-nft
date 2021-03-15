@@ -31,7 +31,7 @@
                 @change="handleCoverChange"
                 ><a-avatar
                   v-if="form.cover"
-                  :src="'/app/file/get/' + form.cover"
+                  :src="'/app/file/get/tumbnail/' + form.cover + '.png'"
                   shape="square"
                   :size="100"
                 />
@@ -89,7 +89,7 @@
                   width="280"
                   height="155"
                   alt="cover"
-                  :src="'/app/file/get/' + item.cover + '?flag=tumbnail'"
+                  :src="'/app/file/get/tumbnail/' + item.cover + '.png'"
                 />
               </template>
               <a-list-item-meta
@@ -101,7 +101,7 @@
                 <template #avatar>
                   <a-avatar
                     v-if="item.head_avatar"
-                    :src="'/app/file/get/' + item.head_avatar"
+                    :src="'/app/file/get/tumbnail/' + item.head_avatar + '.png'"
                   />
                   <a-avatar v-else>
                     <template #icon><UserOutlined /></template>
@@ -224,7 +224,7 @@ export default {
       };
       axios.post("/app/file/upload", param, config).then((response) => {
         insertImage({
-          url: "/app/file/get/" + response.data,
+          url: "/app/file/get/tumbnail/" + response.data + ".png",
           desc: "image",
           width: "500",
           height: "auto",
