@@ -204,7 +204,7 @@ export default {
   }
   width: 100%;
   min-height: 100%;
-  background: #f0f2f5 url(../assets/background.svg) no-repeat 50%;
+  background: #ffffff url(../assets/background.svg) no-repeat 50%;
   background-size: 100%;
   position: relative;
   padding: 150px 0;
@@ -225,6 +225,7 @@ export default {
     color: rgba(0, 0, 0, 0.45);
     margin-top: 12px;
     margin-bottom: 40px;
+    margin-left: 10px;
   }
   .main {
     min-width: 260px;

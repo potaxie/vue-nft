@@ -126,17 +126,17 @@ export default {
           key: "All",
           tab: "All",
         },
-        {
-          key: "Hashmasks",
-          tab: "Hashmasks",
-        },
-        {
-          key: "CryptoKitties",
-          tab: "CryptoKitties",
-        },
-        {
+    {
           key: "CryptoPunks",
           tab: "CryptoPunks",
+        },
+        {
+          key: "SuperRare",
+          tab: "SuperRare",
+        },
+        {
+          key: "Axie Infinity",
+          tab: "Axie Infinity",
         },
       ],
       tabs: [
