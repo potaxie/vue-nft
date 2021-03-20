@@ -31,6 +31,7 @@
         class="sale-history"
         :title="$t('sale-history')"
         :tab-list="symbolTabs"
+        :activeKey="activeKey"
         @tabChange="(key) => changeSymbolTab(key)"
       >
         <a-table
@@ -110,6 +111,7 @@ export default {
       data: [],
       sort: null,
       columns: columns,
+      activeKey: "All",
       pagination: {
         onChange: (page) => {
           this.pagination.current = page;
@@ -120,13 +122,12 @@ export default {
         pageSize: 6,
       },
       choice: "7",
-      symbol: "All",
       symbolTabs: [
         {
           key: "All",
           tab: "All",
         },
-    {
+        {
           key: "CryptoPunks",
           tab: "CryptoPunks",
         },
@@ -155,9 +156,17 @@ export default {
     keyword() {
       return this.$route.query.keyword;
     },
+    symbol() {
+      return this.$route.query.symbol || "All";
+    },
   },
   watch: {
     keyword() {
+      this.keywordSearch();
+    },
+    symbol(val) {
+      this.activeKey = val;
+      console.log(val);
       this.keywordSearch();
     },
   },
@@ -191,10 +200,8 @@ export default {
       this.refreshVolumeHistory();
     },
     changeSymbolTab(name) {
-      this.symbol = name;
       this.pagination.current = 1;
-      this.keyword = "";
-      this.refreshSaleHistory();
+      location.href = "/#/market-place?symbol=" + name;
     },
     keywordSearch() {
       this.pagination.current = 1;

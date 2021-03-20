@@ -29,10 +29,19 @@
         <div style="text-align: center; font-size: 30px">
           <a href="javascript:;;" @click="like()">
             <like-filled v-if="detail.liked" /> <like-outlined v-else />
-            <span style="font-size: 20px; margin-left: 10px"
-              >{{ detail.like }}
-            </span>
+            <span style="font-size: 20px; margin-left: 10px">{{ detail.like }} </span>
           </a>
+          <a-popconfirm
+            v-if="
+              getCurrentUser() &&
+              (getCurrentUser().username === 'potaxie' ||
+                getCurrentUser().username === 'Zkuld')
+            "
+            title="Are you sure delete?"
+            @confirm="deleteContent"
+          >
+            <a-button type="link" style="float: right; color: red">Delete</a-button>
+          </a-popconfirm>
         </div>
         <a-list class="comment-list" item-layout="horizontal" :data-source="comments">
           <template #renderItem="{ item }">
@@ -113,6 +122,15 @@ export default {
     },
   },
   methods: {
+    deleteContent() {
+      api.deleteForum(this.forumId).then((res) => {
+        if (res.data.code === 1) {
+          history.go(-1);
+        } else {
+          message.error(res.data.description);
+        }
+      });
+    },
     getDetail() {
       api.getForumDetail(this.forumId).then((res) => {
         this.detail = res.data;
