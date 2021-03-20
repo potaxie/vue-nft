@@ -54,7 +54,7 @@
         </a-modal>
         <div
           class="write-blog"
-          v-if="getCurrentUser() && getCurrentUser().username === 'potaxie'"
+          v-if="getCurrentUser() && (getCurrentUser().username === 'potaxie' || getCurrentUser().username === 'Zkuld' )"
         >
           <a-button size="large" type="link" @click="writeBlog">
             <template #icon><EditOutlined /></template>
@@ -225,8 +225,9 @@ export default {
       axios.post("/app/file/upload", param, config).then((response) => {
         insertImage({
           url: "/app/file/get/tumbnail/" + response.data + ".png",
+          // url: "/app/file/get/" + response.data + ".png",
           desc: "image",
-          width: "500",
+          width: "450",
           height: "auto",
         });
       });

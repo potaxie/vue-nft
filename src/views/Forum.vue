@@ -12,7 +12,7 @@
           <a-col :span="20">
             <div v-if="labelDetail" class="forum-cover">
               <a-image
-                :height="150"
+                :height="200"
                 width="calc(100%)"
                 :preview="false"
                 :src="`/app/file/get/${labelDetail.logo}.png`"
@@ -20,7 +20,7 @@
               <a-row
                 justify="space-between"
                 align="middle"
-                style="background-color: #f2f4f7; padding: 5px"
+                style="background-color: white; padding: 5px"
               >
                 <a-col>
                   <span style="font-size: 35px; font-weight: bolder">{{
@@ -57,7 +57,7 @@
                   </div>
                 </a-col>
               </a-row>
-              <span style="color: grey">{{ labelDetail.description }}</span>
+              <span style="color: grey;margin-left: 10px;">{{ labelDetail.description }}</span>
             </div>
             <div style="font-size: 16px; font-weight: bolder; margin-bottom: 10px">
               <a href="javascript:void(0)" @click="writeForum"
@@ -132,12 +132,12 @@ export default {
     return {
       labels: [
         "CryptoPunks",
-        "CryptoKitties",
         "SuperRare",
-        "Hashmasks",
         "Art Blocks",
-        "Rarible",
-        "Other Active",
+        "Hashmasks",
+        "Axie Infinity",
+        "CryptoKitties",
+        "Others",
       ],
       activeKeys: [],
       clockInfo: null,
