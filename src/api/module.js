@@ -61,6 +61,9 @@ export default {
   getBlogDetail: (id) => {
     return api.get({ url: "/article/submit/reback_article?id=" + id });
   },
+  deleteBlog: (id) => {
+    return api.get({ url: "/article/delete_article?id=" + id });
+  },
   like: (id) => {
     return api.get({ url: "/article/star/" + id });
   },
@@ -93,7 +96,9 @@ export default {
   starForum: (id) => {
     return api.get({ url: "/forum/star/" + id });
   },
-
+  deleteForum: (id) => {
+    return api.get({ url: "/forum/delete_forum?id=" + id });
+  },
   searchForum: (label, page, pageSize) => {
     let params = {
       label: label,

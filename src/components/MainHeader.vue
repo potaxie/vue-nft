@@ -80,15 +80,17 @@
           <template #overlay>
             <a-menu>
               <a-menu-item key="username">
-                <span> {{ getCurrentUser().nickname || getCurrentUser().username }}</span>
+                <span style="margin-right: 6px; font-size: 17px">
+                  {{ getCurrentUser().username }} </span
+                ><a-tag color="purple">{{ getCurrentUser().userscore }}</a-tag>
               </a-menu-item>
               <a-menu-item @click="collcetion">
                 <WalletOutlined />
-                <span> {{ $t("collection") }} </span>
+                <span> {{ $t("collections") }} </span>
               </a-menu-item>
               <a-menu-item @click="userSetting">
                 <UserOutlined />
-                <span> {{ $t("setting") }} </span>
+                <span> {{ $t("user-setting") }} </span>
               </a-menu-item>
               <a-menu-divider />
               <a-menu-item @click="logout">
@@ -118,8 +120,6 @@
     ><a-form ref="form" :model="form" :label-col="{ span: 4 }" :wrapper-col="{ span: 18 }"
       ><a-form-item label="Username" name="username"
         ><a-input v-model:value="form.username" disabled /></a-form-item
-      ><a-form-item label="Nickname"
-        ><a-input v-model:value="form.nickname" /></a-form-item
       ><a-form-item label="Avatar"
         ><a-upload
           v-model:fileList="fileList"
@@ -184,6 +184,16 @@ export default {
   },
   computed: {
     ...mapGetters(["getCurrentUser"]),
+    queryKeyword() {
+      return this.$route.query.keyword;
+    },
+  },
+  watch: {
+    queryKeyword(val) {
+      if (this.keyword != val) {
+        this.keyword = val;
+      }
+    },
   },
   methods: {
     ...mapActions(["setCurrentUser"]),
@@ -191,7 +201,7 @@ export default {
       location.href = item.key;
     },
     onSearch() {
-      location.href = "/#/market-place?keyword=" + this.keyword;
+      location.href = "/#/market-place?keyword=" + this.keyword + "&symbol=All";
     },
     translation() {
       if (this.$root.$i18n.locale === "en") {
@@ -251,9 +261,8 @@ export default {
     },
   },
   created() {
-    let key = this.$route.query.keyword;
-    if (key && this.keyword != key) {
-      this.keyword = key;
+    if (this.queryKeyword && this.keyword != this.queryKeyword) {
+      this.keyword = this.queryKeyword;
     }
   },
 };
