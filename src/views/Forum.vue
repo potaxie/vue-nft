@@ -57,7 +57,9 @@
                   </div>
                 </a-col>
               </a-row>
-              <span style="color: grey;margin-left: 10px;">{{ labelDetail.description }}</span>
+              <span style="color: grey; margin-left: 10px">{{
+                labelDetail.description
+              }}</span>
             </div>
             <div style="font-size: 16px; font-weight: bolder; margin-bottom: 10px">
               <a href="javascript:void(0)" @click="writeForum"
@@ -74,6 +76,16 @@
             >
               <template #Title="{ record }">
                 <a :href="`/#/forum-content?id=${record.id}`">{{ record.title }}</a>
+              </template>
+              <template #Author="{ record }">
+                <a-avatar
+                  v-if="record.authorAvatar"
+                  :src="`/app/file/get/tumbnail/${record.authorAvatar}.png`"
+                  :size="30"
+                /><a-avatar v-else :size="30"
+                  ><template #icon><UserOutlined /></template
+                ></a-avatar>
+                {{ record.author }}
               </template>
             </a-table>
           </a-col>
@@ -112,7 +124,7 @@
   </a-modal>
 </template>
 <script>
-import { EditOutlined } from "@ant-design/icons-vue";
+import { EditOutlined, UserOutlined } from "@ant-design/icons-vue";
 import MainHeader from "@/components/MainHeader";
 import MainFooter from "@/components/MainFooter";
 import { image } from "@kangc/v-md-editor/lib/utils/constants/command";
@@ -127,6 +139,7 @@ export default {
     MainHeader,
     MainFooter,
     EditOutlined,
+    UserOutlined,
   },
   data() {
     return {
@@ -170,7 +183,11 @@ export default {
         {
           title: "Author",
           dataIndex: "author",
-          width: 100,
+          ellipsis: true,
+          width: 130,
+          slots: {
+            customRender: "Author",
+          },
         },
         {
           title: "Time",
