@@ -92,6 +92,10 @@
                 <UserOutlined />
                 <span> {{ $t("user-setting") }} </span>
               </a-menu-item>
+               <a-menu-item @click="goScoreRule">
+                <SnippetsOutlined />
+                <span> {{ $t("score-rule") }} </span>
+              </a-menu-item>
               <a-menu-divider />
               <a-menu-item @click="logout">
                 <LogoutOutlined />
@@ -156,6 +160,7 @@ import {
   CaretDownOutlined,
   WeiboCircleOutlined,
   TranslationOutlined,
+  SnippetsOutlined
 } from "@ant-design/icons-vue";
 import { mapGetters, mapActions } from "vuex";
 import { message } from "ant-design-vue";
@@ -172,6 +177,7 @@ export default {
     CaretDownOutlined,
     WeiboCircleOutlined,
     TranslationOutlined,
+    SnippetsOutlined
   },
   data() {
     return {
@@ -199,6 +205,9 @@ export default {
     ...mapActions(["setCurrentUser"]),
     handleSelect(item) {
       location.href = item.key;
+    },
+    goScoreRule(){
+      location.href = "/#/about-us?active=score";
     },
     onSearch() {
       location.href = "/#/market-place?keyword=" + this.keyword + "&symbol=All";
