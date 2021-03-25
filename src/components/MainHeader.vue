@@ -20,9 +20,27 @@
           }"
           ><a-menu-item key="/#/"> {{ $t("nft-work") }} </a-menu-item
           ><a-menu-item key="/#/market-place"> {{ $t("market-place") }} </a-menu-item>
-          <a-menu-item key="/#/forum"> {{ $t("forum") }} </a-menu-item>
-          <a-menu-item key="/#/blog"> {{ $t("paper") }} </a-menu-item></a-menu
-        ></a-col
+          <a-menu-item
+            key="/#/forum"
+            v-if="
+              getCurrentUser() &&
+              (getCurrentUser().username === 'potaxie' ||
+                getCurrentUser().username === 'Zkuld')
+            "
+          >
+            {{ $t("forum") }}
+          </a-menu-item>
+          <a-menu-item
+            key="/#/blog"
+            v-if="
+              getCurrentUser() &&
+              (getCurrentUser().username === 'potaxie' ||
+                getCurrentUser().username === 'Zkuld')
+            "
+          >
+            {{ $t("paper") }}
+          </a-menu-item>
+        </a-menu></a-col
       >
       <a-col :span="6" style="text-align: right">
         <a-input-search
@@ -92,7 +110,7 @@
                 <UserOutlined />
                 <span> {{ $t("user-setting") }} </span>
               </a-menu-item>
-               <a-menu-item @click="goScoreRule">
+              <a-menu-item @click="goScoreRule">
                 <SnippetsOutlined />
                 <span> {{ $t("score-rule") }} </span>
               </a-menu-item>
@@ -160,7 +178,7 @@ import {
   CaretDownOutlined,
   WeiboCircleOutlined,
   TranslationOutlined,
-  SnippetsOutlined
+  SnippetsOutlined,
 } from "@ant-design/icons-vue";
 import { mapGetters, mapActions } from "vuex";
 import { message } from "ant-design-vue";
@@ -177,7 +195,7 @@ export default {
     CaretDownOutlined,
     WeiboCircleOutlined,
     TranslationOutlined,
-    SnippetsOutlined
+    SnippetsOutlined,
   },
   data() {
     return {
@@ -206,7 +224,7 @@ export default {
     handleSelect(item) {
       location.href = item.key;
     },
-    goScoreRule(){
+    goScoreRule() {
       location.href = "/#/about-us?active=score";
     },
     onSearch() {
@@ -226,7 +244,6 @@ export default {
       location.href = "/#/collection";
     },
     userSetting() {
-      console.log(111);
       this.form = {
         ...this.getCurrentUser(),
       };

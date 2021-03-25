@@ -12,8 +12,15 @@
         v-model="linkUs"
         mode="preview"
       ></v-md-editor>
-      <v-md-editor  v-else-if="active === 'join'" v-model="joinUs" mode="preview"> </v-md-editor>
-       <v-md-editor v-else v-model="scoreRule" mode="preview"> </v-md-editor>
+      <v-md-editor v-else-if="active === 'join'" v-model="joinUs" mode="preview">
+      </v-md-editor>
+      <v-md-editor v-else-if="active === 'legal'" v-model="legal" mode="preview">
+      </v-md-editor>
+      <v-md-editor v-else-if="active === 'copyright'" v-model="copyright" mode="preview">
+      </v-md-editor>
+      <v-md-editor v-else-if="active === 'privacy'" v-model="privacy" mode="preview">
+      </v-md-editor>
+      <v-md-editor v-else v-model="scoreRule" mode="preview"> </v-md-editor>
     </a-layout-content>
     <main-footer />
   </a-layout>
@@ -34,9 +41,11 @@ export default {
         "# 联系方式 \n \n* 微信公众号：Ginkgo Lab \n* 新浪微博：GinkgoLab \n* 公司邮箱：hello@ginkgonft.com",
       joinUs:
         "# 区块链开发 \n \n* 具有传统互联⽹开发经验 \n* 熟悉互联⽹主流开发语⾔ \n* 熟悉区块链主流技术原理  \n* 拥有区块链项⽬开发经验 \n* 接触区块链2 年以上 \n # 前端开发 \n \n* 拥有⼤型互联⽹前端项⽬开发经验  \n* 熟悉主流前端框架vue 、react   \n* 熟悉javascript开发 \n* 前端开发3年以上经验 \n # 项⽬运营  \n \n* 熟悉区块链、nft ⽣态  \n* 熟悉创业项⽬运作 负责项⽬推⼴、运营  \n* 负责项⽬需求调研、分析⼯作  \n* 接触区块链2 年以上 \n",
-      scoreRule:
-        "# jifen guize"
-   };
+      scoreRule: "# jifen guize",
+      legal: "xxxx",
+      copyright: "2222",
+      privacy: "3333",
+    };
   },
   computed: {
     active() {

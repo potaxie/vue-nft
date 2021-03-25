@@ -23,6 +23,15 @@
                 >
               </span>
             </a-space>
+            <a-select
+              v-model:value="selectSymbol"
+              style="font-size: 14px; float: right; width: 140px"
+              @change="refreshVolumeHistory"
+            >
+              <a-select-option v-for="item in titleVolumes" :key="item.contract_name">
+                {{ item.contract_name }}
+              </a-select-option>
+            </a-select>
           </div>
         </template>
         <div ref="container" id="container"></div>
@@ -109,6 +118,7 @@ export default {
       chart: undefined,
       titleVolumes: [],
       data: [],
+      selectSymbol: "",
       sort: null,
       columns: columns,
       activeKey: "All",
@@ -223,8 +233,11 @@ export default {
         });
     },
     refreshVolumeHistory() {
-      api.marketPlaceAnalysis(this.choice).then((res) => {
+      api.marketPlaceAnalysis(this.choice, this.selectSymbol).then((res) => {
         this.titleVolumes = res.data.title_volume;
+        if (!this.selectSymbol && this.titleVolumes) {
+          this.selectSymbol = this.titleVolumes[0].contract_name;
+        }
         this.chart.data(res.data.volume);
         this.chart.render();
       });
@@ -251,8 +264,14 @@ export default {
       showCrosshairs: true,
       shared: true,
     });
-    this.chart.point().position("day*volume").color("contract_name").shape("smooth");
-    this.chart.line().position("day*volume").color("contract_name").shape("smooth");
+    this.chart.line().position("day*volume");
+    this.chart.point().position("day*volume");
+    this.chart.theme({
+      styleSheet: {
+        brandColor: "#5B8FF9",
+      },
+    });
+
     this.refreshSaleHistory();
     this.refreshVolumeHistory();
   },

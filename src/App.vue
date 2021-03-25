@@ -1,5 +1,6 @@
 <template>
   <router-view />
+  <a-back-top />
 </template>
 
 <style lang="less">
@@ -20,7 +21,10 @@
 .ant-comment-inner {
   padding: 0 !important;
 }
-
+.ant-back-top {
+  right: 63px !important;
+  bottom: 80px !important;
+}
 .admin-layout {
   min-height: 100%;
   .ant-layout-header {
