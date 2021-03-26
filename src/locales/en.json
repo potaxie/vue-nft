@@ -34,5 +34,7 @@
   "submit-at": "Submit At",
   "clock-in": "签到",
   "clocked": "已签到",
-  "first-login": "Please Login First"
+  "first-login": "Please Login First",
+  "username":"username"
+
 }

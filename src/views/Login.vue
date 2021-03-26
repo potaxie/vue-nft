@@ -15,7 +15,11 @@
         @submit.prevent
       >
         <a-form-item>
-          <a-input v-model:value="form.username" size="large" placeholder="Username">
+          <a-input
+            v-model:value="form.username"
+            size="large"
+            placeholder="Username"
+          >
             <template #prefix>
               <UserOutlined style="color: rgba(0, 0, 0, 0.25)" />
             </template>
@@ -37,7 +41,11 @@
           </a-input-search>
         </a-form-item>
         <a-form-item v-if="action === 'signup'">
-          <a-input v-model:value="form.code" size="large" placeholder="Email Code">
+          <a-input
+            v-model:value="form.code"
+            size="large"
+            placeholder="Email Code"
+          >
             <template #prefix>
               <NotificationOutlined style="color: rgba(0, 0, 0, 0.25)" />
             </template>
@@ -66,14 +74,20 @@
           </a-input-password>
         </a-form-item>
         <a-form-item v-if="action === 'signup'">
-          <a-input v-model:value="form.inviteCode" size="large" placeholder="Invite Code">
+          <a-input
+            v-model:value="form.inviteCode"
+            size="large"
+            placeholder="Invite Code"
+          >
             <template #prefix>
               <BulbOutlined style="color: rgba(0, 0, 0, 0.25)" />
             </template>
           </a-input>
         </a-form-item>
         <a-form-item style="text-align: left" v-if="action === 'login'">
-          <a-checkbox v-model:checked="form['remember-me']">Remember me</a-checkbox>
+          <a-checkbox v-model:checked="form['remember-me']"
+            >Remember me</a-checkbox
+          >
           <a
             style="float: right; line-height: 40px"
             href="javascript:;;"
@@ -108,7 +122,11 @@
     </div>
     <div class="copyright">Copyright © 2020 Ginkgo</div>
   </div>
-  <a-drawer placement="right" :width="600" v-model:visible="visibleRegistration">
+  <a-drawer
+    placement="right"
+    :width="600"
+    v-model:visible="visibleRegistration"
+  >
     <template #title>
       <h2>ginkgo使用协议</h2>
     </template>
@@ -235,7 +253,12 @@ export default {
         message.error("Please complate information!");
       } else {
         api
-          .signup(this.form.username, this.form.password, this.form.email, this.form.code)
+          .signup(
+            this.form.username,
+            this.form.password,
+            this.form.email,
+            this.form.code
+          )
           .then((res) => {
             this.loggingIn = false;
             if (res.data.code === 1) {
