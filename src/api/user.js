@@ -19,4 +19,7 @@ export default {
   update: (data) => {
     return api.post({ url: "/setting", data: data });
   },
+  submitFeedback: (data) => {
+    return api.post({ url: "/feedback", data: data });
+  },
 };

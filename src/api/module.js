@@ -31,8 +31,8 @@ export default {
     return api.get({ url: "/marketplace_list", params: params });
   },
 
-  marketPlaceAnalysis: (choice) => {
-    return api.get({ url: "/marketplace_analysis/" + choice });
+  marketPlaceAnalysis: (choice, symbol) => {
+    return api.get({ url: "/marketplace_analysis/" + choice + "/" + (symbol || 'None') });
   },
 
   //Collection
