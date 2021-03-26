@@ -34,5 +34,6 @@
   "submit-at": "发表于",
   "clock-in": "签到",
   "clocked": "已签到",
-  "first-login": "请先登录"
+  "first-login": "请先登录",
+  "user-name":"用户名"
 }

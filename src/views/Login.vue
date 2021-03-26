@@ -205,7 +205,7 @@ export default {
         confirmPassword: "",
         email: "",
         code: "",
-        inviteCode: "",
+        inviteCode: "None",
       },
     };
   },
