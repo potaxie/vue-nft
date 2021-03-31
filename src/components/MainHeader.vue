@@ -23,24 +23,10 @@
           ><a-menu-item key="/#/market-place">
             {{ $t("market-place") }}
           </a-menu-item>
-          <a-menu-item
-            key="/#/forum"
-            v-if="
-              getCurrentUser() ||
-                getCurrentUser().username === 'potaxie' ||
-                  getCurrentUser().username === 'Zkuld'
-            "
-          >
+          <a-menu-item key="/#/forum">
             {{ $t("forum") }}
           </a-menu-item>
-          <a-menu-item
-            key="/#/blog"
-            v-if="
-              getCurrentUser() ||
-                getCurrentUser().username === 'potaxie' ||
-                  getCurrentUser().username === 'Zkuld'
-            "
-          >
+          <a-menu-item key="/#/blog">
             {{ $t("paper") }}
           </a-menu-item>
         </a-menu></a-col

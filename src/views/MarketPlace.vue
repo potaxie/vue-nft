@@ -18,20 +18,22 @@
                 :key="item.contract_name"
                 style="margin-left: 10px"
               >
-                {{ item.contract_name }} &nbsp;<span style="color: #3291e6"
-                  >Ξ{{ item.volume }}</span
-                >
+                <span
+                  :style="{
+                    color: '#3291e6',
+                    cursor: 'pointer',
+                    fontSize: '16px',
+                  }"
+                  @click="
+                    selectSymbol = item.contract_name;
+                    refreshVolumeHistory();
+                  "
+                  >{{
+                    item.contract_name + (item.contract_name === selectSymbol ? "✨" : "")
+                  }} </span
+                >&nbsp;&nbsp;&nbsp;Ξ{{ item.volume }}
               </span>
             </a-space>
-            <a-select
-              v-model:value="selectSymbol"
-              style="font-size: 14px; float: right; width: 140px"
-              @change="refreshVolumeHistory"
-            >
-              <a-select-option v-for="item in titleVolumes" :key="item.contract_name">
-                {{ item.contract_name }}
-              </a-select-option>
-            </a-select>
           </div>
         </template>
         <div ref="container" id="container"></div>
