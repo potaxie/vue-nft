@@ -35,5 +35,16 @@
   "clock-in": "签到",
   "clocked": "已签到",
   "first-login": "请先登录",
-  "user-name":"用户名"
-}
+  "username": "用户名",
+  "password": "密码",
+  "email": "邮箱",
+  "send": "发送",
+  "email-code": "邮箱验证码",
+  "confirm-password": "确认密码",
+  "invite-code": "邀请码",
+  "remember-me": "记住登录",
+  "sign-up": "注册",
+  "registration-protocol": "注册协议",
+  "back-login": "返回登录",
+  "login": "登录",
+  "create-account": "创建账号"}

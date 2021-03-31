@@ -35,6 +35,17 @@
   "clock-in": "签到",
   "clocked": "已签到",
   "first-login": "Please Login First",
-  "user-name":"Username"
-
+  "username": "Username",
+  "password": "Password",
+  "email": "Email",
+  "send": "Send",
+  "email-code": "Email Code",
+  "confirm-password": "Confirm Password",
+  "invite-code": "Invite Code",
+  "remember-me": "Remember Me",
+  "sign-up": "Sign Up",
+  "registration-protocol": "Registration Protocol",
+  "back-login": "Back Login",
+  "login": "Login",
+  "create-account": "Create Account"
 }
