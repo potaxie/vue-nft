@@ -18,7 +18,7 @@ get.interceptors.response.use(
   response => response,
   error => {
     if (error.response && error.response.status === 403) {
-      vuex.dispatch('setCurrentUser', null);
+      vuex.dispatch('setCurrentUser', { anonymous: true });
       message.error("Please login first...");
     }
   }
@@ -28,7 +28,7 @@ post.interceptors.response.use(
   response => response,
   error => {
     if (error.response && error.response.status === 403) {
-      vuex.dispatch('setCurrentUser', null);
+      vuex.dispatch('setCurrentUser', { anonymous: true });
       message.error("Please login first...");
     }
   }

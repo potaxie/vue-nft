@@ -278,7 +278,7 @@ export default {
     logout() {
       api.logout().then((res) => {
         if (res.data.code === 1) {
-          this.setCurrentUser(null);
+          this.setCurrentUser({ anonymous: true });
         } else {
           message.error(res.data.description);
         }

@@ -8,6 +8,7 @@ import Forum from "./views/Forum";
 import ForumContent from "./views/ForumContent";
 import BlogContent from "./views/BlogContent";
 import AboutUs from "./views/AboutUs";
+import MobilePage from "./views/MobilePage";
 
 const routes = [
   {
@@ -54,6 +55,11 @@ const routes = [
     path: "/about-us",
     name: "AboutUs",
     component: AboutUs,
+  },
+  {
+    path: "/mobile",
+    name: "MobilePage",
+    component: MobilePage,
   }
 ];
 
@@ -61,5 +67,18 @@ const router = createRouter({
   history: createWebHashHistory(),
   routes,
 });
+
+router.beforeEach((to, from, next) => {
+  var isMobile = /Android|webOS|iPhone|iPad|BlackBerry/i.test(navigator.userAgent)
+  if (isMobile && !to.path.startsWith("/mobile")) {
+    // 移动端
+    next('/mobile');
+  } else if (!isMobile && to.path.startsWith("/mobile")) {
+    // PC端
+    next('/');
+  } else {
+    next();
+  }
+})
 
 export default router;

@@ -10,8 +10,8 @@ export default {
   login: (username, password) => {
     return api.get({ url: "/login/" + username + "/" + password });
   },
-  signup: (username, password, email, code) => {
-    return api.get({ url: "/register/" + username + "/" + password + "/" + email + "/" + code });
+  signup: (data) => {
+    return api.post({ url: "/register", data: data });
   },
   logout: () => {
     return api.get({ url: "/logout/" });

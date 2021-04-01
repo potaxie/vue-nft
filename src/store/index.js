@@ -8,15 +8,21 @@ export default createStore({
   getters: {
     getCurrentUser: (state) => () => {
       if (state.user) {
+        if (state.user.anonymous) {
+          return null;
+        }
         return state.user;
       }
       let user = api.getCurrentUser();
       if (user.username) {
         state.user = user;
+        return user;
       } else {
-        state.user = undefined;
+        state.user = {
+          anonymous: true
+        };
+        return null;
       }
-      return state.user;
     },
   },
   actions: {
