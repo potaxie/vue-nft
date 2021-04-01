@@ -41,7 +41,11 @@
           </a-input-search>
         </a-form-item>
         <a-form-item v-if="action === 'signup'">
-          <a-input v-model:value="form.code" size="large" :placeholder="$t('email-code')">
+          <a-input
+            v-model:value="form.code"
+            size="large"
+            :placeholder="$t('email-code')"
+          >
             <template #prefix>
               <NotificationOutlined style="color: rgba(0, 0, 0, 0.25)" />
             </template>
@@ -111,14 +115,20 @@
             type="primary"
             html-type="submit"
             size="large"
-            >{{ action === "login" ? $t("login") : $t("create-account") }}</a-button
+            >{{
+              action === "login" ? $t("login") : $t("create-account")
+            }}</a-button
           >
         </a-form-item>
       </a-form>
     </div>
     <div class="copyright">Copyright © 2020 Ginkgo</div>
   </div>
-  <a-drawer placement="right" :width="600" v-model:visible="visibleRegistration">
+  <a-drawer
+    placement="right"
+    :width="600"
+    v-model:visible="visibleRegistration"
+  >
     <template #title>
       <h2>ginkgo使用协议</h2>
     </template>
@@ -242,7 +252,7 @@ export default {
         !this.form.code
       ) {
         this.loggingIn = false;
-        message.error("Please complate information!");
+        message.error("Please complete information!");
       } else {
         api.signup({ ...this.form }).then((res) => {
           this.loggingIn = false;
