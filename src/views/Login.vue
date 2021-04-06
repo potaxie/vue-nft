@@ -36,16 +36,14 @@
               <SendOutlined style="color: rgba(0, 0, 0, 0.25)" />
             </template>
             <template #enterButton>
-              <a-button>{{ $t("send") }}</a-button>
+              <a-button :disabled="limit > 0">{{
+                limit > 0 ? limit : $t("send")
+              }}</a-button>
             </template>
           </a-input-search>
         </a-form-item>
         <a-form-item v-if="action === 'signup'">
-          <a-input
-            v-model:value="form.code"
-            size="large"
-            :placeholder="$t('email-code')"
-          >
+          <a-input v-model:value="form.code" size="large" :placeholder="$t('email-code')">
             <template #prefix>
               <NotificationOutlined style="color: rgba(0, 0, 0, 0.25)" />
             </template>
@@ -115,20 +113,14 @@
             type="primary"
             html-type="submit"
             size="large"
-            >{{
-              action === "login" ? $t("login") : $t("create-account")
-            }}</a-button
+            >{{ action === "login" ? $t("login") : $t("create-account") }}</a-button
           >
         </a-form-item>
       </a-form>
     </div>
     <div class="copyright">Copyright © 2020 Ginkgo</div>
   </div>
-  <a-drawer
-    placement="right"
-    :width="600"
-    v-model:visible="visibleRegistration"
-  >
+  <a-drawer placement="right" :width="600" v-model:visible="visibleRegistration">
     <template #title>
       <h2>ginkgo使用协议</h2>
     </template>
@@ -201,6 +193,8 @@ export default {
       visibleRegistration: false,
       action: "login",
       registrationProtocol: "",
+      limitInterval: null,
+      limit: 0,
       form: {
         username: "",
         password: "",
@@ -216,9 +210,15 @@ export default {
     sendEmail() {
       if (this.form.email) {
         api.verifyEmail(this.form.email).then((res) => {
-          console.log(res);
           if (res.data.code === 1) {
             message.success("Send email code success");
+            this.limit = 60;
+            this.limitInterval = setInterval(() => {
+              this.limit = this.limit - 1;
+              if (this.limit == 0) {
+                clearInterval(this.limitInterval);
+              }
+            }, 1000);
           } else {
             message.error(res.data.description);
           }
@@ -266,7 +266,9 @@ export default {
       }
     },
   },
-  mounted() {},
+  mounted() {
+
+  },
 };
 </script>
 <style lang="less">
